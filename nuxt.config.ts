@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/tailwindcss',
     '@invictus.codes/nuxt-vuetify',
+    'nuxt-icon',
   ],
   vuetify: {
     moduleOptions: {

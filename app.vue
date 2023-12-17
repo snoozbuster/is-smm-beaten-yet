@@ -3,6 +3,7 @@
     class="text-center h-screen grid place-content-center bg-smm-yellow uppercase overflow-hidden"
   >
     <h1 id="the-answer" :class="!animationStarted && 'hidden'">Not yet</h1>
+    <SocialLinks />
   </main>
 </template>
 
