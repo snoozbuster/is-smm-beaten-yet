@@ -24,11 +24,14 @@
     "eslint-plugin-prettier": "^5.0.1",
     "nuxt": "^3.8.2",
     "prettier": "^3.1.1",
+    "sass": "^1.69.5",
     "typescript": "^5.3.3",
     "vue": "^3.3.12",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@vueuse/nuxt": "^10.7.0"
+    "@vueuse/nuxt": "^10.7.0",
+    "gsap": "^3.12.4",
+    "split-type": "^0.3.4"
   }
 }
