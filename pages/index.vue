@@ -34,7 +34,7 @@ useSeoMeta({
   description: 'Click here to find out!',
   ogDescription: 'Click here to find out!',
   ogImage: {
-    url: '/public/img/mario.jpg',
+    url: '/img/mario.png',
     width: 775,
     height: 775,
     alt: 'Nario in a builder outfit',
