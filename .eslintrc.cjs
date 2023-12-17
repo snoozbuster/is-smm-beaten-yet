@@ -8,4 +8,12 @@ module.exports = {
     parser: '@typescript-eslint/parser',
   },
   extends: ['@nuxtjs/eslint-config-typescript', 'plugin:prettier/recommended'],
+  rules: {
+    'vue/component-tags-order': [
+      'error',
+      {
+        order: ['template', 'style', 'script'],
+      },
+    ],
+  },
 };
