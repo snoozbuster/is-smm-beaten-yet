@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@invictus.codes/nuxt-vuetify',
     'nuxt-icon',
+    'nuxt-lodash',
   ],
   vuetify: {
     moduleOptions: {
