@@ -37,7 +37,7 @@ useSeoMeta({
     url: '/img/mario.png',
     width: 775,
     height: 775,
-    alt: 'Nario in a builder outfit',
+    alt: 'Mario in a builder outfit',
   },
   twitterCard: 'summary_large_image',
   themeColor: '#fbcd0e',
