@@ -6,6 +6,7 @@
       id="the-answer"
       :class="[
         !animationStarted && 'hidden',
+        /* dirty hack; lines up space in text with scroll prompt */ 'sm:ml-0 md:ml-[-5%]',
       ]"
     >
       Not yet
