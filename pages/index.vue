@@ -1,7 +1,12 @@
 <template>
   <main class="h-screen" :class="dataReady ? 'scroll-snap' : 'overflow-hidden'">
     <TheAnswer class="h-screen" />
-    <LevelData id="stats" class="h-screen" @ready="promptScroll" />
+    <LevelData
+      id="stats"
+      class="h-screen"
+      :visible="scrolled"
+      @ready="promptScroll"
+    />
     <div
       class="fixed bottom-0 p-3 left-2/4 transition-opacity"
       :class="(!dataReady || scrolled) && 'opacity-0'"
