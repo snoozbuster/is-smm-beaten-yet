@@ -3,11 +3,26 @@
     class="grid p-7 grid-flow-row grid-rows-2 grid-cols-3 w-full gap-7 overflow-hidden"
     :class="!animationStarted && 'invisible'"
   >
-    <div class="col-span-2 stat-section">Big stat</div>
-    <div class="stat-section">Small stat 01</div>
-    <div class="stat-section">Small stat 02</div>
-    <div class="stat-section">Small stat 03</div>
-    <div class="stat-section">Small stat 04</div>
+    <template v-if="visible || animationStarted">
+      <div class="stat-section">
+        <PercentClear
+          :uncleared-levels="uncleared.length"
+          :cleared-levels="cleared.length"
+        />
+      </div>
+      <div class="stat-section text-center grid place-content-center">
+        <h2 class="text-4xl font-semibold">
+          {{ formatNumber(uncleared.length) }} levels left to clear
+        </h2>
+        <p>
+          out of {{ formatNumber(cleared.length + uncleared.length) }} levels
+        </p>
+      </div>
+      <div class="stat-section">Small stat 01</div>
+      <div class="stat-section">Small stat 02</div>
+      <div class="stat-section">Small stat 03</div>
+      <div class="stat-section">Small stat 04</div>
+    </template>
   </div>
 </template>
 
@@ -46,16 +61,20 @@ onMounted(async () => {
   emit('ready');
 });
 
+const formatNumber = new Intl.NumberFormat().format;
+
 watch(toRef(props, 'visible'), () => {
   if (props.visible && !animationStarted.value) {
-    gsap.to('.stat-section', {
-      y: 0,
-      opacity: 1,
-      stagger: 0.3,
-      duration: 0.3,
-    });
+    nextTick(() => {
+      gsap.to('.stat-section', {
+        y: 0,
+        opacity: 1,
+        stagger: 0.3,
+        duration: 0.3,
+      });
 
-    animationStarted.value = true;
+      animationStarted.value = true;
+    });
   }
 });
 </script>
