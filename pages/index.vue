@@ -1,9 +1,9 @@
 <template>
   <main class="h-screen" :class="dataReady ? 'scroll-snap' : 'overflow-hidden'">
-    <TheAnswer class="h-screen" />
+    <TheAnswer class="pane h-screen" />
     <LevelData
       id="stats"
-      class="h-screen"
+      class="pane"
       :visible="scrolled"
       @ready="promptScroll"
     />
@@ -30,7 +30,7 @@
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
 
-  > .h-screen {
+  > .pane {
     scroll-snap-align: start;
   }
 }
@@ -85,7 +85,9 @@ function promptScroll() {
 }
 
 function smoothScroll() {
-  document.getElementById('stats')?.scrollIntoView({ behavior: 'smooth' });
+  document
+    .getElementById('stats')
+    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   scrolled.value = true;
 }
 
