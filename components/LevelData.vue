@@ -36,6 +36,8 @@
 
 <script setup lang="ts">
 import gsap from 'gsap';
+import type { ClearedLevel } from '~/server/api/levels/cleared';
+import type { LevelData } from '~/server/api/levels/uncleared';
 
 const emit = defineEmits({
   ready: () => true,
@@ -48,8 +50,8 @@ const props = defineProps({
   },
 });
 
-const cleared = ref();
-const uncleared = ref();
+const cleared = ref<ClearedLevel[]>([]);
+const uncleared = ref<LevelData[]>([]);
 const animationStarted = ref(false);
 
 onMounted(async () => {
