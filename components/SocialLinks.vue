@@ -1,6 +1,6 @@
 <template>
   <div
-    class="social-links fixed flex gap-3 right-3 bottom-0 p-4 opacity-50 hover:opacity-100 transition-opacity"
+    class="social-links flex gap-3 p-7 opacity-50 hover:opacity-100 transition-opacity"
   >
     <a
       v-for="link in links"

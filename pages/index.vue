@@ -1,5 +1,11 @@
 <template>
-  <main class="h-screen" :class="dataReady ? 'scroll-snap' : 'overflow-hidden'">
+  <main
+    class="h-screen"
+    :class="[
+      'position-relative',
+      dataReady ? 'scroll-snap' : 'overflow-hidden',
+    ]"
+  >
     <TheAnswer class="pane h-screen" />
     <LevelData
       id="stats"
@@ -21,7 +27,7 @@
         <div>See how we're doing</div>
       </a>
     </div>
-    <SocialLinks />
+    <SocialLinks class="absolute bottom-0 right-3" />
   </main>
 </template>
 

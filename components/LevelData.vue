@@ -15,6 +15,10 @@
           <h2 class="text-4xl font-semibold mb-5">
             {{ formatNumber(uncleared.length) }} levels left to clear
           </h2>
+
+          <div class="md:hidden">
+            <h3 class="text-2xl font-semibold mb-3">More stats</h3>
+          </div>
         </div>
         <StatSection>
           <UnclearedByDate :uncleared-levels="uncleared" />
