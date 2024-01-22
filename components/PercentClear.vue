@@ -39,6 +39,7 @@ const percentClear = computed(() =>
 const options = computed(() => ({
   responsive: true,
   plugins: {
+    tooltip: false,
     donut_center_text: {
       text: `${percentClear.value} clear`,
       color: COURSE_WORLD_TEXT,
