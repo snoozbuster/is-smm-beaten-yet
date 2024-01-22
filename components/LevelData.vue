@@ -1,7 +1,7 @@
 <template>
   <div class="bg-course-world text-course-world-contrast">
     <div
-      class="grid p-7 grid-flow-row grid-rows-2 grid-cols-3 w-full gap-7 overflow-hidden"
+      class="grid p-7 grid-flow-row grid-rows-2 grid-cols-3 w-full h-full gap-7 overflow-hidden"
       :class="!animationStarted && 'invisible'"
     >
       <template v-if="visible || animationStarted">
