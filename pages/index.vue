@@ -27,7 +27,9 @@
         <div>See how we're doing</div>
       </a>
     </div>
-    <SocialLinks class="absolute bottom-0 right-3" />
+    <SocialLinks
+      class="absolute bottom-0 right-3 p-7 opacity-50 hover:opacity-100 transition-opacity"
+    />
   </main>
 </template>
 

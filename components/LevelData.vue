@@ -11,7 +11,7 @@
             :cleared-levels="cleared.length"
           />
         </div>
-        <div class="stat-section grid align-content-center text-center">
+        <StatSection>
           <h2 class="text-4xl font-semibold mb-5">
             {{ formatNumber(uncleared.length) }} levels left to clear
           </h2>
@@ -19,17 +19,19 @@
           <div class="md:hidden">
             <h3 class="text-2xl font-semibold mb-3">More stats</h3>
           </div>
-        </div>
-        <StatSection>
+        </StatSection>
+        <StatSection card>
           <UnclearedByDate :uncleared-levels="uncleared" />
         </StatSection>
-        <StatSection>
+        <StatSection card>
           <ClearsOverTime :cleared-levels="cleared" />
         </StatSection>
-        <StatSection>
+        <StatSection card>
           <ClearLeaderboard :cleared-levels="cleared" />
         </StatSection>
-        <StatSection>Small stat 04</StatSection>
+        <StatSection class="w-75 mx-auto">
+          <GetInvolved />
+        </StatSection>
       </template>
     </div>
   </div>
@@ -76,15 +78,25 @@ Tooltip.positioners.mouse = function (_elements, eventPosition) {
 } as TooltipPositionerFunction<ChartType>;
 ChartJS.defaults.plugins.tooltip.position = 'mouse';
 
-const StatSection = (_: {}, { slots }: SetupContext) =>
+const StatSection = (props: { card?: boolean }, { slots }: SetupContext) =>
   h(
     'div',
     {
-      class:
-        'stat-section grid place-content-center text-center bg-course-world-card text-course-world-card-contrast rounded-2xl shadow-lg p-4',
+      class: [
+        'stat-section grid place-content-center text-center',
+        props.card &&
+          'bg-course-world-card text-course-world-card-contrast rounded-2xl shadow-lg p-4',
+      ],
     },
     slots.default?.(),
   );
+StatSection.props = {
+  card: {
+    type: Boolean,
+    default: false,
+  },
+};
+
 const emit = defineEmits({
   ready: () => true,
 });
