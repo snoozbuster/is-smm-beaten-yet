@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { Doughnut } from 'vue-chartjs';
 import { Chart as ChartJS, DoughnutController, ArcElement } from 'chart.js';
+import { COURSE_WORLD_CARD, SMM_YELLOW } from '~/constants/colors';
 
 ChartJS.register(DoughnutController, ArcElement);
 
@@ -41,7 +42,7 @@ const data = computed(() => {
     datasets: [
       {
         data: [props.clearedLevels, props.unclearedLevels],
-        backgroundColor: ['rgb(54, 162, 235)', '#f0f0f0'],
+        backgroundColor: [SMM_YELLOW, COURSE_WORLD_CARD],
       },
     ],
   };
