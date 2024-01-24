@@ -53,6 +53,7 @@ const options = computed(() => ({
       type: 'time',
       time: {
         unit: unref(tab) === 'daily' ? 'day' : 'week',
+        tooltipFormat: 'DDD',
       },
     },
   },
