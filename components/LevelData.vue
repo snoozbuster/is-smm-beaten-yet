@@ -54,38 +54,8 @@ import {
   type TooltipPositionerFunction,
 } from 'chart.js';
 import type { SetupContext } from 'vue';
-import {
-  CHART_MAIN_COLOR,
-  COURSE_WORLD_CARD_TEXT,
-} from '~/constants/colors';
-
-interface LevelData {
-  title: string;
-  uploadDate: string;
-  stars: number;
-  players: number;
-  clears: number;
-  attempts: number;
-  creator: string;
-  levelId: string;
-  countryCode: string;
-  style: 'SMW' | 'NSMBU' | 'SMB1' | 'SMB3';
-  theme: 'Castle' | 'Ground' | 'Underground' | 'Ghost House' | 'Airship';
-  autoscroll: boolean;
-  hacked?: boolean;
-}
-
-interface HackedClear extends Omit<LevelData, 'clears' | 'players' | 'stars'> {
-  hacked: true;
-}
-
-type UnclearedLevel = HackedClear | LevelData;
-
-interface ClearedLevelStatSummary {
-  clearsByDate: Record<string, number>;
-  clearsByPerson: Record<string, number>;
-  clearedTotal: number;
-}
+import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
+import type { UnclearedLevel, ClearedLevelStatSummary } from '~/types/levels';
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {

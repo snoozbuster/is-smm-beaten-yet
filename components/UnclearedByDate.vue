@@ -4,7 +4,7 @@
     <v-tab value="year">Year</v-tab>
     <v-tab value="month">Month</v-tab>
   </v-tabs>
-  <Bar :data="data" :options="{ responsive: true }" />
+  <Bar :data="data" :options="options" />
 </template>
 
 <script lang="ts" setup>
@@ -13,21 +13,49 @@ import {
   Chart as ChartJS,
   BarController,
   BarElement,
-  CategoryScale,
+  TimeScale,
   LinearScale,
 } from 'chart.js';
-import type { LevelData } from '~/server/api/levels/uncleared';
+import type { UnclearedLevel } from '~/types/levels';
 
-ChartJS.register(BarController, BarElement, CategoryScale, LinearScale);
+ChartJS.register(BarController, BarElement, TimeScale, LinearScale);
 
 const props = defineProps({
   unclearedLevels: {
-    type: Object as PropType<LevelData[]>,
+    type: Object as PropType<UnclearedLevel[]>,
     required: true,
   },
 });
 
 const tab = ref('year');
+
+const options = computed(() => {
+  return {
+    responsive: true,
+    scales: {
+      x: {
+        type: 'time',
+        grid: {
+          offset: unref(tab) === 'year',
+        },
+        time: {
+          unit: 'year',
+          tooltipFormat: unref(tab) === 'year' ? 'yyyy' : 'LLLL yyyy',
+          displayFormats:
+            unref(tab) === 'year'
+              ? {}
+              : {
+                  month: 'LLL yyyy',
+                  year: 'yyyy',
+                },
+        },
+        ticks: {
+          major: { enabled: true },
+        },
+      },
+    },
+  };
+});
 
 const data = computed(() => {
   const levelCountByYear = useMapValues(
@@ -40,11 +68,13 @@ const data = computed(() => {
   );
   const years = useSortBy(Object.keys(levelCountByYear));
   return {
-    labels: years,
     datasets: [
       {
         label: 'Levels',
-        data: years.map((y) => levelCountByYear[y]),
+        data: years.map((date) => ({
+          x: date,
+          y: levelCountByYear[date],
+        })),
       },
     ],
   };
