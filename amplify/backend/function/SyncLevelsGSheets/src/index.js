@@ -110,13 +110,19 @@ function parseDate(date) {
 function parseLevelCommon(level) {
   const hasValue = (v) => !_.isNil(v) && v !== '';
   return {
-    stars: hasValue(level.stars) && parseInt(level.stars, 10),
-    players: hasValue(level.players) && parseInt(level.players, 10),
-    clears: hasValue(level.clears) && parseInt(level.clears, 10),
-    attempts: hasValue(level.attempts) && parseInt(level.attempts, 10),
+    stars: hasValue(level.stars) ? parseInt(level.stars, 10) : level.stars,
+    players: hasValue(level.players)
+      ? parseInt(level.players, 10)
+      : level.players,
+    clears: hasValue(level.clears) ? parseInt(level.clears, 10) : level.clears,
+    attempts: hasValue(level.attempts)
+      ? parseInt(level.attempts, 10)
+      : level.attempts,
     // uploadDate should always be here but there is something really wonked
     // up about the hacked clear CSV download
-    uploadDate: hasValue(level.uploadDate) && parseDate(level.uploadDate),
+    uploadDate: hasValue(level.uploadDate)
+      ? parseDate(level.uploadDate)
+      : level.uploadDate,
   };
 }
 
