@@ -58,8 +58,33 @@ import {
   CHART_MAIN_COLOR,
   COURSE_WORLD_CARD_TEXT,
 } from '~/constants/colors';
-import type { ClearedLevel } from '~/server/api/levels/cleared';
-import type { LevelData } from '~/server/api/levels/uncleared';
+
+interface LevelData {
+  title: string;
+  uploadDate: string;
+  stars: number;
+  players: number;
+  clears: number;
+  attempts: number;
+  creator: string;
+  levelId: string;
+  countryCode: string;
+  style: 'SMW' | 'NSMBU' | 'SMB1' | 'SMB3';
+  theme: 'Castle' | 'Ground' | 'Underground' | 'Ghost House' | 'Airship';
+  autoscroll: boolean;
+  hacked?: boolean;
+}
+
+interface HackedClear extends Omit<LevelData, 'clears' | 'players' | 'stars'> {
+  hacked: true;
+}
+
+type UnclearedLevel = HackedClear | LevelData;
+
+interface ClearedLevelStatSummary {
+  clearsByDate: Record<string, number>;
+  clearsByPerson: Record<string, number>;
+}
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
@@ -108,14 +133,18 @@ const props = defineProps({
   },
 });
 
-const cleared = shallowRef<ClearedLevel[]>([]);
-const uncleared = shallowRef<LevelData[]>([]);
+const clearSummary = shallowRef<ClearedLevelStatSummary>({});
+const uncleared = shallowRef<UnclearedLevel[]>([]);
 const animationStarted = ref(false);
 
+const DATA_ROOT_URL =
+  'https://is-smm-beaten-yet-public-data.s3.us-west-2.amazonaws.com/levels';
+
 onMounted(async () => {
-  [cleared.value, uncleared.value] = await Promise.all([
-    $fetch('/api/levels/cleared'),
-    $fetch('/api/levels/uncleared'),
+  [clearSummary.value, uncleared.value] = await Promise.all([
+    // this seems wrong but it works? what is the nuxt-y way to do this?
+    (async () => (await fetch(`${DATA_ROOT_URL}/clear_summary.json`)).json())(),
+    (async () => (await fetch(`${DATA_ROOT_URL}/uncleared.json`)).json())(),
   ]);
 
   emit('ready');

@@ -12,13 +12,12 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js';
-import type { ClearedLevel } from '~/server/api/levels/cleared';
 
 ChartJS.register(BarController, BarElement, CategoryScale, LinearScale);
 
 const props = defineProps({
-  clearedLevels: {
-    type: Object as PropType<ClearedLevel[]>,
+  clearsByPerson: {
+    type: Object as PropType<Record<string, number>>,
     required: true,
   },
 });
@@ -37,20 +36,18 @@ const options = computed(() => ({
 }));
 
 const data = computed(() => {
-  const levelCountByClearer = useMapValues(
-    useGroupBy(props.clearedLevels, 'firstClearerNnid'),
-    (levels, user) => ({ user, clears: levels.length }),
-  );
-  const clearers = useOrderBy(levelCountByClearer, 'clears', 'desc').slice(
-    0,
-    10,
-  );
+  const clearers = useOrderBy(
+    useToPairs(props.clearsByPerson),
+    '1',
+    'desc',
+  ).slice(0, 10);
+
   return {
-    labels: clearers.map(({ user }) => user),
+    labels: clearers.map(([user]) => user),
     datasets: [
       {
         label: 'Clears',
-        data: clearers.map(({ clears }) => clears),
+        data: clearers.map(([_, clears]) => clears),
       },
     ],
   };

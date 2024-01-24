@@ -19,7 +19,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import { DateTime } from 'luxon';
-import type { ClearedLevel } from '~/server/api/levels/cleared';
 
 ChartJS.register(
   LineController,
@@ -30,8 +29,8 @@ ChartJS.register(
 );
 
 const props = defineProps({
-  clearedLevels: {
-    type: Object as PropType<ClearedLevel[]>,
+  clearsByDate: {
+    type: Object as PropType<Record<string, number>>,
     required: true,
   },
 });
@@ -63,21 +62,18 @@ const data = computed(() => {
   const leftEdge = DateTime.now()
     .minus({ month: unref(tab) === 'daily' ? 1 : 3 })
     .toISODate();
-  const levelCountByDate = useMapValues(
-    useGroupBy(
-      props.clearedLevels.filter(({ dateCleared }) => dateCleared >= leftEdge),
-      'dateCleared',
+  const days = useSortBy(
+    Object.keys(props.clearsByDate).filter(
+      (dateCleared) => dateCleared >= leftEdge,
     ),
-    'length',
   );
-  const days = useSortBy(Object.keys(levelCountByDate));
   return {
     datasets: [
       {
         label: 'Clears',
         data: days.map((d) => ({
           x: d,
-          y: levelCountByDate[d],
+          y: props.clearsByDate[d],
         })),
         pointRadius: 0,
         pointHitRadius: 5,

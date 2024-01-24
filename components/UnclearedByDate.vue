@@ -31,8 +31,10 @@ const tab = ref('year');
 
 const data = computed(() => {
   const levelCountByYear = useMapValues(
-    useGroupBy(props.unclearedLevels, ({ uploadDate }) =>
-      uploadDate.substring(0, unref(tab) === 'year' ? 4 : 7),
+    useGroupBy(
+      props.unclearedLevels.filter(({ uploadDate }) => uploadDate),
+      ({ uploadDate }) =>
+        uploadDate.substring(0, unref(tab) === 'year' ? 4 : 7),
     ),
     'length',
   );
