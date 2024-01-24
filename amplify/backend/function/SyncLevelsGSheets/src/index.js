@@ -240,6 +240,7 @@ exports.handler = async (event) => {
   const clearStats = {
     clearsByDate,
     clearsByPerson,
+    clearedTotal: clearedFinal.length,
   };
 
   if (!event.localrun) {

@@ -8,7 +8,7 @@
         <div class="stat-section">
           <PercentClear
             :uncleared-levels="uncleared.length"
-            :cleared-levels="cleared.length"
+            :cleared-levels="clearSummary.clearedTotal"
           />
         </div>
         <StatSection>
@@ -24,10 +24,10 @@
           <UnclearedByDate :uncleared-levels="uncleared" />
         </StatSection>
         <StatSection card>
-          <ClearsOverTime :cleared-levels="cleared" />
+          <ClearsOverTime :clears-by-date="clearSummary.clearsByDate" />
         </StatSection>
         <StatSection card>
-          <ClearLeaderboard :cleared-levels="cleared" />
+          <ClearLeaderboard :clears-by-person="clearSummary.clearsByPerson" />
         </StatSection>
         <StatSection class="w-75 mx-auto">
           <GetInvolved />
@@ -84,6 +84,7 @@ type UnclearedLevel = HackedClear | LevelData;
 interface ClearedLevelStatSummary {
   clearsByDate: Record<string, number>;
   clearsByPerson: Record<string, number>;
+  clearedTotal: number;
 }
 
 declare module 'chart.js' {
