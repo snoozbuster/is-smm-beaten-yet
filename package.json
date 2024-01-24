@@ -7,24 +7,32 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "install:lambda": "yarn install --cwd ./amplify/backend/function/SyncLevelsGSheets/src",
     "postinstall": "nuxt prepare",
+    "build:level-json": "amplify mock function SyncLevelsGSheets",
     "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:js && yarn lint:prettier",
     "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "devDependencies": {
+    "@aws-amplify/cli": "^12.10.1",
     "@invictus.codes/nuxt-vuetify": "^0.3.0",
     "@nuxt/devtools": "latest",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/tailwindcss": "^6.10.1",
     "@typescript-eslint/parser": "^6.14.0",
+    "@types/luxon": "^3.4.2",
+    "@types/papaparse": "%5.3.14",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "luxon": "^3.4.4",
+    "lodash": "^4.17.21",
     "nuxt": "^3.8.2",
     "nuxt-icon": "^0.6.7",
     "nuxt-lodash": "^2.5.3",
+    "papaparse": "^5.3.14",
     "prettier": "^3.1.1",
     "sass": "^1.69.5",
     "typescript": "^5.3.3",
@@ -33,7 +41,10 @@
   },
   "dependencies": {
     "@vueuse/nuxt": "^10.7.0",
+    "chart.js": "^4.4.1",
+    "chartjs-adapter-luxon": "^1.3.1",
     "gsap": "^3.12.4",
-    "split-type": "^0.3.4"
+    "split-type": "^0.3.4",
+    "vue-chartjs": "^5.3.0"
   }
 }

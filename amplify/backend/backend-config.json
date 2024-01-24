@@ -1,0 +1,30 @@
+{
+  "auth": {},
+  "function": {
+    "SyncLevelsGSheets": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_SyncLevelsGSheets_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "SyncLevelsGSheets"
+        }
+      ]
+    },
+    "AMPLIFY_function_SyncLevelsGSheets_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "SyncLevelsGSheets"
+        }
+      ]
+    }
+  },
+  "storage": {}
+}

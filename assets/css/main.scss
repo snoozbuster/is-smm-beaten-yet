@@ -1,1 +1,5 @@
-@import './smm-font.scss'
+@import './smm-font.scss';
+
+html, body {
+  overflow: visible;
+}

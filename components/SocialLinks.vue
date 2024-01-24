@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="social-links fixed flex gap-3 right-0 bottom-0 p-4 opacity-50 hover:opacity-100 transition-opacity"
-  >
+  <div class="social-links flex gap-3 justify-center">
     <a
       v-for="link in links"
       :key="link.name"

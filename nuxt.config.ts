@@ -15,10 +15,15 @@ export default defineNuxtConfig({
     },
   },
   tailwindcss: {
+    exposeConfig: true,
     config: {
       theme: {
         colors: {
           'smm-yellow': '#fbcd0e',
+          'course-world': '#0f9280',
+          'course-world-contrast': '#91f2e1',
+          'course-world-card': '#fdffbe',
+          'course-world-card-contrast': '#7f8143',
         },
       },
     },
