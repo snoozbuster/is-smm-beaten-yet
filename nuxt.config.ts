@@ -9,14 +9,6 @@ export default defineNuxtConfig({
     'nuxt-icon',
     'nuxt-lodash',
   ],
-  nitro: {
-    storage: {
-      levels: {
-        driver: 'fs',
-        base: './data',
-      },
-    },
-  },
   vuetify: {
     moduleOptions: {
       treeshaking: true,
