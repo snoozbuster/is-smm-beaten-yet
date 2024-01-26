@@ -8,7 +8,7 @@
         <div class="stat-section">
           <PercentClear
             :uncleared-levels="uncleared.length"
-            :cleared-levels="clearSummary.clearedTotal"
+            :cleared-levels="clearSummary.clearedTotal ?? 0"
           />
         </div>
         <StatSection>
@@ -24,10 +24,12 @@
           <UnclearedByDate :uncleared-levels="uncleared" />
         </StatSection>
         <StatSection card>
-          <ClearsOverTime :clears-by-date="clearSummary.clearsByDate" />
+          <ClearsOverTime :clears-by-date="clearSummary.clearsByDate ?? {}" />
         </StatSection>
         <StatSection card>
-          <ClearLeaderboard :clears-by-person="clearSummary.clearsByPerson" />
+          <ClearLeaderboard
+            :clears-by-person="clearSummary.clearsByPerson ?? {}"
+          />
         </StatSection>
         <StatSection class="w-75 mx-auto">
           <GetInvolved />
@@ -55,7 +57,9 @@ import {
 } from 'chart.js';
 import type { SetupContext } from 'vue';
 import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
-import type { UnclearedLevel, ClearedLevelStatSummary } from '~/types/levels';
+import type { ClearedLevelStatSummary } from '~/types/levels';
+import { DATA_ROOT_URL } from '~/constants/levelData';
+import CourseWorldCard from '~/components/CourseWorldCard';
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
@@ -76,12 +80,11 @@ ChartJS.defaults.plugins.tooltip.position = 'mouse';
 
 const StatSection = (props: { card?: boolean }, { slots }: SetupContext) =>
   h(
-    'div',
+    props.card ? CourseWorldCard : 'div',
     {
       class: [
-        'stat-section grid place-content-center text-center',
-        props.card &&
-          'bg-course-world-card text-course-world-card-contrast rounded-2xl shadow-lg p-4',
+        'stat-section',
+        !props.card && 'grid place-content-center text-center',
       ],
     },
     slots.default?.(),
@@ -104,18 +107,16 @@ const props = defineProps({
   },
 });
 
-const clearSummary = shallowRef<ClearedLevelStatSummary>({});
-const uncleared = shallowRef<UnclearedLevel[]>([]);
+const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
 const animationStarted = ref(false);
 
-const DATA_ROOT_URL =
-  'https://is-smm-beaten-yet-public-data.s3.us-west-2.amazonaws.com/levels';
+const { uncleared, load } = useUnclearedLevels();
 
 onMounted(async () => {
   [clearSummary.value, uncleared.value] = await Promise.all([
     // this seems wrong but it works? what is the nuxt-y way to do this?
     (async () => (await fetch(`${DATA_ROOT_URL}/clear_summary.json`)).json())(),
-    (async () => (await fetch(`${DATA_ROOT_URL}/uncleared.json`)).json())(),
+    load(),
   ]);
 
   emit('ready');
