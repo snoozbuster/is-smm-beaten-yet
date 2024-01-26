@@ -68,6 +68,8 @@ $size: 30px;
 </style>
 
 <script setup lang="ts">
+import { SMM_YELLOW } from '~/constants/colors';
+
 useSeoMeta({
   title: 'Is Super Mario Maker Beaten Yet?',
   ogTitle: 'Is Super Mario Maker Beaten Yet?',
@@ -80,7 +82,7 @@ useSeoMeta({
     alt: 'Mario in a builder outfit',
   },
   twitterCard: 'summary_large_image',
-  themeColor: '#fbcd0e',
+  themeColor: SMM_YELLOW,
 });
 
 const dataReady = ref(false);
