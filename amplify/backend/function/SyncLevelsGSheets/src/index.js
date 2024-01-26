@@ -173,7 +173,7 @@ exports.handler = async (event) => {
 
   const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
   const getLevelTranslation = (level) =>
-    levelMeta[level.levelId]?.countryCode === 'JP'
+    levelMeta[level.levelId]?.countryCode === 'JP' || level.hacked
       ? { titleTranslation: translations[level.levelId] }
       : {};
 
