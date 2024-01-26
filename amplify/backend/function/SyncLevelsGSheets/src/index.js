@@ -110,13 +110,17 @@ function parseDate(date) {
 function parseLevelCommon(level) {
   const hasValue = (v) => !_.isNil(v) && v !== '';
   return {
-    stars: hasValue(level.stars) ? parseInt(level.stars, 10) : level.stars,
+    stars: hasValue(level.stars)
+      ? parseInt(level.stars.replace(/[^\d]/g, ''), 10)
+      : level.stars,
     players: hasValue(level.players)
-      ? parseInt(level.players, 10)
+      ? parseInt(level.players.replace(/[^\d]/g, ''), 10)
       : level.players,
-    clears: hasValue(level.clears) ? parseInt(level.clears, 10) : level.clears,
+    clears: hasValue(level.clears)
+      ? parseInt(level.clears.replace(/[^\d]/g, ''), 10)
+      : level.clears,
     attempts: hasValue(level.attempts)
-      ? parseInt(level.attempts, 10)
+      ? parseInt(level.attempts.replace(/[^\d]/g, ''), 10)
       : level.attempts,
     // uploadDate should always be here but there is something really wonked
     // up about the hacked clear CSV download
@@ -169,7 +173,7 @@ exports.handler = async (event) => {
 
   const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
   const getLevelTranslation = (level) =>
-    levelMeta[level.levelId]?.countryCode === 'JP'
+    levelMeta[level.levelId]?.countryCode === 'JP' || level.hacked
       ? { titleTranslation: translations[level.levelId] }
       : {};
 
