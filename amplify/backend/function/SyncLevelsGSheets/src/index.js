@@ -139,6 +139,7 @@ exports.handler = async (event) => {
   const legacyClearsPromise = getS3File(s3, 'static/legacy_clears.json');
 
   const levelMetaPromise = getS3File(s3, 'static/static_level_data.json');
+  const translationsPromise = getS3File(s3, 'static/jp_en_translations.json');
   const uploadOverridesPromise = getS3File(
     s3,
     'static/upload_date_overrides.json',
@@ -164,14 +165,20 @@ exports.handler = async (event) => {
 
   console.log('Compiling uncleared levels');
   const levelMeta = JSON.parse(await levelMetaPromise);
+  const translations = JSON.parse(await translationsPromise);
 
   const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
+  const getLevelTranslation = (level) =>
+    levelMeta[level.levelId]?.countryCode === 'JP'
+      ? { titleTranslation: translations[level.levelId] }
+      : {};
 
   const unclearedFinal = _.sortBy(
     [...unclearedClean, ...hackedClearsClean].map((level) => ({
       ...level,
       ...parseLevelCommon(level),
       ...getLevelMeta(level),
+      ...getLevelTranslation(level),
     })),
     'uploadDate',
   );
@@ -207,12 +214,14 @@ exports.handler = async (event) => {
     'UNCLEARED:',
     unclearedFinal.length,
     unclearedFinal[0],
+    unclearedFinal[Math.round((unclearedFinal.length - 1) / 2)],
     unclearedFinal[unclearedFinal.length - 1],
   );
   console.log(
     'CLEARED:',
     clearedFinal.length,
     clearedFinal[0],
+    clearedFinal[Math.round((clearedFinal.length - 1) / 2)],
     clearedFinal[clearedFinal.length - 1],
   );
 
