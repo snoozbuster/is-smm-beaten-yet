@@ -418,7 +418,16 @@
         </PrimeDropdown>
       </template>
     </PrimeColumn>
-    <PrimeColumn field="autoscroll" header="Autoscroll" data-type="boolean">
+    <PrimeColumn
+      field="autoscroll"
+      header="Autoscroll"
+      data-type="boolean"
+      :pt="{
+        filterInput: {
+          class: 'leading-[18px]',
+        },
+      }"
+    >
       <template #body="{ data }">
         <i
           class="pi"

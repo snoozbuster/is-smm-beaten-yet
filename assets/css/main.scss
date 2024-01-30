@@ -29,3 +29,10 @@ html, body {
   // fixes datepicker in table filter being extremely squashed
   width: unset !important;
 }
+
+.p-inputtext, .p-multiselect-label, .p-button-sm {
+  padding: 4px 8px;
+}
+.p-input-icon-left > .p-inputtext {
+  padding-left: 2.5rem;
+}
