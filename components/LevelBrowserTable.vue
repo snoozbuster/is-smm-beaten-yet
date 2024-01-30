@@ -190,7 +190,13 @@
         />
       </template>
     </PrimeColumn>
-    <PrimeColumn field="stars" header="Stars" data-type="numeric" sortable>
+    <PrimeColumn
+      field="stars"
+      header="Stars"
+      data-type="numeric"
+      sortable
+      style="min-width: 100px"
+    >
       <template #body="{ data }">
         {{ data.stars ? formatNumber(data.stars) : data.stars ?? '' }}
       </template>
@@ -207,7 +213,13 @@
         />
       </template>
     </PrimeColumn>
-    <PrimeColumn field="players" header="Players" data-type="numeric" sortable>
+    <PrimeColumn
+      field="players"
+      header="Players"
+      data-type="numeric"
+      sortable
+      style="min-width: 100px"
+    >
       <template #body="{ data }">
         {{ data.stars ? formatNumber(data.players) : data.players ?? '' }}
       </template>
@@ -229,6 +241,7 @@
       header="Attempts"
       data-type="numeric"
       sortable
+      style="min-width: 100px"
     >
       <template #body="{ data }">
         {{ data.attempts ? formatNumber(data.attempts) : data.attempts ?? '' }}
