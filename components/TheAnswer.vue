@@ -1,12 +1,12 @@
 <template>
   <section
-    class="text-center grid place-content-center bg-smm-yellow uppercase position-relative overflow-hidden"
+    class="text-center grid place-content-center bg-smm-yellow uppercase relative overflow-hidden"
   >
     <h1 id="the-answer" :class="['text-smm', !animationStarted && 'hidden']">
       Not yet
     </h1>
     <SocialLinks
-      class="absolute top-0 right-3 p-7 opacity-50 hover:opacity-100 transition-opacity"
+      class="absolute top-0 right-0 p-7 opacity-50 hover:opacity-100 transition-opacity"
     />
   </section>
 </template>
