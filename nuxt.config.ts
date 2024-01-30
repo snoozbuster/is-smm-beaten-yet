@@ -18,6 +18,7 @@ export default defineNuxtConfig({
       prefix: 'Prime',
     },
     options: {
+      ripple: true,
       pt: {
         tabMenu: {
           menu: {
