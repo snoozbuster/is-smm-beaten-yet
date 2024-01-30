@@ -1,9 +1,6 @@
 <template>
   <h3 class="text-xl">Uncleared levels by date</h3>
-  <v-tabs v-model="tab">
-    <v-tab value="year">Year</v-tab>
-    <v-tab value="month">Month</v-tab>
-  </v-tabs>
+  <PrimeTabMenu :model="tabs" />
   <Bar :data="data" :options="options" />
 </template>
 
@@ -28,6 +25,11 @@ const props = defineProps({
 });
 
 const tab = ref('year');
+
+const tabs = [
+  { label: 'Year', command: () => (tab.value = 'year') },
+  { label: 'Month', command: () => (tab.value = 'month') },
+];
 
 const options = computed(() => {
   return {
