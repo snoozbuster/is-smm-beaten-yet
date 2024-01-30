@@ -24,7 +24,7 @@
         class: 'border-separate',
       },
       header: {
-        class: 'bg-inherit',
+        class: 'bg-inherit pt-0 px-0',
       },
       virtualScroller: {
         root: {

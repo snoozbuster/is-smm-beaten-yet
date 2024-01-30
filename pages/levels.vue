@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen overflow-hidden bg-course-world">
-    <div class="h-full max-w-[1800px] mt-auto mx-auto flex flex-col py-5">
+    <div class="h-full max-w-[1800px] mt-auto mx-auto flex flex-col p-5">
       <PrimeMessage class="md:hidden" severity="warn" :closable="false">
         Sorry, this page is still under construction for devices of this size.
         Use a wider screen for best results.
