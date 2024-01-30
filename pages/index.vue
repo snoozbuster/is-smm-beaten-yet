@@ -20,16 +20,13 @@
     >
       <a
         href="#stats"
-        class="-translate-x-2/4 mb-20 md:mb-5 text-xl grid place-content-center relative"
+        class="-translate-x-2/4 mb-5 text-xl grid place-content-center relative"
         @click.prevent="smoothScroll"
       >
-        <div class="scroll-arrow justify-self-center"></div>
         <div>See how we're doing</div>
+        <div class="scroll-arrow justify-self-center"></div>
       </a>
     </div>
-    <SocialLinks
-      class="absolute bottom-0 right-3 p-7 opacity-50 hover:opacity-100 transition-opacity"
-    />
   </main>
 </template>
 
@@ -54,20 +51,22 @@ $size: 30px;
 
 @keyframes arrow {
   0% {
-    transform: translate(0, -$size) rotate(-45deg);
+    transform: translate(0, -$size * 0.5) rotate(-45deg);
     opacity: 0;
   }
   50% {
     opacity: 1;
   }
   100% {
-    transform: translate(0, 0) rotate(-45deg);
+    transform: translate(0, $size * 0.5) rotate(-45deg);
     opacity: 0;
   }
 }
 </style>
 
 <script setup lang="ts">
+import { SMM_YELLOW } from '~/constants/colors';
+
 useSeoMeta({
   title: 'Is Super Mario Maker Beaten Yet?',
   ogTitle: 'Is Super Mario Maker Beaten Yet?',
@@ -80,7 +79,7 @@ useSeoMeta({
     alt: 'Mario in a builder outfit',
   },
   twitterCard: 'summary_large_image',
-  themeColor: '#fbcd0e',
+  themeColor: SMM_YELLOW,
 });
 
 const dataReady = ref(false);

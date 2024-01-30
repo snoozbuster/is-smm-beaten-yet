@@ -1,9 +1,6 @@
 <template>
   <h3 class="text-xl">Clears over time</h3>
-  <v-tabs v-model="tab">
-    <v-tab value="daily">Daily</v-tab>
-    <v-tab value="weekly">Weekly</v-tab>
-  </v-tabs>
+  <PrimeTabMenu :model="tabs" />
   <Line :data="data" :options="options" />
 </template>
 
@@ -36,6 +33,11 @@ const props = defineProps({
 });
 
 const tab = ref('daily');
+
+const tabs = [
+  { label: 'Daily', command: () => (tab.value = 'daily') },
+  { label: 'Weekly', command: () => (tab.value = 'weekly') },
+];
 
 const options = computed(() => ({
   responsive: true,

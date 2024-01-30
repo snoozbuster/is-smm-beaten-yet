@@ -1,20 +1,38 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  css: ['~/assets/css/main.scss'],
+  css: [
+    '~/assets/css/main.scss',
+    'primevue/resources/themes/mdc-light-indigo/theme.css',
+  ],
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/tailwindcss',
-    '@invictus.codes/nuxt-vuetify',
     'nuxt-icon',
     'nuxt-lodash',
+    'nuxt-primevue',
   ],
-  vuetify: {
-    moduleOptions: {
-      treeshaking: true,
+  primevue: {
+    cssLayerOrder: 'tailwind-base, primevue, tailwind-utilities',
+    components: {
+      prefix: 'Prime',
+    },
+    options: {
+      ripple: true,
+      pt: {
+        tabMenu: {
+          menu: {
+            class: 'bg-inherit',
+          },
+          action: {
+            class: 'uppercase',
+          },
+        },
+      },
     },
   },
   tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
     exposeConfig: true,
     config: {
       theme: {

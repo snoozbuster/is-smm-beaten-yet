@@ -1,5 +1,31 @@
 @import './smm-font.scss';
+@import 'primeicons/primeicons.css';
 
 html, body {
   overflow: visible;
+}
+
+.text-nowrap {
+  text-wrap: nowrap;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-smm {
+  font-family: 'Super Mario Maker';
+}
+
+.bg-inherit {
+  background-color: inherit;
+}
+
+.p-menuitem-link:not(:hover), .p-highlight .p-menuitem-link {
+  background-color: transparent;
+}
+
+.p-datepicker {
+  // fixes datepicker in table filter being extremely squashed
+  width: unset !important;
 }
