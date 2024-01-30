@@ -2,13 +2,7 @@
   <section
     class="text-center grid place-content-center bg-smm-yellow uppercase overflow-hidden"
   >
-    <h1
-      id="the-answer"
-      :class="[
-        !animationStarted && 'hidden',
-        /* dirty hack; lines up space in text with scroll prompt */ 'sm:ml-0 md:ml-[-5%]',
-      ]"
-    >
+    <h1 id="the-answer" :class="['text-smm', !animationStarted && 'hidden']">
       Not yet
     </h1>
   </section>
@@ -16,7 +10,6 @@
 
 <style lang="scss" scoped>
 #the-answer {
-  font-family: 'Super Mario Maker';
   font-size: clamp(10rem, 20vw, 20rem);
   user-select: none;
   clip-path: polygon(0 0, 100% 1%, 100% 100%, 0% 100%);
