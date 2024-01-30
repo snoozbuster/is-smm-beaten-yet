@@ -79,13 +79,12 @@ Tooltip.positioners.mouse = function (_elements, eventPosition) {
 ChartJS.defaults.plugins.tooltip.position = 'mouse';
 
 const StatSection = (props: { card?: boolean }, { slots }: SetupContext) =>
-  h(
-    props.card ? CourseWorldCard : 'div',
+  props.card
+    ? h(CourseWorldCard, slots.default?.())
+    : h(
+        'div',
     {
-      class: [
-        'stat-section',
-        !props.card && 'grid place-content-center text-center',
-      ],
+          class: ['stat-section grid place-content-center text-center'],
     },
     slots.default?.(),
   );
