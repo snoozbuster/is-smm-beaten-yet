@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "install:lambda": "yarn install --cwd ./amplify/backend/function/SyncLevelsGSheets/src",
     "postinstall": "nuxt prepare",
-    "build:level-json": "amplify mock function SyncLevelsGSheets",
+    "build:level-json": "amplify mock function SyncLevelsGSheets --event local-event.json --timeout 600",
     "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:js && yarn lint:prettier",
