@@ -6,3 +6,12 @@
     @tailwind components;
     @tailwind utilities;
 }
+
+/* fixme - should probably move other stuff from main.scss here? */
+.p-button.p-button-warning {
+  @apply bg-smm-yellow;
+}
+
+.p-button.p-button-secondary {
+  @apply bg-course-world;
+}

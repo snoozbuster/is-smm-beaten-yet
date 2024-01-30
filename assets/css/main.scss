@@ -24,3 +24,8 @@ html, body {
 .p-menuitem-link:not(:hover), .p-highlight .p-menuitem-link {
   background-color: transparent;
 }
+
+.p-datepicker {
+  // fixes datepicker in table filter being extremely squashed
+  width: unset !important;
+}

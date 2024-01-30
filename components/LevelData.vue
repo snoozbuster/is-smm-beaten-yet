@@ -15,6 +15,14 @@
           <h2 class="text-4xl font-semibold mb-5">
             {{ formatNumber(uncleared.length) }} levels left to clear
           </h2>
+          <NuxtLink to="/levels">
+            <PrimeButton
+              label="View uncleared levels"
+              class="w-full text-smm uppercase"
+              size="large"
+              severity="warning"
+            />
+          </NuxtLink>
 
           <div class="md:hidden">
             <h3 class="text-2xl font-semibold mb-3">More stats</h3>
@@ -83,11 +91,11 @@ const StatSection = (props: { card?: boolean }, { slots }: SetupContext) =>
     ? h(CourseWorldCard, slots.default?.())
     : h(
         'div',
-    {
+        {
           class: ['stat-section grid place-content-center text-center'],
-    },
-    slots.default?.(),
-  );
+        },
+        slots.default?.(),
+      );
 StatSection.props = {
   card: {
     type: Boolean,
