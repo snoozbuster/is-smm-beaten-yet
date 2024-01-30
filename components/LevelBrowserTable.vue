@@ -74,7 +74,6 @@
           <PrimeMenu
             id="table-settings"
             ref="menu"
-            class="translate-x-[calc(-100%_+_36px)]"
             :model="settingsMenuItems"
             popup
           >
@@ -625,7 +624,6 @@ function shouldShowTranslation(level: UnclearedLevel) {
     })
   );
 }
-
 
 const filters = ref();
 function resetFilters() {
