@@ -325,20 +325,22 @@
         {{ data.countryCode }}
       </template>
       <template #filter="{ filterModel, filterCallback }">
-        <PrimeDropdown
+        <PrimeMultiSelect
           v-model="filterModel.value"
           :options="countries"
           option-label="name"
           option-value="value"
           placeholder="Any"
           class="p-column-filter"
+          :max-selected-labels="1"
+          :show-toggle-all="false"
           @change="filterCallback()"
         >
           <template #option="{ option }">
             <CountryFlag class="pr-1" :country-code="option.value" />
             <div>{{ option.name }}</div>
           </template>
-        </PrimeDropdown>
+        </PrimeMultiSelect>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -359,13 +361,17 @@
         {{ data.style }}
       </template>
       <template #filter="{ filterModel, filterCallback }">
-        <PrimeDropdown
+        <PrimeMultiSelect
           v-model="filterModel.value"
           :options="styles"
           option-label="name"
           option-value="value"
           placeholder="Any"
           class="p-column-filter"
+          option-disabled="disabled"
+          :max-selected-labels="1"
+          :show-toggle-all="false"
+          :pt="{ wrapper: { style: { 'max-height': 'fit-content' } } }"
           @change="filterCallback()"
         >
           <template #option="{ option }">
@@ -375,9 +381,14 @@
               :width="16"
               :height="16"
             />
-            <div>{{ option.name }}</div>
+            <div>
+              {{ option.name }}
+              <div v-if="option.disabled" class="text-xs">
+                All levels completed!
+              </div>
+            </div>
           </template>
-        </PrimeDropdown>
+        </PrimeMultiSelect>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -397,13 +408,16 @@
         {{ data.theme }}
       </template>
       <template #filter="{ filterModel, filterCallback }">
-        <PrimeDropdown
+        <PrimeMultiSelect
           v-model="filterModel.value"
           :options="themes"
           option-label="value"
           option-value="value"
           placeholder="Any"
           class="p-column-filter"
+          :max-selected-labels="1"
+          :show-toggle-all="false"
+          :pt="{ wrapper: { style: { 'max-height': 'fit-content' } } }"
           @change="filterCallback()"
         >
           <template #option="{ option }">
@@ -417,7 +431,7 @@
             />
             <div>{{ option.value }}</div>
           </template>
-        </PrimeDropdown>
+        </PrimeMultiSelect>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -576,16 +590,17 @@ const styles = [
     name: 'Super Mario Bros.',
   },
   {
-    value: 'SMB3',
-    name: 'Super Mario Bros. 3',
-  },
-  {
     value: 'SMW',
     name: 'Super Mario World',
   },
   {
     value: 'NSMBU',
     name: 'New Super Mario Bros. U',
+  },
+  {
+    value: 'SMB3',
+    name: 'Super Mario Bros. 3',
+    disabled: true,
   },
 ];
 
@@ -661,15 +676,15 @@ function resetFilters() {
     creator: { value: null, matchMode: FilterMatchMode.IN },
     countryCode: {
       value: null,
-      matchMode: FilterMatchMode.EQUALS,
+      matchMode: FilterMatchMode.IN,
     },
     theme: {
       value: null,
-      matchMode: FilterMatchMode.EQUALS,
+      matchMode: FilterMatchMode.IN,
     },
     style: {
       value: null,
-      matchMode: FilterMatchMode.EQUALS,
+      matchMode: FilterMatchMode.IN,
     },
     autoscroll: { value: null, matchMode: FilterMatchMode.EQUALS },
   };
