@@ -1,6 +1,10 @@
 <template>
   <img
-    class="inline"
+    :class="[
+      'inline',
+      'border',
+      countryCode !== 'JP' ? 'border-transparent' : 'border-black/25',
+    ]"
     :src="`/img/flags/${countryCode.toLowerCase()}.gif`"
     width="24"
     height="16"
