@@ -1,3 +1,5 @@
+import colors from 'tailwindcss/colors';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -37,6 +39,7 @@ export default defineNuxtConfig({
     config: {
       theme: {
         colors: {
+          ...colors,
           'smm-yellow': '#fbcd0e',
           'course-world': '#0f9280',
           'course-world-contrast': '#91f2e1',
