@@ -55,10 +55,12 @@
         </span>
         <span class="text-xl self-center ml-5">
           {{ formatNumber(numRows) }} levels
-          <span v-if="numRows !== props.levels.length" class="font-normal">
-            ({{ formatPercent(numRows, props.levels.length) }} of all
-            levels)</span
+          <span
+            v-show="props.levels.length && numRows !== props.levels.length"
+            class="font-normal"
           >
+            ({{ formatPercent(numRows, props.levels.length) }} of all levels)
+          </span>
         </span>
 
         <div class="ml-auto">
