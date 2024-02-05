@@ -33,6 +33,10 @@ const tabs = [
   { label: 'Month', command: () => (tab.value = 'month') },
 ];
 
+const tooltipCallbacks = useUnclearedTooltipFormatter(
+  toRef(props, 'unclearedLevels'),
+);
+
 const options = computed(() => {
   return {
     responsive: true,
@@ -40,6 +44,9 @@ const options = computed(() => {
     plugins: {
       legend: {
         display: false,
+      },
+      tooltip: {
+        callbacks: tooltipCallbacks,
       },
     },
     scales: {
@@ -80,7 +87,7 @@ const data = computed(() => {
   return {
     datasets: [
       {
-        label: 'Levels',
+        label: 'remaining',
         data: years.map((date) => ({
           x: date,
           y: levelCountByYear[date],

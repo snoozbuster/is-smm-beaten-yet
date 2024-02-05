@@ -26,6 +26,10 @@ const props = defineProps({
   },
 });
 
+const tooltipCallbacks = useUnclearedTooltipFormatter(
+  toRef(props, 'unclearedLevels'),
+);
+
 const options = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
@@ -34,7 +38,10 @@ const options = computed(() => ({
       display: true,
       position: 'bottom',
     },
-    tooltip: true,
+    tooltip: {
+      enabled: true,
+      callbacks: tooltipCallbacks,
+    },
   },
 }));
 
@@ -62,7 +69,7 @@ const styleData = computed(() => {
     ),
     datasets: [
       {
-        label: 'Levels',
+        label: 'remaining',
         data: styles.map(([_, levels]) => levels.length),
         backgroundColor: [
           '#6c43a1',
