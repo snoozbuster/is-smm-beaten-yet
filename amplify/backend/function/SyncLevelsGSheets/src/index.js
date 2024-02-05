@@ -13,21 +13,16 @@ const axios = require('axios');
 const { DateTime } = require('luxon');
 
 const BUCKET_ID = 'is-smm-beaten-yet-public-data';
-const MAIN_SPREADSHEET_ID = '1PMNsDoZqYd4261FRmEZSo3SkcnqcvfbKDTQMAJaw6ws';
-const SHEETS = ['By Date', 'Hacked Clears By Date', 'Cleared Levels'];
+const CLEARS_SPREADSHEET_ID = '1PMNsDoZqYd4261FRmEZSo3SkcnqcvfbKDTQMAJaw6ws';
+const UNCLEARED_SHEET_ID = '11dV6SHOIBzHjIqacQyG8Hsnynydg3h7MBLsFoDwA5KA';
 
-function getSheetDownloadUrl(sheetName) {
-  const sheetId =
-    sheetName === 'Hacked Clears By Date'
-      ? '1PcZmIJyKLV6PYBNMLqoEtvVPFrSWpLbqQSRF9ZVwBho'
-      : MAIN_SPREADSHEET_ID;
-
+function getSheetDownloadUrl(sheetId, sheetName) {
   return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(
     sheetName,
   )}`;
 }
 
-const UNCLEARED_TITLE_TO_KEY = {
+const COMMON_TITLE_TO_KEY = {
   Title: 'title',
   'Upload Date': 'uploadDate',
   Stars: 'stars',
@@ -37,33 +32,20 @@ const UNCLEARED_TITLE_TO_KEY = {
   'Level ID': 'levelId',
 };
 
-const HACKED_CLEAR_TITLE_TO_KEY = {
-  'Level Name': 'title',
-  'Upload Date': 'uploadDate',
-  Attempts: 'attempts',
-  Creator: 'creator',
-  'Level ID': 'levelId',
-
+const UNCLEARED_TITLE_TO_KEY = {
+  ...COMMON_TITLE_TO_KEY,
+  Code: 'countryCode',
   Style: 'style',
   Theme: 'theme',
-  Scroll: 'autoscroll',
-  Code: 'countryCode',
+  AutoScroll: 'autoscroll',
+  Hacked: 'hacked',
   Timer: 'timer',
-
-  Hacker: 'hackedBy',
-  'Level Description': 'description',
 };
 
 const CLEARED_TITLE_TO_KEY = {
-  ...UNCLEARED_TITLE_TO_KEY,
+  ...COMMON_TITLE_TO_KEY,
   'First Clearer NNID': 'firstClearerNnid',
   'Date Cleared': 'dateCleared',
-};
-
-const SHEET_NAME_TO_HEADER_TRANSFORMER = {
-  [SHEETS[0]]: (title) => UNCLEARED_TITLE_TO_KEY[title] ?? title,
-  [SHEETS[1]]: (title) => HACKED_CLEAR_TITLE_TO_KEY[title] ?? title,
-  [SHEETS[2]]: (title) => CLEARED_TITLE_TO_KEY[title] ?? title,
 };
 
 async function getS3File(s3, filename) {
@@ -93,13 +75,13 @@ async function uploadToS3(s3, filename, data) {
   );
 }
 
-async function downloadCsv(sheetName) {
-  const { data } = await axios.get(getSheetDownloadUrl(sheetName));
+async function downloadCsv(downloadUrl, transformer) {
+  const { data } = await axios.get(downloadUrl);
 
   return new Promise((resolve, reject) => {
     Papa.parse(data, {
       header: true,
-      transformHeader: SHEET_NAME_TO_HEADER_TRANSFORMER[sheetName],
+      transformHeader: (title) => transformer[title] ?? title,
       complete: ({ data }) => resolve(data),
       error: (e) => reject(e),
     });
@@ -116,6 +98,7 @@ function parseDate(date) {
 
 function parseLevelCommon(level) {
   const hasValue = (v) => !_.isNil(v) && v !== '';
+
   return {
     stars: hasValue(level.stars)
       ? parseInt(level.stars.replace(/[^\d]/g, ''), 10)
@@ -129,11 +112,7 @@ function parseLevelCommon(level) {
     attempts: hasValue(level.attempts)
       ? parseInt(level.attempts.replace(/[^\d]/g, ''), 10)
       : level.attempts,
-    // uploadDate should always be here but there is something really wonked
-    // up about the hacked clear CSV download
-    uploadDate: hasValue(level.uploadDate)
-      ? parseDate(level.uploadDate)
-      : level.uploadDate,
+    uploadDate: parseDate(level.uploadDate),
   };
 }
 
@@ -157,51 +136,51 @@ exports.handler = async (event) => {
   );
 
   console.log('Downloading gsheets');
-  const [unclearedLevels, hackedClears, clearedLevels] = await Promise.all(
-    SHEETS.map(downloadCsv),
-  );
+  const [unclearedLevels, clearedLevels] = await Promise.all([
+    downloadCsv(
+      getSheetDownloadUrl(UNCLEARED_SHEET_ID, 'By Date'),
+      UNCLEARED_TITLE_TO_KEY,
+    ),
+    downloadCsv(
+      getSheetDownloadUrl(CLEARS_SPREADSHEET_ID, 'Cleared Levels'),
+      CLEARED_TITLE_TO_KEY,
+    ),
+  ]);
 
   const unclearedClean = cleanList(
     unclearedLevels,
     Object.values(UNCLEARED_TITLE_TO_KEY),
   );
-  const hackedClearsClean = cleanList(
-    hackedClears,
-    Object.values(HACKED_CLEAR_TITLE_TO_KEY),
-  ).map((l) => ({
-    ...l,
-    hacked: true,
-    autoscroll: Boolean(l.autoscroll),
-    timer: parseInt(l.timer, 10),
-  }));
   const clearedClean = cleanList(
     clearedLevels,
     Object.values(CLEARED_TITLE_TO_KEY),
   );
 
   console.log('Compiling uncleared levels');
-  const levelMeta = JSON.parse(await levelMetaPromise);
   const translations = JSON.parse(await translationsPromise);
 
-  const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
   const getLevelTranslation = (level) =>
-    levelMeta[level.levelId]?.countryCode === 'JP' || level.hacked
+    level.countryCode === 'JP' || level.hacked
       ? { titleTranslation: translations[level.levelId] }
       : {};
 
   const unclearedFinal = _.sortBy(
-    [...unclearedClean, ...hackedClearsClean].map((level) => ({
+    unclearedClean.map((level) => ({
       ...level,
       ...parseLevelCommon(level),
-      ...getLevelMeta(level),
       ...getLevelTranslation(level),
+      hacked: Boolean(level.hacked),
+      autoscroll: Boolean(level.autoscroll),
+      timer: parseInt(level.timer, 10),
     })),
     'uploadDate',
   );
 
   console.log('Compiling cleared levels');
   const uploadDateOverrides = JSON.parse(await uploadOverridesPromise);
+  const levelMeta = JSON.parse(await levelMetaPromise);
 
+  const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
   const getClearDate = (level) => {
     if (level.levelId in uploadDateOverrides) {
       return {
@@ -278,7 +257,6 @@ exports.handler = async (event) => {
     statusCode: 200,
     body: JSON.stringify({
       processedUncleareds: unclearedClean.length,
-      processedHackedClears: hackedClearsClean.length,
       processedCleareds: clearedLevels.length,
 
       totalUncleared: unclearedFinal.length,
