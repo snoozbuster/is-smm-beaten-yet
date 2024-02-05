@@ -79,14 +79,39 @@
             :model="settingsMenuItems"
             popup
           >
+            <template #submenuheader="{ item }">
+              <div class="flex items-center">
+                {{ item.label }}
+
+                <PrimeButton
+                  v-if="!allColumnsVisible"
+                  class="ml-auto"
+                  link
+                  size="small"
+                  label="Show all"
+                  @click.stop="initColumns(true)"
+                />
+              </div>
+            </template>
             <template #item="{ item, props: { action } }">
-              <label v-bind="action" @click.stop>
+              <label v-if="item.prop" v-bind="action" @click.stop>
                 <PrimeInputSwitch
                   v-model="
                     // @ts-expect-error
                     levelBrowserSettings[item.prop]
                   "
                   class="mr-3"
+                />
+                {{ item.label }}
+              </label>
+              <label v-else v-bind="action" @click.stop>
+                <PrimeCheckbox
+                  v-model="
+                    // @ts-expect-error
+                    levelBrowserSettings.visibleColumns[item.field]
+                  "
+                  class="mr-3"
+                  binary
                 />
                 {{ item.label }}
               </label>
@@ -138,9 +163,10 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
-      class="text-nowrap"
+      v-if="columnVisible('uploadDate')"
       field="uploadDate"
       filter-field="filterDate"
+      class="text-nowrap"
       :filter-match-mode-options="[
         ...$primevue.config.filterMatchModeOptions.date.map((key: string) => {
           return {
@@ -193,11 +219,12 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('stars')"
       field="stars"
       header="Stars"
       data-type="numeric"
       sortable
-      style="min-width: 100px"
+      style="min-width: 150px"
     >
       <template #body="{ data }">
         {{ data.stars ? formatNumber(data.stars) : data.stars ?? '' }}
@@ -216,14 +243,15 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('players')"
       field="players"
       header="Players"
       data-type="numeric"
       sortable
-      style="min-width: 100px"
+      style="min-width: 150px"
     >
       <template #body="{ data }">
-        {{ data.stars ? formatNumber(data.players) : data.players ?? '' }}
+        {{ data.players ? formatNumber(data.players) : data.players ?? '' }}
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeInputNumber
@@ -239,11 +267,12 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('attempts')"
       field="attempts"
       header="Attempts"
       data-type="numeric"
       sortable
-      style="min-width: 100px"
+      style="min-width: 150px"
     >
       <template #body="{ data }">
         {{ data.attempts ? formatNumber(data.attempts) : data.attempts ?? '' }}
@@ -262,6 +291,7 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('creator')"
       field="creator"
       header="Creator"
       sortable
@@ -315,6 +345,7 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('countryCode')"
       field="countryCode"
       header="Country"
       :show-filter-menu="false"
@@ -344,9 +375,10 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
-      class="text-nowrap"
+      v-if="columnVisible('style')"
       field="style"
       header="Style"
+      class="text-nowrap"
       :show-filter-menu="false"
       sortable
     >
@@ -392,6 +424,7 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('theme')"
       field="theme"
       header="Theme"
       :show-filter-menu="false"
@@ -435,6 +468,7 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('timer')"
       field="timer"
       header="Timer"
       :show-filter-menu="false"
@@ -455,6 +489,7 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('autoscroll')"
       field="autoscroll"
       header="Autoscroll"
       data-type="boolean"
@@ -534,10 +569,51 @@ FilterService.filters.month = (value: Date, filter: Date) => {
   );
 };
 
+const columns = {
+  title: 'Level name',
+  uploadDate: 'Upload date',
+  stars: 'Stars',
+  players: 'Players',
+  attempts: 'Attempts',
+  creator: 'Creator',
+  countryCode: 'Country',
+  style: 'Style',
+  theme: 'Theme',
+  timer: 'Timer',
+  autoscroll: 'Autoscroll',
+};
+
 const levelBrowserSettings = useStorage('levelBrowser', {
   includeHackedClears: true,
   enableTranslation: true,
+  visibleColumns: useMapValues(columns, () => true),
 });
+
+function initColumns(reset = false) {
+  if (!unref(levelBrowserSettings).visibleColumns) {
+    levelBrowserSettings.value.visibleColumns = {} as any;
+  }
+  useForEach(columns, (_, field) => {
+    if (!(field in levelBrowserSettings.value.visibleColumns) || reset) {
+      levelBrowserSettings.value.visibleColumns[field as keyof typeof columns] =
+        true;
+    }
+  });
+}
+
+function columnVisible(field: keyof typeof columns) {
+  return unref(levelBrowserSettings).visibleColumns[field] !== false;
+}
+
+initColumns();
+
+const allColumnsVisible = computed(() =>
+  useEvery(
+    useMapValues(columns, (_, field) =>
+      columnVisible(field as keyof typeof columns),
+    ),
+  ),
+);
 
 const menu = ref();
 const toggle = (event: MouseEvent) => {
@@ -551,6 +627,14 @@ const settingsMenuItems = computed(() => [
   {
     label: 'Translate level titles',
     prop: 'enableTranslation',
+  },
+  {
+    label: 'Columns',
+    items: useMap(columns, (title, field) => ({
+      label: title,
+      field,
+      disabled: field === 'title',
+    })),
   },
 ]);
 
