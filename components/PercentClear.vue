@@ -27,12 +27,12 @@ const props = defineProps({
   },
 });
 
+const { formatPercent } = useFormatters();
+
 const percentClear = computed(() =>
-  new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    maximumFractionDigits: 0,
-  }).format(
-    props.clearedLevels / (props.clearedLevels + props.unclearedLevels),
+  formatPercent(
+    props.clearedLevels,
+    props.clearedLevels + props.unclearedLevels,
   ),
 );
 

@@ -144,7 +144,7 @@ onMounted(async () => {
   emit('ready');
 });
 
-const formatNumber = new Intl.NumberFormat().format;
+const { formatNumber } = useFormatters();
 
 watch(toRef(props, 'visible'), () => {
   if (props.visible && !animationStarted.value) {

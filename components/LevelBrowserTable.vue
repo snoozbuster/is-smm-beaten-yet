@@ -510,7 +510,6 @@
 </template>
 
 <script setup lang="ts">
-import { DateTime } from 'luxon';
 import { FilterMatchMode, FilterService } from 'primevue/api';
 import { useStorage } from '@vueuse/core';
 import type { UnclearedLevel } from '~/types/levels';
@@ -594,16 +593,7 @@ const preparedLevels = computed(() =>
   ),
 );
 
-const formatDate = (d: string) => DateTime.fromISO(d).toFormat('DDD');
-
-const formatter = new Intl.NumberFormat();
-const formatNumber = (n: number) => formatter.format(n);
-
-const formatPercent = (numerator: number, denominator: number) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    maximumFractionDigits: 2,
-  }).format(numerator / denominator);
+const { formatDate, formatNumber, formatPercent } = useFormatters();
 
 const styles = [
   {
