@@ -435,6 +435,26 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      field="timer"
+      header="Timer"
+      :show-filter-menu="false"
+      sortable
+    >
+      <template #filter="{ filterModel, filterCallback }">
+        <PrimeMultiSelect
+          v-model="filterModel.value"
+          :options="timerOptions"
+          option-label="value"
+          option-value="value"
+          placeholder="Any"
+          class="p-column-filter"
+          :max-selected-labels="1"
+          :show-toggle-all="false"
+          @change="filterCallback()"
+        />
+      </template>
+    </PrimeColumn>
+    <PrimeColumn
       field="autoscroll"
       header="Autoscroll"
       data-type="boolean"
@@ -641,6 +661,14 @@ const countries = [
 
 const levelsByCreator = computed(() => useGroupBy(props.levels, 'creator'));
 
+const timerOptions = computed(() =>
+  useOrderBy(
+    useUniq(props.levels.map(({ timer }) => timer)),
+    useIdentity,
+    'asc',
+  ).map((timer) => ({ value: timer })),
+);
+
 const creators = computed(() =>
   useOrderBy(
     useKeys(unref(levelsByCreator)).map((creator) => ({
@@ -683,6 +711,10 @@ function resetFilters() {
       matchMode: FilterMatchMode.IN,
     },
     style: {
+      value: null,
+      matchMode: FilterMatchMode.IN,
+    },
+    timer: {
       value: null,
       matchMode: FilterMatchMode.IN,
     },

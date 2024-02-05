@@ -3,6 +3,7 @@ export interface LevelData {
   titleTranslation?: string;
   description?: string;
   uploadDate: string;
+  timer: number;
   stars: number;
   players: number;
   clears: number;
