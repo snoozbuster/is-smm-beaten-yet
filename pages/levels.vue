@@ -11,7 +11,7 @@
       <h1 class="text-course-world-contrast text-4xl mb-5">
         Uncleared Super Mario Maker 1 Levels
         <span
-          v-tooltip="'Level list is refreshed every 2 hours.'"
+          v-tooltip="'Level list is updated every 2 hours.'"
           class="pi pi-question-circle text-2xl ml-2 text-slate-400 opacity-50 hover:opacity-100 transition-opacity"
         ></span>
       </h1>
