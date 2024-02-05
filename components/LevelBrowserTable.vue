@@ -215,7 +215,23 @@
           :min-date="new Date('2016-06-01')"
           :max-date="new Date('2021-04-01')"
           @date-select="filterCallback()"
-        />
+        >
+          <template #date="{ date }">
+            <strong
+              v-if="
+                date.selectable &&
+                !datesWithLevels.has(
+                  `${date.year}-${date.month
+                    .toString()
+                    .padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`,
+                )
+              "
+              class="line-through bg-green"
+              >{{ date.day }}</strong
+            >
+            <template v-else>{{ date.day }}</template>
+          </template>
+        </PrimeCalendar>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -754,6 +770,10 @@ function shouldShowTranslation(level: UnclearedLevel) {
     })
   );
 }
+
+const datesWithLevels = computed(
+  () => new Set(props.levels.map(({ uploadDate }) => uploadDate)),
+);
 
 const filters = ref();
 function resetFilters() {
