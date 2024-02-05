@@ -20,7 +20,7 @@
     >
       <a
         href="#stats"
-        class="-translate-x-2/4 mb-5 text-xl grid place-content-center relative"
+        class="-translate-x-2/4 mb-5 text-xl grid place-content-center relative text-center"
         @click.prevent="smoothScroll"
       >
         <div>See how we're doing</div>
