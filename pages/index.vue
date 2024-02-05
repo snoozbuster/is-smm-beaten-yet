@@ -103,7 +103,7 @@ onMounted(() => {
     observer = new IntersectionObserver(
       (entries) => {
         scrolled.value = entries.some((entry) => entry.isIntersecting);
-        // window.location.hash = scrolled.value ? 'stats' : '';
+        window.location.hash = scrolled.value ? 'stats' : '';
       },
       {
         root: document.getElementsByTagName('main')[0],
