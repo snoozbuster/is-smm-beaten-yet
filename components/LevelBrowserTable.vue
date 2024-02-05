@@ -640,6 +640,9 @@ const themes = [
   {
     value: 'Airship',
   },
+  {
+    value: 'Underwater',
+  },
 ];
 
 const countries = [
