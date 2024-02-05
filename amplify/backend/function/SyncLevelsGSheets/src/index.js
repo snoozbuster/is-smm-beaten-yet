@@ -17,7 +17,12 @@ const MAIN_SPREADSHEET_ID = '1PMNsDoZqYd4261FRmEZSo3SkcnqcvfbKDTQMAJaw6ws';
 const SHEETS = ['By Date', 'Hacked Clears By Date', 'Cleared Levels'];
 
 function getSheetDownloadUrl(sheetName) {
-  return `https://docs.google.com/spreadsheets/d/${MAIN_SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(
+  const sheetId =
+    sheetName === 'Hacked Clears By Date'
+      ? '1PcZmIJyKLV6PYBNMLqoEtvVPFrSWpLbqQSRF9ZVwBho'
+      : MAIN_SPREADSHEET_ID;
+
+  return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(
     sheetName,
   )}`;
 }
@@ -33,11 +38,17 @@ const UNCLEARED_TITLE_TO_KEY = {
 };
 
 const HACKED_CLEAR_TITLE_TO_KEY = {
-  'Hacked Clears by Date Level Name': 'title',
+  'Level Name': 'title',
   'Upload Date': 'uploadDate',
   Attempts: 'attempts',
   Creator: 'creator',
   'Level ID': 'levelId',
+
+  Style: 'style',
+  Theme: 'theme',
+  Scroll: 'autoscroll',
+  Code: 'countryCode',
+  Timer: 'timer',
 
   Hacker: 'hackedBy',
   'Level Description': 'description',
@@ -51,11 +62,7 @@ const CLEARED_TITLE_TO_KEY = {
 
 const SHEET_NAME_TO_HEADER_TRANSFORMER = {
   [SHEETS[0]]: (title) => UNCLEARED_TITLE_TO_KEY[title] ?? title,
-  // gsheets downloads this CSV really weird because of the double header
-  [SHEETS[1]]: (title) =>
-    title.match(/Remaining: \d* Upload Date/)
-      ? 'uploadDate'
-      : HACKED_CLEAR_TITLE_TO_KEY[title] ?? title,
+  [SHEETS[1]]: (title) => HACKED_CLEAR_TITLE_TO_KEY[title] ?? title,
   [SHEETS[2]]: (title) => CLEARED_TITLE_TO_KEY[title] ?? title,
 };
 
@@ -161,7 +168,12 @@ exports.handler = async (event) => {
   const hackedClearsClean = cleanList(
     hackedClears,
     Object.values(HACKED_CLEAR_TITLE_TO_KEY),
-  ).map((l) => ({ ...l, hacked: true }));
+  ).map((l) => ({
+    ...l,
+    hacked: true,
+    autoscroll: Boolean(l.autoscroll),
+    timer: parseInt(l.timer, 10),
+  }));
   const clearedClean = cleanList(
     clearedLevels,
     Object.values(CLEARED_TITLE_TO_KEY),
