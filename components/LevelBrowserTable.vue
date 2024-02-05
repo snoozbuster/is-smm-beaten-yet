@@ -514,6 +514,7 @@ import { DateTime } from 'luxon';
 import { FilterMatchMode, FilterService } from 'primevue/api';
 import { useStorage } from '@vueuse/core';
 import type { UnclearedLevel } from '~/types/levels';
+import { COUNTRIES } from '~/constants/levelData';
 
 const props = defineProps({
   levels: {
@@ -645,22 +646,7 @@ const themes = [
   },
 ];
 
-const countries = [
-  { value: 'JP', name: 'Japan' },
-  { value: 'US', name: 'United States' },
-  { value: 'NL', name: 'Netherlands' },
-  { value: 'SE', name: 'Sweden' },
-  { value: 'DE', name: 'Germany' },
-  { value: 'FR', name: 'France' },
-  { value: 'ES', name: 'Spain' },
-  { value: 'GB', name: 'Great Britain' },
-  { value: 'NO', name: 'Norway' },
-  { value: 'MX', name: 'Mexico' },
-  { value: 'CA', name: 'Canada' },
-  { value: 'AU', name: 'Australia' },
-  { value: 'AT', name: 'Austria' },
-  { value: 'NZ', name: 'New Zealand' },
-];
+const countries = COUNTRIES;
 
 const levelsByCreator = computed(() => useGroupBy(props.levels, 'creator'));
 

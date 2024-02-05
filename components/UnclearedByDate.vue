@@ -1,7 +1,9 @@
 <template>
   <h3 class="text-xl">Uncleared levels by date</h3>
-  <PrimeTabMenu :model="tabs" />
-  <Bar :data="data" :options="options" />
+  <PrimeTabMenu class="mb-3" :model="tabs" />
+  <ChartContainer>
+    <Bar :data="data" :options="options" />
+  </ChartContainer>
 </template>
 
 <script lang="ts" setup>
@@ -34,6 +36,12 @@ const tabs = [
 const options = computed(() => {
   return {
     responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
     scales: {
       x: {
         type: 'time',

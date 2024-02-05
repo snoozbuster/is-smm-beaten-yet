@@ -1,6 +1,8 @@
 <template>
-  <h3 class="text-xl">Top 10 clearers</h3>
-  <Bar :data="data" :options="options" />
+  <h3 class="text-xl mb-3">Top 10 clearers</h3>
+  <ChartContainer>
+    <Bar :data="data" :options="options" />
+  </ChartContainer>
 </template>
 
 <script lang="ts" setup>
@@ -24,8 +26,13 @@ const props = defineProps({
 
 const options = computed(() => ({
   responsive: true,
-  aspectRatio: 1.5,
+  maintainAspectRatio: false,
   indexAxis: 'y',
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
   scales: {
     y: {
       ticks: {

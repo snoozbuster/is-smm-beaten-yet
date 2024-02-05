@@ -1,6 +1,6 @@
 <template>
   <div class="align-center flex h-full justify-center position-relative w-full">
-    <Doughnut id="foo" :data="data" :options="options" />
+    <Doughnut :data="data" :options="options" />
   </div>
 </template>
 
@@ -38,8 +38,12 @@ const percentClear = computed(() =>
 
 const options = computed(() => ({
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     tooltip: false,
+    legend: {
+      display: false,
+    },
     donut_center_text: {
       text: `${percentClear.value} clear`,
       color: COURSE_WORLD_TEXT,

@@ -23,6 +23,11 @@ export default defineNuxtConfig({
       ripple: true,
       pt: {
         tabMenu: {
+          root: {
+            style: {
+              'min-height': '41px',
+            },
+          },
           menu: {
             class: 'bg-inherit',
           },

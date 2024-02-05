@@ -1,7 +1,9 @@
 <template>
   <h3 class="text-xl">Clears over time</h3>
-  <PrimeTabMenu :model="tabs" />
-  <Line :data="data" :options="options" />
+  <PrimeTabMenu class="mb-3" :model="tabs" />
+  <ChartContainer>
+    <Line :data="data" :options="options" />
+  </ChartContainer>
 </template>
 
 <script lang="ts" setup>
@@ -41,6 +43,7 @@ const tabs = [
 
 const options = computed(() => ({
   responsive: true,
+  maintainAspectRatio: false,
   interaction: {
     mode: 'index',
     intersect: false,
@@ -48,6 +51,9 @@ const options = computed(() => ({
   plugins: {
     tooltip: {
       position: 'average',
+    },
+    legend: {
+      display: false,
     },
   },
   scales: {

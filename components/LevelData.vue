@@ -5,27 +5,39 @@
       :class="!animationStarted && 'invisible'"
     >
       <template v-if="visible || animationStarted">
-        <div class="stat-section">
+        <div class="stat-section min-h-[20vh]">
           <PercentClear
             :uncleared-levels="uncleared.length"
             :cleared-levels="clearSummary.clearedTotal ?? 0"
           />
         </div>
-        <StatSection>
-          <h2 class="text-4xl font-semibold mb-5">
-            {{ formatNumber(uncleared.length) }} levels left to clear
-          </h2>
-          <NuxtLink to="/levels">
-            <PrimeButton
-              label="View uncleared levels"
-              class="w-full text-smm uppercase"
-              size="large"
-              severity="warning"
-            />
-          </NuxtLink>
+        <StatSection class="md:grid-rows-[1fr_2fr_1fr]">
+          <div class="placement"></div>
+          <div class="self-center">
+            <h2 class="text-4xl font-semibold mb-5">
+              {{ formatNumber(uncleared.length) }} levels left to clear
+            </h2>
+            <NuxtLink to="/levels">
+              <PrimeButton
+                label="View uncleared levels"
+                class="w-full text-smm uppercase mb-3"
+                size="large"
+                severity="warning"
+              />
+            </NuxtLink>
+          </div>
+          <div class="self-end">
+            <p class="text-lg mb-3">
+              All you have to do to be a part of Team 0% is to clear one level.
+              Check out the list with the button above, or visit our socials for
+              more info!
+            </p>
+            <h4 class="text-xl font-semibold mb-3">Community links</h4>
+            <SocialLinks />
+          </div>
 
           <div class="md:hidden">
-            <h3 class="text-2xl font-semibold mb-3">More stats</h3>
+            <h3 class="text-2xl font-semibold mt-7">More stats</h3>
           </div>
         </StatSection>
         <StatSection card>
@@ -39,8 +51,8 @@
             :clears-by-person="clearSummary.clearsByPerson ?? {}"
           />
         </StatSection>
-        <StatSection class="w-75 mx-auto">
-          <GetInvolved />
+        <StatSection card>
+          <StylePieChart :uncleared-levels="uncleared" />
         </StatSection>
       </template>
     </div>
@@ -86,9 +98,12 @@ Tooltip.positioners.mouse = function (_elements, eventPosition) {
 } as TooltipPositionerFunction<ChartType>;
 ChartJS.defaults.plugins.tooltip.position = 'mouse';
 
-const StatSection = (props: { card?: boolean }, { slots }: SetupContext) =>
+const StatSection = (
+  props: { card?: boolean },
+  { slots, attrs }: SetupContext,
+) =>
   props.card
-    ? h(CourseWorldCard, slots.default?.())
+    ? h(CourseWorldCard, attrs, slots.default?.())
     : h(
         'div',
         {
