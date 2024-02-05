@@ -563,6 +563,7 @@
 <script setup lang="ts">
 import { FilterMatchMode, FilterService } from 'primevue/api';
 import { useStorage } from '@vueuse/core';
+import { DateTime } from 'luxon';
 import type { UnclearedLevel } from '~/types/levels';
 import { COUNTRIES } from '~/constants/levelData';
 
@@ -683,15 +684,23 @@ function translateLevels(levels: UnclearedLevel[]) {
   });
 }
 
-const preparedLevels = computed(() =>
-  translateLevels(
+const preparedLevels = computed(() => {
+  const localZone = DateTime.local().zone;
+  return translateLevels(
     unref(levelBrowserSettings).includeHackedClears
       ? props.levels
       : props.levels.filter(({ hacked }) => !hacked),
   ).map((level) =>
-    markRaw({ ...level, filterDate: new Date(level.uploadDate) }),
-  ),
-);
+    markRaw({
+      ...level,
+      filterDate: new Date(
+        DateTime.fromISO(level.uploadDate)
+          .setZone(localZone, { keepLocalTime: true })
+          .toString(),
+      ),
+    }),
+  );
+});
 
 const { formatDate, formatNumber, formatPercent } = useFormatters();
 
