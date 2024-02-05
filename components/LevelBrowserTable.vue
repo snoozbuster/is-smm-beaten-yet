@@ -64,6 +64,11 @@
         </span>
 
         <div class="ml-auto">
+          <span v-if="numHiddenColumns" class="mr-3">
+            {{ formatNumber(numHiddenColumns) }}
+            {{ numHiddenColumns === 1 ? 'column' : 'columns' }} hidden
+          </span>
+
           <PrimeButton
             type="button"
             icon="pi pi-cog"
@@ -84,7 +89,7 @@
                 {{ item.label }}
 
                 <PrimeButton
-                  v-if="!allColumnsVisible"
+                  v-if="numHiddenColumns"
                   class="ml-auto"
                   link
                   size="small"
@@ -624,12 +629,12 @@ function columnVisible(field: keyof typeof columns) {
 
 initColumns();
 
-const allColumnsVisible = computed(() =>
-  useEvery(
-    useMapValues(columns, (_, field) =>
-      columnVisible(field as keyof typeof columns),
-    ),
-  ),
+const numHiddenColumns = computed(
+  () =>
+    useFilter(
+      columns,
+      (_, field) => !columnVisible(field as keyof typeof columns),
+    ).length,
 );
 
 const menu = ref();
@@ -685,6 +690,7 @@ function translateLevels(levels: UnclearedLevel[]) {
 }
 
 const preparedLevels = computed(() => {
+  // all my homies hate JS dates
   const localZone = DateTime.local().zone;
   return translateLevels(
     unref(levelBrowserSettings).includeHackedClears
