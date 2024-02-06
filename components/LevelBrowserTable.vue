@@ -1,14 +1,17 @@
 <template>
   <PrimeDataTable
     v-model:filters="filters"
+    v-model:selection="selected"
     :value="preparedLevels"
     data-key="levelId"
     sort-field="uploadDate"
+    selection-mode="single"
+    :row-class="getRowClass"
     :sort-order="1"
     scrollable
     scroll-height="flex"
     :virtual-scroller-options="{
-      itemSize: 104,
+      itemSize: 100,
     }"
     filter-display="row"
     :global-filter-fields="[
@@ -26,14 +29,19 @@
       header: {
         class: 'bg-inherit pt-0 px-0',
       },
+      bodyRow: {
+        style: {
+          height: '100px',
+        },
+      },
       virtualScroller: {
         root: {
-          class: 'min-h-full',
+          class: 'table-scroller-root min-h-full',
         },
       },
     }"
     row-hover
-    @filter="({ filteredValue }) => (numRows = filteredValue.length)"
+    @value-change="(v) => (currentTableView = v)"
   >
     <template #header>
       <div class="flex gap-4">
@@ -53,13 +61,22 @@
             size="small"
           />
         </span>
+        <PrimeButton
+          type="button"
+          icon="pi pi-question"
+          label="Random level"
+          outlined
+          size="small"
+          :disabled="isRandomizing || currentTableView.length < 2"
+          @click="selectRandomLevel()"
+        />
         <span class="text-xl self-center ml-5">
           {{ formatNumber(numRows) }} levels
           <span
             v-show="props.levels.length && numRows !== props.levels.length"
             class="font-normal"
           >
-            ({{ formatPercent(numRows, props.levels.length) }} of all levels)
+            ({{ formatPercent(numRows, props.levels.length, 1) }} of all levels)
           </span>
         </span>
 
@@ -130,7 +147,8 @@
       field="title"
       header="Level name"
       sortable
-      style="min-width: 250px"
+      frozen
+      style="min-width: 300px"
     >
       <template #body="{ data }">
         <PrimeTag
@@ -563,12 +581,32 @@
       </div>
     </template>
   </PrimeDataTable>
+  <PrimeToast
+    position="bottom-center"
+    :pt="{
+      buttonContainer: {
+        class: 'hidden',
+      },
+    }"
+  >
+    <template #message>
+      <div>
+        {{ randomProgress < 100 ? 'Picking a random level...' : 'Done!' }}
+        <PrimeProgressBar
+          v-if="randomProgress < 100"
+          :value="randomProgress"
+          :show-value="false"
+        />
+      </div>
+    </template>
+  </PrimeToast>
 </template>
 
 <script setup lang="ts">
 import { FilterMatchMode, FilterService } from 'primevue/api';
 import { useStorage } from '@vueuse/core';
 import { DateTime } from 'luxon';
+import { useToast } from 'primevue/usetoast';
 import type { UnclearedLevel } from '~/types/levels';
 import { COUNTRIES } from '~/constants/levelData';
 
@@ -608,6 +646,7 @@ const columns = {
 const levelBrowserSettings = useStorage('levelBrowser', {
   includeHackedClears: true,
   enableTranslation: true,
+  disableRouletteAnimation: false,
   visibleColumns: useMapValues(columns, () => true),
 });
 
@@ -651,6 +690,10 @@ const settingsMenuItems = computed(() => [
     prop: 'enableTranslation',
   },
   {
+    label: 'Fast random levels',
+    prop: 'disableRouletteAnimation',
+  },
+  {
     label: 'Columns',
     items: useMap(columns, (title, field) => ({
       label: title,
@@ -660,12 +703,13 @@ const settingsMenuItems = computed(() => [
   },
 ]);
 
-const numRows = ref(0);
+const currentTableView = ref<UnclearedLevel[]>([]);
+const numRows = computed(() => unref(currentTableView).length);
 
 watch(
   toRef(props, 'levels'),
   () => {
-    numRows.value = props.levels.length;
+    currentTableView.value = props.levels;
   },
   { immediate: true },
 );
@@ -821,4 +865,115 @@ function resetFilters() {
 }
 
 resetFilters();
+
+const toast = useToast();
+const selected = ref<UnclearedLevel>();
+const isRandomizing = ref(false);
+const randomProgress = ref<number>(0);
+
+function selectRandomLevel() {
+  let lastIndex: number = selected.value
+    ? // start with current selection index to avoid selecting the same value
+      // that's already selected
+      currentTableView.value.indexOf(selected.value)
+    : -1;
+
+  const isSmallSelection = () => unref(currentTableView).length <= 10;
+  const getRandomIndex = () => {
+    let newIndex: number;
+    do {
+      newIndex = useRandom(0, unref(currentTableView).length - 1);
+    } while (unref(currentTableView).length > 1 && lastIndex === newIndex);
+    return newIndex;
+  };
+
+  const finalIndex = getRandomIndex();
+  const numRandomChoices = unref(levelBrowserSettings).disableRouletteAnimation
+    ? 0
+    : useRandom(22, 26);
+
+  if (isSmallSelection()) {
+    // work backwards to generate starting index based on number of roulette
+    // iterations. there must be a way to do this in a single expression but I
+    // couldn't figure it out :(
+    const startingIndex =
+      finalIndex - (numRandomChoices % unref(currentTableView).length) - 1;
+    lastIndex =
+      startingIndex < 0
+        ? startingIndex + unref(currentTableView).length
+        : startingIndex;
+  }
+  let remainingChoices = numRandomChoices;
+
+  selected.value = undefined;
+  isRandomizing.value = true;
+  if (!unref(levelBrowserSettings).disableRouletteAnimation) {
+    toast.add({ severity: 'success' }); // show progress toast
+  }
+
+  let timer = 0;
+  let timerVelocity = 5;
+  const timerAcceleration = 3;
+
+  // define and invoke recursive function
+  return (function highlightRandomLevel() {
+    let index: number;
+
+    // for small sets, it's more aesthetic to have the roulette wheel forwards
+    // through the rows, wrapping around at the end. for larger sets that's impractical,
+    // so we just flip through random indicies during the animation
+    if (remainingChoices === 0) {
+      index = finalIndex;
+    } else if (isSmallSelection()) {
+      index = (lastIndex + 1) % unref(currentTableView).length;
+    } else {
+      index = getRandomIndex();
+    }
+
+    lastIndex = index;
+    selected.value = unref(currentTableView)[index];
+
+    const tableScrollRoot = document.getElementsByClassName(
+      'table-scroller-root',
+    )[0];
+
+    const viewportHeight =
+      tableScrollRoot.clientHeight - /* height of header area */ 108;
+    const randOffsetFactor = useRandom(-viewportHeight + 100, 0); // choose a random section of the viewport for the level to appear in
+    const scrollPos = Math.min(
+      Math.max(0, index * 100 + randOffsetFactor),
+      unref(currentTableView).length * 100,
+    );
+    tableScrollRoot.scroll({
+      top: scrollPos,
+      behavior: 'instant',
+    });
+
+    if (remainingChoices > 0) {
+      // slow down timer and reset
+      timer += timerVelocity;
+      timerVelocity += timerAcceleration;
+      randomProgress.value =
+        ((numRandomChoices - remainingChoices) / numRandomChoices) * 100;
+      remainingChoices--;
+
+      setTimeout(highlightRandomLevel, timer);
+    } else {
+      randomProgress.value = 100;
+      setTimeout(
+        () => {
+          toast.removeAllGroups();
+          isRandomizing.value = false;
+        },
+        unref(levelBrowserSettings).disableRouletteAnimation ? 0 : 2500,
+      );
+    }
+  })();
+}
+
+function getRowClass(level: UnclearedLevel) {
+  if (level.levelId === selected.value?.levelId) {
+    return 'p-highlight';
+  }
+}
 </script>
