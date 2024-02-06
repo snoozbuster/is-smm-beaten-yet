@@ -5,7 +5,6 @@
     :value="preparedLevels"
     data-key="levelId"
     sort-field="uploadDate"
-    selection-mode="single"
     :row-class="getRowClass"
     :sort-order="1"
     scrollable
