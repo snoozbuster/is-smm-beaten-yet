@@ -14,7 +14,7 @@
       @ready="promptScroll"
     />
     <div
-      class="fixed bottom-0 p-3 left-2/4 transition-opacity"
+      class="fixed bottom-0 pb-3 left-2/4 transition-opacity"
       :class="(!dataReady || scrolled) && 'opacity-0'"
       :inert="!dataReady || scrolled"
     >
