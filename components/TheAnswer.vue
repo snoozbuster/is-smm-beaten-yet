@@ -2,7 +2,8 @@
   <section
     class="text-center grid place-content-center bg-smm-yellow uppercase relative overflow-hidden"
   >
-    <h1 id="the-answer" :class="['text-smm', !animationStarted && 'hidden']">
+    <span class="text-smm sm:text-2xl"> Is Super Mario Maker beaten yet?</span>
+    <h1 id="the-answer" :class="['text-smm', !animationStarted && 'opacity-0']">
       Not yet
     </h1>
     <SocialLinks
@@ -13,13 +14,17 @@
 
 <style lang="scss" scoped>
 #the-answer {
-  font-size: clamp(10rem, 20vw, 20rem);
+  font-size: clamp(8rem, 20vw, 20rem);
   user-select: none;
   clip-path: polygon(0 0, 100% 1%, 100% 100%, 0% 100%);
 }
 
 :deep(.word) {
-  @apply ml-[0.1em] -mr-[0.05em] md:mx-0;
+  @apply ml-[0.1em] -mr-[0.1em] md:mx-0;
+
+  &:first-of-type {
+    @apply ml-[0.15em] md:mx-0;
+  }
 }
 
 :deep(.char) {
