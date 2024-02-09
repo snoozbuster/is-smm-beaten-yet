@@ -13,6 +13,9 @@ export default function useFormatters() {
       }).format(numerator / denominator);
     },
     formatNumber: (n: number) => new Intl.NumberFormat().format(n),
-    formatDate: (d: string) => DateTime.fromISO(d).toFormat('DDD'),
+    formatDate: (d: string, short: boolean = false) =>
+      DateTime.fromISO(d).toLocaleString(
+        short ? DateTime.DATE_MED : DateTime.DATETIME_FULL,
+      ),
   };
 }
