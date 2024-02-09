@@ -79,6 +79,7 @@ useSeoMeta({
     width: 775,
     height: 775,
     alt: 'Mario in a builder outfit',
+    type: 'image/png',
   },
   ogImageSecureUrl: 'https://www.issmmbeatenyet.com/img/mario.png',
   twitterCard: 'summary_large_image',
