@@ -15,14 +15,17 @@
           <div class="placement"></div>
           <div class="self-center">
             <h2
-              class="text-4xl md:text-3xl xl:text-4xl font-semibold mb-5 text-balance"
+              class="text-4xl md:text-3xl xl:text-4xl font-semibold text-balance"
             >
               {{ formatNumber(uncleared.length) }} levels left to clear
             </h2>
+            <span>
+              before the server shutdown on {{ formatDate('2024-04-08') }}
+            </span>
             <NuxtLink to="/levels">
               <PrimeButton
                 label="View uncleared levels"
-                class="w-full text-smm uppercase mb-1"
+                class="w-full text-smm uppercase mt-5 mb-3"
                 size="large"
                 severity="warning"
               />
@@ -53,12 +56,11 @@
             </PrimeDialog>
           </div>
           <div class="self-end">
+            <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
             <p class="mb-2">
-              All you have to do to be a part of Team 0% is to clear one level.
-              Check out the list with the button above, or visit our socials for
-              more info!
+              All you have to do to be a part of Team 0% is clear one level.
+              Every clear counts!
             </p>
-            <h4 class="text-xl font-semibold mb-2">Community links</h4>
             <SocialLinks />
           </div>
 
