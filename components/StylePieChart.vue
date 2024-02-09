@@ -1,6 +1,8 @@
 <template>
-  <h3 class="text-xl">Uncleared levels by {{ tab }}</h3>
-  <PrimeTabMenu class="mb-3" :model="tabs" />
+  <h3 class="text-xl">
+    Uncleared levels by {{ tab === 'countryCode' ? 'country' : tab }}
+  </h3>
+  <PrimeTabMenu class="mb-3 -mx-2 md:mx-0" :model="tabs" />
   <ChartContainer>
     <Pie :data="data" :options="options" />
   </ChartContainer>

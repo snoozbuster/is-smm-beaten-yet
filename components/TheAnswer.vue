@@ -6,7 +6,7 @@
       Not yet
     </h1>
     <SocialLinks
-      class="absolute top-0 right-0 p-7 opacity-50 hover:opacity-100 transition-opacity"
+      class="absolute top-0 right-0 p-7 opacity-50 hover:opacity-100 transition-opacity hidden sm:flex"
     />
   </section>
 </template>
@@ -16,6 +16,10 @@
   font-size: clamp(10rem, 20vw, 20rem);
   user-select: none;
   clip-path: polygon(0 0, 100% 1%, 100% 100%, 0% 100%);
+}
+
+:deep(.word) {
+  @apply ml-[0.1em] -mr-[0.05em] md:mx-0;
 }
 
 :deep(.char) {

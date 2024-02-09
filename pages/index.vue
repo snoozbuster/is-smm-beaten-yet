@@ -1,32 +1,34 @@
 <template>
   <main
-    class="h-screen"
+    class="h-dvh"
     :class="[
       'position-relative',
       dataReady ? 'scroll-snap' : 'overflow-hidden',
     ]"
   >
-    <TheAnswer class="pane h-screen" />
+    <div class="pane relative h-dvh">
+      <TheAnswer class="h-dvh" />
+      <div
+        class="absolute bottom-0 pb-3 left-2/4 transition-opacity"
+        :class="!dataReady && 'opacity-0'"
+        :inert="!dataReady"
+      >
+        <a
+          href="#stats"
+          class="-translate-x-2/4 mb-5 text-xl grid place-content-center relative text-center"
+          @click.prevent="smoothScroll"
+        >
+          <div>See how we're doing</div>
+          <div class="scroll-arrow justify-self-center"></div>
+        </a>
+      </div>
+    </div>
     <LevelData
       id="stats"
-      class="pane"
+      class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh"
       :visible="scrolled"
       @ready="promptScroll"
     />
-    <div
-      class="fixed bottom-0 pb-3 left-2/4 transition-opacity"
-      :class="(!dataReady || scrolled) && 'opacity-0'"
-      :inert="!dataReady || scrolled"
-    >
-      <a
-        href="#stats"
-        class="-translate-x-2/4 mb-5 text-xl grid place-content-center relative text-center"
-        @click.prevent="smoothScroll"
-      >
-        <div>See how we're doing</div>
-        <div class="scroll-arrow justify-self-center"></div>
-      </a>
-    </div>
   </main>
 </template>
 
