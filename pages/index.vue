@@ -75,11 +75,12 @@ useSeoMeta({
   description: 'Click here to find out!',
   ogDescription: 'Click here to find out!',
   ogImage: {
-    url: '/img/mario.png',
+    url: 'https://www.issmmbeatenyet.com/img/mario.png',
     width: 775,
     height: 775,
     alt: 'Mario in a builder outfit',
   },
+  ogImageSecureUrl: 'https://www.issmmbeatenyet.com/img/mario.png',
   twitterCard: 'summary_large_image',
   themeColor: SMM_YELLOW,
 });
