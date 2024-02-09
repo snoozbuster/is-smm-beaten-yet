@@ -6,8 +6,8 @@
       dataReady ? 'scroll-snap' : 'overflow-hidden',
     ]"
   >
-    <div class="pane relative h-dvh">
-      <TheAnswer class="h-dvh" />
+    <div class="pane relative h-svh">
+      <TheAnswer class="h-svh" />
       <div
         class="absolute bottom-0 pb-3 left-2/4 transition-opacity"
         :class="!dataReady && 'opacity-0'"
