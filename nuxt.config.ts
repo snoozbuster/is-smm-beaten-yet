@@ -41,6 +41,7 @@ export default defineNuxtConfig({
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
     exposeConfig: true,
+    editorSupport: true,
     config: {
       theme: {
         colors: {
