@@ -14,25 +14,51 @@
         <StatSection class="md:grid-rows-[1fr_2fr_1fr]">
           <div class="placement"></div>
           <div class="self-center">
-            <h2 class="text-4xl font-semibold mb-5">
+            <h2
+              class="text-4xl md:text-3xl xl:text-4xl font-semibold mb-5 text-balance"
+            >
               {{ formatNumber(uncleared.length) }} levels left to clear
             </h2>
             <NuxtLink to="/levels">
               <PrimeButton
                 label="View uncleared levels"
-                class="w-full text-smm uppercase mb-3"
+                class="w-full text-smm uppercase mb-1"
                 size="large"
                 severity="warning"
               />
             </NuxtLink>
+            <PrimeButton
+              class="text-course-world-contrast"
+              link
+              label="How is this calculated?"
+              @click="showFaq = true"
+            />
+            <PrimeDialog
+              v-model:visible="showFaq"
+              class="w-80"
+              header="FAQ"
+              modal
+            >
+              <p class="mb-4">
+                Percentages calculated out of ~{{ formatNumber(48000) }} levels
+                that were still uncleared when level upload was disabled on
+                {{ formatDate('2021-04-01') }}.
+              </p>
+              <p>
+                Levels are marked as cleared by the community using a
+                custom-made Discord bot built by TheCryptan. Around once a
+                month, the SMM1 API is scraped for any unreported levels that
+                have been cleared.
+              </p>
+            </PrimeDialog>
           </div>
           <div class="self-end">
-            <p class="text-lg mb-3">
+            <p class="mb-2">
               All you have to do to be a part of Team 0% is to clear one level.
               Check out the list with the button above, or visit our socials for
               more info!
             </p>
-            <h4 class="text-xl font-semibold mb-3">Community links</h4>
+            <h4 class="text-xl font-semibold mb-2">Community links</h4>
             <SocialLinks />
           </div>
 
@@ -129,6 +155,8 @@ const props = defineProps({
   },
 });
 
+const showFaq = ref(false);
+
 const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
 const animationStarted = ref(false);
 
@@ -144,7 +172,7 @@ onMounted(async () => {
   emit('ready');
 });
 
-const { formatNumber } = useFormatters();
+const { formatNumber, formatDate } = useFormatters();
 
 watch(toRef(props, 'visible'), () => {
   if (props.visible && !animationStarted.value) {
