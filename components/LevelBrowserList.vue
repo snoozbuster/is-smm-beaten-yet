@@ -6,8 +6,10 @@
     </span>
 
     <div
-      class="bg-course-world-card text-course-world-card-contrast rounded-lg h-full border"
+      class="bg-course-world-card text-course-world-card-contrast rounded-lg h-full border shadow-xl"
     >
+      <div v-if="!levels.length" class="p-3">Loading levels...</div>
+
       <PrimeVirtualScroller :items="levels" :item-size="125">
         <template #item="{ item: data }">
           <div class="p-3 border-b border-collapse">
