@@ -15,7 +15,7 @@ export default function useFormatters() {
     formatNumber: (n: number) => new Intl.NumberFormat().format(n),
     formatDate: (d: string, short: boolean = false) =>
       DateTime.fromISO(d).toLocaleString(
-        short ? DateTime.DATE_MED : DateTime.DATETIME_FULL,
+        short ? DateTime.DATE_MED : DateTime.DATE_FULL,
       ),
   };
 }
