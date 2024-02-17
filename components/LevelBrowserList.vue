@@ -73,16 +73,17 @@
                   <CountryFlag :country-code="data.countryCode" />
                   {{ data.creator }}
                 </div>
-                <div class="text-sm text-gray-400 font-medium text-nowrap">
-                  {{ data.levelId }}
-                  <PrimeButton
-                    class="p-0 align-baseline ml-2"
-                    link
-                    size="small"
+                <div>
+                  <button
+                    class="text-sm text-gray-400 font-medium text-nowrap"
                     @click="levelModal = data.levelId"
                   >
-                    Preview
-                  </PrimeButton>
+                    {{ data.levelId }}
+                    <Icon
+                      class="align-middle ml-1 text-blue-600"
+                      name="icon-park-outline:preview-open"
+                    />
+                  </button>
                 </div>
               </div>
 
