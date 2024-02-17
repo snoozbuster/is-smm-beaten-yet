@@ -10,7 +10,7 @@
         </span>
         <span class="lg:hidden"> Uncleared levels </span>
         <button
-          v-tooltip.focus="'Level list is updated every 2 hours.'"
+          v-tooltip.focus="'Level list is updated every 30 minutes.'"
           class="ml-2 opacity-50 hover:opacity-100 transition-opacity"
         >
           <span class="text-2xl pi pi-question-circle" />
