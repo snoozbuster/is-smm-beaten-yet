@@ -70,7 +70,8 @@
           @click="selectRandomLevel()"
         />
         <span class="text-xl self-center ml-5">
-          {{ formatNumber(numRows) }} levels
+          {{ formatNumber(levels.length) }} levels from
+          {{ formatNumber(creators.length) }} creators
           <span
             v-show="props.levels.length && numRows !== props.levels.length"
             class="font-normal"
@@ -173,14 +174,11 @@
         <span class="text-sm text-gray-400 font-medium text-nowrap">
           {{ data.levelId }}
         </span>
-        <PrimeButton
-          class="p-0 align-baseline ml-2"
-          link
-          size="small"
-          @click="levelModal = data.levelId"
-        >
-          Preview
-        </PrimeButton>
+        <NuxtLink :to="`/levels/${data.levelId}`">
+          <PrimeButton class="p-0 align-baseline ml-2" link size="small">
+            Preview
+          </PrimeButton>
+        </NuxtLink>
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeInputText
@@ -592,11 +590,11 @@
     position="bottom-center"
     :pt="{
       buttonContainer: {
-        class: 'hidden',
+        class: isRandomizing && 'hidden',
       },
     }"
   >
-    <template #message>
+    <template v-if="isRandomizing" #message>
       <div>
         {{ randomProgress < 100 ? 'Picking a random level...' : 'Done!' }}
         <PrimeProgressBar
@@ -607,12 +605,6 @@
       </div>
     </template>
   </PrimeToast>
-  <LevelPreviewModal
-    v-if="levelModal"
-    visible
-    :level-id="levelModal"
-    @update:visible="levelModal = undefined"
-  />
 </template>
 
 <script setup lang="ts">
@@ -641,8 +633,6 @@ FilterService.filters.month = (value: Date, filter: Date) => {
     value.getMonth() === filter.getMonth()
   );
 };
-
-const levelModal = ref<string>();
 
 const columns = {
   title: 'Level name',

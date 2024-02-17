@@ -1,84 +1,64 @@
 <template>
-  <PrimeDialog
-    class="w-screen lg:w-3/4"
-    :header="`Preview for ${levelId}`"
-    :visible="visible"
-    :draggable="false"
-    modal
-    maximizable
-    :pt="{
-      content: {
-        class: 'flex flex-col',
-      },
-    }"
-    @update:visible="(v) => $emit('update:visible', v)"
-  >
-    <PrimeSkeleton
-      v-if="!worldData.main && !error"
-      width="100%"
-      height="432px"
-    />
-    <div v-else-if="!worldData.main && error" class="text-xl">
-      <Icon name="material-symbols:error" class="text-red-700" /> There was an
-      error loading the preview. Please confirm your internet connection and try
-      again. If the error continues, the Discord may be able to help.
+  <PrimeSkeleton v-if="!worldData.main && !error" width="100%" height="432px" />
+  <div v-else-if="!worldData.main && error" class="text-xl">
+    <Icon name="material-symbols:error" class="text-red-700" /> There was an
+    error loading the preview. Please confirm your internet connection and try
+    again. If the error continues, the Discord may be able to help.
+  </div>
+  <div v-show="worldData.main" class="h-full min-h-0 flex flex-col">
+    <div class="relative mb-3">
+      <PrimeTabMenu
+        v-model:activeIndex="activeTabIndex"
+        class="hidden sm:block"
+        :model="tabs"
+      />
+      <PrimeDropdown
+        v-model="tab"
+        class="sm:hidden"
+        :options="tabs"
+        option-label="label"
+        option-value="value"
+        placeholder="Tile size"
+        @change="drawWorlds"
+      />
+      <PrimeDropdown
+        v-model="tileSize"
+        class="absolute right-0 bottom-0 sm:mb-1"
+        :options="tileSizes"
+        option-label="label"
+        option-value="value"
+        placeholder="Tile size"
+        @change="drawWorlds"
+      />
     </div>
-    <div v-show="worldData.main" class="h-full min-h-0 flex flex-col">
-      <div class="relative mb-3">
-        <PrimeTabMenu
-          v-model:activeIndex="activeTabIndex"
-          class="hidden sm:block"
-          :model="tabs"
-        />
-        <PrimeDropdown
-          v-model="tab"
-          class="sm:hidden"
-          :options="tabs"
-          option-label="label"
-          option-value="value"
-          placeholder="Tile size"
-          @change="drawWorlds"
-        />
-        <PrimeDropdown
-          v-model="tileSize"
-          class="absolute right-0 bottom-0 sm:mb-1"
-          :options="tileSizes"
-          option-label="label"
-          option-value="value"
-          placeholder="Tile size"
-          @change="drawWorlds"
-        />
-      </div>
 
-      <div
-        id="course-display-main"
-        class="overflow-scroll h-full min-h-0 position-relative cursor-move"
-        :class="tab !== 'main' && 'hidden'"
-        @mousemove="handleMouseover"
-        @click="handleClick"
-      ></div>
-      <div
-        id="course-display-sub"
-        class="overflow-scroll h-full min-h-0 position-relative cursor-move"
-        :class="tab !== 'sub' && 'hidden'"
-        @mousemove="handleMouseover"
-        @click="handleClick"
-      ></div>
+    <div
+      id="course-display-main"
+      class="overflow-scroll h-full min-h-0 position-relative cursor-move"
+      :class="tab !== 'main' && 'hidden'"
+      @mousemove="handleMouseover"
+      @click="handleClick"
+    ></div>
+    <div
+      id="course-display-sub"
+      class="overflow-scroll h-full min-h-0 position-relative cursor-move"
+      :class="tab !== 'sub' && 'hidden'"
+      @mousemove="handleMouseover"
+      @click="handleClick"
+    ></div>
 
-      <p class="text-slate-600 italic text-sm mt-1">
-        Click and drag to pan. Click or tap doors and pipes to move between
-        pairs.
-        <button
-          v-tooltip.focus="
-            `Tag snooz in the Discord with the level ID and description of the inaccuracy. Include a screenshot (or picture, I'm not judgmental) from the game if possible.`
-          "
-          class="border-dotted border-b"
-        >
-          Inaccurate?
-        </button>
-      </p>
-    </div>
-  </PrimeDialog>
+    <p class="text-slate-600 italic text-sm mt-1">
+      Click and drag to pan. Click or tap doors and pipes to move between pairs.
+      <button
+        v-tooltip.focus="
+          `Tag snooz in the Discord with the level ID and description of the inaccuracy. Include a screenshot (or picture, I'm not judgmental) from the game if possible.`
+        "
+        class="border-dotted border-b"
+      >
+        Inaccurate?
+      </button>
+    </p>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -117,7 +97,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(['update:visible']);
+const emit = defineEmits(['not-found']);
 
 const levelUrl = computed(
   () => `${DATA_ROOT_URL}/course-data/${props.levelId}`,
@@ -198,13 +178,21 @@ const viewer = new CourseViewer();
 
 const error = ref(false);
 
+const toast = useToast();
+
 onMounted(async () => {
+  const getLevelFile = async (url: string) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to GET level file', { cause: response });
+    }
+    return await response.blob();
+  };
+
   try {
     const [main, sub] = await Promise.all([
-      (async () =>
-        (await fetch(`${unref(levelUrl)}/course_data.cdt`)).blob())(),
-      (async () =>
-        (await fetch(`${unref(levelUrl)}/course_data_sub.cdt`)).blob())(),
+      getLevelFile(`${unref(levelUrl)}/course_data.cdt`),
+      getLevelFile(`${unref(levelUrl)}/course_data_sub.cdt`),
     ]);
 
     viewer.read(main, (err: boolean, course: Course, objs: CourseObject[]) => {
@@ -231,6 +219,20 @@ onMounted(async () => {
       drawWorld('sub');
     });
   } catch (e) {
+    if (
+      e instanceof Error &&
+      e.cause instanceof Response &&
+      [403, 404].includes(e.cause.status)
+    ) {
+      emit('not-found');
+      toast.add({
+        severity: 'error',
+        summary: 'Not found',
+        detail: `No level preview for ${props.levelId} was found.`,
+        life: 4000,
+      });
+      return;
+    }
     console.error(e);
     error.value = true;
   }
@@ -315,6 +317,7 @@ function getObjectIntersections({ x, y }: { x: number; y: number }) {
         y < (obj.y + obj.height) * size
       );
     }
+    return false;
   });
 }
 

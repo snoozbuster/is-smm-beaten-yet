@@ -25,6 +25,7 @@
         <LevelBrowserList :levels="uncleared" />
       </div>
     </div>
+    <NuxtPage />
   </div>
 </template>
 

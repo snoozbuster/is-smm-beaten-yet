@@ -74,16 +74,16 @@
                   {{ data.creator }}
                 </div>
                 <div>
-                  <button
+                  <NuxtLink
                     class="text-sm text-gray-400 font-medium text-nowrap"
-                    @click="levelModal = data.levelId"
+                    :to="`/levels/${data.levelId}`"
                   >
                     {{ data.levelId }}
                     <Icon
                       class="align-middle ml-1 text-blue-600"
                       name="icon-park-outline:preview-open"
                     />
-                  </button>
+                  </NuxtLink>
                 </div>
               </div>
 
@@ -128,13 +128,6 @@
         </template>
       </PrimeVirtualScroller>
     </div>
-
-    <LevelPreviewModal
-      v-if="levelModal"
-      visible
-      :level-id="levelModal"
-      @update:visible="levelModal = undefined"
-    />
   </div>
 </template>
 
@@ -151,8 +144,6 @@ const props = defineProps({
 const { formatNumber, formatDate } = useFormatters();
 
 // copied
-const levelModal = ref<string>();
-
 function shouldShowTranslation(level: UnclearedLevel) {
   return (
     (level.countryCode === 'JP' || level.hacked) &&
