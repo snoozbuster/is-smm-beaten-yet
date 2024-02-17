@@ -21,25 +21,27 @@ html, body {
   background-color: inherit;
 }
 
-.p-menuitem-link:not(:hover), .p-highlight .p-menuitem-link {
-  background-color: transparent;
-}
+@layer primevue-overrides {
+  .p-menuitem-link:not(:hover), .p-highlight .p-menuitem-link {
+    background-color: transparent;
+  }
 
-.p-datepicker {
-  // fixes datepicker in table filter being extremely squashed
-  width: unset !important;
-}
+  .p-datepicker {
+    // fixes datepicker in table filter being extremely squashed
+    width: unset !important;
+  }
 
-.p-inputtext, .p-multiselect-label, .p-button-sm {
-  padding: 4px 8px;
-}
-.p-input-icon-left > .p-inputtext {
-  padding-left: 2.5rem;
-}
+  .p-inputtext, .p-multiselect-label, .p-button-sm {
+    padding: 4px 8px;
+  }
+  .p-input-icon-left > .p-inputtext {
+    padding-left: 2.5rem;
+  }
 
-.p-frozencolumn {
-  z-index: 10;
-}
-.p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
-  background-color: #f3f5b7;
+  .p-frozencolumn {
+    z-index: 10;
+  }
+  .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
+    background-color: #f3f5b7;
+  }
 }
