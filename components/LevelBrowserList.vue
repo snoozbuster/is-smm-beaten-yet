@@ -9,8 +9,22 @@
       class="bg-course-world-card text-course-world-card-contrast rounded-lg h-full border shadow-xl"
     >
       <div v-if="!levels.length" class="p-3">Loading levels...</div>
-
-      <PrimeVirtualScroller :items="levels" :item-size="125">
+      <div v-else>
+        <span class="p-input-icon-left w-full p-2">
+          <i class="pi pi-search" />
+          <PrimeInputText
+            v-model="globalFilter"
+            placeholder="Search by level ID, title, creator, and more"
+            size="small"
+            :pt="{
+              root: {
+                class: 'w-full',
+              },
+            }"
+          />
+        </span>
+      </div>
+      <PrimeVirtualScroller :items="filteredLevels" :item-size="125">
         <template #item="{ item: data }">
           <div class="p-3 border-b border-collapse">
             <PrimeTag
@@ -142,6 +156,27 @@ const props = defineProps({
 });
 
 const { formatNumber, formatDate } = useFormatters();
+
+const globalFilter = ref('');
+
+const filteredLevels = computed(() =>
+  !unref(globalFilter)
+    ? props.levels
+    : props.levels.filter((level) => {
+        return useSome(
+          useCompact([
+            level.levelId,
+            level.title,
+            level.titleTranslation,
+            level.creator,
+            level.countryCode,
+            level.style,
+            level.theme,
+          ]),
+          (searchText) => searchText.includes(unref(globalFilter)),
+        );
+      }),
+);
 
 // copied
 function shouldShowTranslation(level: UnclearedLevel) {

@@ -14,6 +14,7 @@
     }"
     filter-display="row"
     :global-filter-fields="[
+      'levelId',
       'title',
       'titleTranslation',
       'creator',
@@ -53,10 +54,13 @@
           @click="resetFilters()"
         />
         <span class="p-input-icon-left">
-          <i class="pi pi-search" />
+          <i class="pi pi-search ml-2" />
           <PrimeInputText
             v-model="filters['global'].value"
-            placeholder="Keyword search"
+            v-tooltip.bottom="
+              `Search by level ID, title, creator, country code, style, or theme`
+            "
+            placeholder="Find any level..."
             size="small"
           />
         </span>
