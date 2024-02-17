@@ -75,6 +75,14 @@
                 </div>
                 <div class="text-sm text-gray-400 font-medium text-nowrap">
                   {{ data.levelId }}
+                  <PrimeButton
+                    class="p-0 align-baseline ml-2"
+                    link
+                    size="small"
+                    @click="levelModal = data.levelId"
+                  >
+                    Preview
+                  </PrimeButton>
                 </div>
               </div>
 
@@ -119,6 +127,13 @@
         </template>
       </PrimeVirtualScroller>
     </div>
+
+    <LevelPreviewModal
+      v-if="levelModal"
+      visible
+      :level-id="levelModal"
+      @update:visible="levelModal = undefined"
+    />
   </div>
 </template>
 
@@ -135,6 +150,8 @@ const props = defineProps({
 const { formatNumber, formatDate } = useFormatters();
 
 // copied
+const levelModal = ref<string>();
+
 function shouldShowTranslation(level: UnclearedLevel) {
   return (
     (level.countryCode === 'JP' || level.hacked) &&
