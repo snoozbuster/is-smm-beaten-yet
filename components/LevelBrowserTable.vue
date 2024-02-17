@@ -170,13 +170,17 @@
           </span>
           <span v-else>{{ data.title }}</span>
         </div>
-        <a
-          class="text-sm text-gray-400 font-medium text-nowrap"
-          href="#"
+        <span class="text-sm text-gray-400 font-medium text-nowrap">
+          {{ data.levelId }}
+        </span>
+        <PrimeButton
+          class="p-0 align-baseline ml-2"
+          link
+          size="small"
           @click="levelModal = data.levelId"
         >
-          {{ data.levelId }}
-        </a>
+          Preview
+        </PrimeButton>
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeInputText
