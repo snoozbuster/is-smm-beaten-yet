@@ -219,7 +219,7 @@ BlockDraw._defitions = {
     extend: function (courseObject) {
       const width = courseObject.width;
       const height = courseObject.height;
-      const direction = (courseObject.flags & 0x60) / 0x20;
+      const direction = courseObject.direction;
       let tt;
       /* {0} right */
       if (direction === 0) {

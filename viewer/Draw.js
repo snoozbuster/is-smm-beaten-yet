@@ -30,7 +30,7 @@ export class Draw {
     this._element = _element;
     this._canvas = null;
     this._context = null;
-    this._canvasId = 'courseDraw';
+    this._canvasId = `${_element}_courseDraw`;
     /* course definitions */
     this._widthBlock = _course.widthBlock;
     this._heightBlock = _course.heightBlock;
@@ -69,7 +69,7 @@ export class Draw {
     /* struct the draw table */
     const html = document.createElement('div');
     html.classList.add('courseDrawMain');
-    html.classList.add('rounded');
+    html.classList.add('relative');
     const canvas = document.createElement('canvas');
     canvas.id = this._canvasId;
     canvas.width = this._widthBlock * this._base;
@@ -162,17 +162,18 @@ export class Draw {
           }
         });
 
-        const doorsPipesHash = {};
-        doorsPipesHash['0'] = 'A';
-        doorsPipesHash['1'] = 'B';
-        doorsPipesHash['2'] = 'C';
-        doorsPipesHash['3'] = 'D';
-        doorsPipesHash['4'] = 'E';
-        doorsPipesHash['5'] = 'F';
-        doorsPipesHash['6'] = 'G';
-        doorsPipesHash['7'] = 'H';
-        doorsPipesHash['8'] = 'I';
-        doorsPipesHash['9'] = 'J';
+        const doorsPipesHash = {
+          0: 'A',
+          1: 'B',
+          2: 'C',
+          3: 'D',
+          4: 'E',
+          5: 'F',
+          6: 'G',
+          7: 'H',
+          8: 'I',
+          9: 'J',
+        };
         remainingObjs.forEach(function (courseObject) {
           const type = courseObject.type;
           if ($this._blocks.hasDraw(type)) {
@@ -199,7 +200,7 @@ export class Draw {
 
             if (type === 9) {
               // Pipe Labelling
-              let PR = (Math.floor(courseObject.flags / 0x100000) % 0x10) - 1;
+              let PR = courseObject.pipeLink;
               PR = PR.toString();
               if (PR != '-1') {
                 // Real Pipe
@@ -215,7 +216,7 @@ export class Draw {
             $this._drawObjectFromTheme($this._monsters, courseObject);
             if (type === 55) {
               // Door Labelling
-              let PR = Math.floor(courseObject.flags / 0x200000) % 2;
+              let PR = courseObject.doorLink;
               PR = PR.toString();
               const doorText = doorsPipesHash[PR];
               $this._drawText(

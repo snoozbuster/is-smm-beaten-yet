@@ -46,6 +46,10 @@ export class CourseObject {
     this.effect = _objectData.effect;
     this.transform = _objectData.transform;
     this.childTransform = _objectData.childTransform;
+
+    if (_objectData.type in CourseObject.extensions) {
+      CourseObject.extensions[_objectData.type](this);
+    }
   }
 
   /**
@@ -70,3 +74,16 @@ export class CourseObject {
     return false;
   }
 }
+
+CourseObject.extensions = {
+  // pipe
+  9: (courseObject) => {
+    courseObject.direction = (courseObject.flags & 0x60) / 0x20;
+    courseObject.pipeLink =
+      (Math.floor(courseObject.flags / 0x100000) % 0x10) - 1;
+  },
+  // door
+  55: (courseObject) => {
+    courseObject.doorLink = Math.floor(courseObject.flags / 0x200000) % 2;
+  },
+};
