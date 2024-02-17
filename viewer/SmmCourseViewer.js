@@ -189,6 +189,11 @@ export default class SmmCourseViewer {
     $this._courseInterpreter(_rawHex, function (course) {
       const objects = [];
       /* read objects - max 2600 objects */
+      if (course.objectCount > 2600) {
+        throw new Error(
+          `Corrupted course file; object count is ${course.objectCount}`,
+        );
+      }
       for (let i = 0; i < course.objectCount; i++) {
         const pos = 0xf0 + 32 * i;
         const courseObject = $this._objectInterpreter(_rawHex, pos);
