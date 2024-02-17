@@ -170,9 +170,13 @@
           </span>
           <span v-else>{{ data.title }}</span>
         </div>
-        <div class="text-sm text-gray-400 font-medium text-nowrap">
+        <a
+          class="text-sm text-gray-400 font-medium text-nowrap"
+          href="#"
+          @click="levelModal = data.levelId"
+        >
           {{ data.levelId }}
-        </div>
+        </a>
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeInputText
@@ -599,6 +603,12 @@
       </div>
     </template>
   </PrimeToast>
+  <LevelPreviewModal
+    v-if="levelModal"
+    visible
+    :level-id="levelModal"
+    @update:visible="levelModal = undefined"
+  />
 </template>
 
 <script setup lang="ts">
@@ -627,6 +637,8 @@ FilterService.filters.month = (value: Date, filter: Date) => {
     value.getMonth() === filter.getMonth()
   );
 };
+
+const levelModal = ref<string>();
 
 const columns = {
   title: 'Level name',
