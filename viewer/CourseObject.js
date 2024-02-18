@@ -1,3 +1,16 @@
+export const DOOR_SUBTYPES = {
+  Normal: 0,
+  PSwitch: 1,
+  Key: 2,
+};
+
+export const PIPE_DIRECTIONS = {
+  Top: 2,
+  Right: 0,
+  Bottom: 3,
+  Left: 1,
+};
+
 /**
  * @module CourseObject
  * This class is a struct for course objects.
@@ -85,5 +98,6 @@ CourseObject.extensions = {
   // door
   55: (courseObject) => {
     courseObject.doorLink = Math.floor(courseObject.flags / 0x200000) % 2;
+    courseObject.doorType = (courseObject.flags >> 18) & 3;
   },
 };

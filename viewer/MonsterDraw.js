@@ -487,7 +487,7 @@ MonsterDraw._defitions = {
   },
   55: {
     extend: function (courseObject) {
-      const doorType = (courseObject.flags >> 18) & 3;
+      const doorType = courseObject.doorType;
       /* P door */
       if (doorType === 1) {
         return MonsterDraw._extendForObjects([], 1, 2, 5, 17);

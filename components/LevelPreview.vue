@@ -356,7 +356,11 @@ const objectHandlers = {
   Door: {
     onClick: (obj: MonsterObject, objects: CourseObject[]) => {
       const otherDoor = objects.find(
-        (o) => o !== obj && o.name === 'Door' && o.doorLink === obj.doorLink,
+        (o) =>
+          o !== obj &&
+          o.name === 'Door' &&
+          o.doorLink === obj.doorLink &&
+          o.doorType === obj.doorType,
       );
 
       if (otherDoor) {
@@ -364,7 +368,7 @@ const objectHandlers = {
       }
     },
   },
-  Dokan: {
+  Dokan /* Pipe */: {
     hasInteraction: (obj: BlockObject) => {
       return obj.pipeLink !== -1;
     },
@@ -420,8 +424,6 @@ function handleClick(event: MouseEvent) {
   const intersections = getObjectIntersections(coords);
 
   const target = intersections.find(({ name }) => name in objectHandlers);
-
-  console.log(target, intersections);
 
   if (
     target?.name in objectHandlers &&
