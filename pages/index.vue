@@ -3,7 +3,7 @@
     class="h-dvh"
     :class="[
       'position-relative',
-      dataReady ? 'scroll-snap' : 'overflow-hidden',
+      dataReady || forceStatsScroll ? 'scroll-snap' : 'overflow-hidden',
     ]"
   >
     <div class="pane relative h-svh">
@@ -86,8 +86,10 @@ useSeoMeta({
   themeColor: SMM_YELLOW,
 });
 
+const route = useRoute();
 const dataReady = ref(false);
 const scrolled = ref(false);
+const forceStatsScroll = ref(false);
 
 let observer: IntersectionObserver;
 
@@ -103,6 +105,7 @@ function smoothScroll() {
 }
 
 onMounted(() => {
+  forceStatsScroll.value = route.hash === '#stats';
   nextTick(() => {
     observer = new IntersectionObserver(
       (entries) => {
@@ -115,7 +118,14 @@ onMounted(() => {
       },
     );
 
-    observer.observe(document.getElementById('stats')!);
+    const stats = document.getElementById('stats')!;
+    if (forceStatsScroll.value) {
+      stats.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrolled.value = true;
+      setTimeout(() => observer.observe(stats), 500);
+    } else {
+      observer.observe(stats);
+    }
   });
 });
 </script>

@@ -2,9 +2,9 @@
   <div class="bg-course-world text-course-world-contrast">
     <div
       class="grid p-7 grid-flow-row grid-rows-1 md:grid-rows-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full h-full gap-7 overflow-hidden"
-      :class="!animationStarted && 'invisible'"
+      :class="!visible && !animationStarted && 'invisible'"
     >
-      <template v-if="visible || animationStarted">
+      <template v-if="animationStarted">
         <div class="stat-section min-h-[20vh]">
           <PercentClear
             :uncleared-levels="uncleared.length"
@@ -87,6 +87,12 @@
           <StylePieChart :uncleared-levels="uncleared" />
         </StatSection>
       </template>
+      <template v-else>
+        <PrimeSkeleton v-for="i in 2" :key="i" class="w-full" height="100%" />
+        <StatSection v-for="i in 4" :key="i" class="force-visible" card>
+          <PrimeSkeleton class="w-full" height="100%" />
+        </StatSection>
+      </template>
     </div>
   </div>
 </template>
@@ -96,6 +102,10 @@
   opacity: 0;
   transform: translateY(100%);
   transition: transform, opacity;
+
+  &.force-visible {
+    opacity: 1;
+  }
 }
 </style>
 
@@ -112,6 +122,7 @@ import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
 import type { ClearedLevelStatSummary } from '~/types/levels';
 import { DATA_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
 import CourseWorldCard from '~/components/CourseWorldCard';
+import { PrimeSkeleton } from '#components';
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
@@ -161,12 +172,29 @@ const props = defineProps({
   },
 });
 
-const showFaq = ref(false);
-
-const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
 const animationStarted = ref(false);
 
+const showFaq = ref(false);
+const ready = ref(false);
+
+const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
+
 const { uncleared, load } = useUnclearedLevels();
+
+function startAnimation() {
+  if (unref(ready) && props.visible && !animationStarted.value) {
+    animationStarted.value = true;
+
+    nextTick(() => {
+      gsap.to('.stat-section', {
+        y: 0,
+        opacity: 1,
+        stagger: 0.3,
+        duration: 0.3,
+      });
+    });
+  }
+}
 
 onMounted(async () => {
   [clearSummary.value, uncleared.value] = await Promise.all([
@@ -175,23 +203,12 @@ onMounted(async () => {
     load(),
   ]);
 
+  ready.value = true;
   emit('ready');
+  startAnimation();
 });
 
 const { formatNumber, formatDate } = useFormatters();
 
-watch(toRef(props, 'visible'), () => {
-  if (props.visible && !animationStarted.value) {
-    nextTick(() => {
-      gsap.to('.stat-section', {
-        y: 0,
-        opacity: 1,
-        stagger: 0.3,
-        duration: 0.3,
-      });
-
-      animationStarted.value = true;
-    });
-  }
-});
+watch(toRef(props, 'visible'), startAnimation);
 </script>
