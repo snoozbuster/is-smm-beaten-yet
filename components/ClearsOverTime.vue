@@ -2,9 +2,7 @@
   <h3 class="text-xl">
     Clears over time
     <button
-      v-tooltip.focus="
-        'Spikes commonly occur about once a month when the level list is scraped to check for unrecorded clears'
-      "
+      v-tooltip.focus="'Clear dates are recorded in the GMT time zone'"
       class="ml-2 opacity-50 hover:opacity-100"
     >
       <span class="pi pi-question-circle"></span>
