@@ -48,6 +48,9 @@ const CLEARED_TITLE_TO_KEY = {
   'Date Cleared': 'dateCleared',
 };
 
+// known hackers. no soup for you
+const BANNED_NNIDS = new Set(['Zappy7', 'BechPlayz69']);
+
 async function getS3File(s3, filename) {
   const response = await s3.send(
     new GetObjectCommand({
@@ -193,20 +196,25 @@ exports.handler = async (event) => {
     };
   };
 
+  const joinedClears = clearedClean
+    .map((level) => ({
+      ...level,
+      ...parseLevelCommon(level),
+      ...getLevelMeta(level),
+      ...getClearDate(level),
+    }))
+    .concat(JSON.parse(await legacyClearsPromise));
+
   const clearedFinal = _.uniqBy(
     _.sortBy(
-      clearedClean
-        .map((level) => ({
-          ...level,
-          ...parseLevelCommon(level),
-          ...getLevelMeta(level),
-          ...getClearDate(level),
-        }))
-        .concat(JSON.parse(await legacyClearsPromise)),
+      joinedClears.filter(({ creator }) => !BANNED_NNIDS.has(creator)),
       'dateCleared',
     ),
     'levelId',
   );
+
+  const filteredClearCount = joinedClears.length - clearedFinal.length;
+  console.log('Removed', filteredClearCount, 'cleared from banned NNIDs');
 
   console.log(
     'UNCLEARED:',
@@ -287,12 +295,14 @@ exports.handler = async (event) => {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
+    body: {
       processedUncleareds: unclearedClean.length,
       processedCleareds: clearedLevels.length,
 
       totalUncleared: unclearedFinal.length,
       totalCleared: clearedFinal.length,
-    }),
+
+      filteredClears: filteredClearCount,
+    },
   };
 };
