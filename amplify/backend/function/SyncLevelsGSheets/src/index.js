@@ -236,6 +236,18 @@ exports.handler = async (event) => {
     'length',
   );
 
+  const dailyWinners = _.mapValues(
+    _.groupBy(clearedFinal, 'dateCleared'),
+    (levels) => {
+      const clearsByCreator = _.countBy(levels, 'firstClearerNnid');
+      const winner = _.orderBy(_.toPairs(clearsByCreator), '1', 'desc')[0];
+      return {
+        creator: winner[0],
+        levels: winner[1],
+      };
+    },
+  );
+
   const clearsByPerson = _.mapValues(
     _.groupBy(clearedFinal, 'firstClearerNnid'),
     'length',
@@ -244,8 +256,11 @@ exports.handler = async (event) => {
   const clearStats = {
     clearsByDate,
     clearsByPerson,
+    dailyWinners,
     clearedTotal: clearedFinal.length,
   };
+
+  console.log(dailyWinners);
 
   if (!event.localrun) {
     await uploadToS3(s3, 'levels/clear_summary.json', clearStats);
