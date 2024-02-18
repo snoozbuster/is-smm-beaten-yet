@@ -659,7 +659,10 @@ const levelBrowserSettings = useStorage('levelBrowser', {
   includeHackedClears: true,
   enableTranslation: true,
   disableRouletteAnimation: false,
-  visibleColumns: useMapValues(columns, () => true),
+  visibleColumns: useMapValues(
+    columns,
+    (_, columnId) => columnId !== 'autoscroll',
+  ),
 });
 
 function initColumns(reset = false) {
@@ -708,7 +711,7 @@ const settingsMenuItems = computed(() => [
   {
     label: 'Columns',
     items: useMap(columns, (title, field) => ({
-      label: title,
+      label: field === 'autoscroll' ? `${title} (All clear!)` : title,
       field,
       disabled: field === 'title',
     })),
