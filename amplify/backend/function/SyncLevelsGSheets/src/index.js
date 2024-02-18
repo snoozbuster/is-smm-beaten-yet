@@ -260,8 +260,6 @@ exports.handler = async (event) => {
     clearedTotal: clearedFinal.length,
   };
 
-  console.log(dailyWinners);
-
   if (!event.localrun) {
     await uploadToS3(s3, 'levels/clear_summary.json', clearStats);
   } else {
