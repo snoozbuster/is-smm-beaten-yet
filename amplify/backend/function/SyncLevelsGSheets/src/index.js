@@ -193,16 +193,19 @@ exports.handler = async (event) => {
     };
   };
 
-  const clearedFinal = _.sortBy(
-    clearedClean
-      .map((level) => ({
-        ...level,
-        ...parseLevelCommon(level),
-        ...getLevelMeta(level),
-        ...getClearDate(level),
-      }))
-      .concat(JSON.parse(await legacyClearsPromise)),
-    'dateCleared',
+  const clearedFinal = _.uniqBy(
+    _.sortBy(
+      clearedClean
+        .map((level) => ({
+          ...level,
+          ...parseLevelCommon(level),
+          ...getLevelMeta(level),
+          ...getClearDate(level),
+        }))
+        .concat(JSON.parse(await legacyClearsPromise)),
+      'dateCleared',
+    ),
+    'levelId',
   );
 
   console.log(
