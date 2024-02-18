@@ -41,7 +41,7 @@ html, body {
   .p-frozencolumn {
     z-index: 10;
   }
-  .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover {
+  .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover, tr:focus {
     background-color: #f3f5b7;
   }
 }
