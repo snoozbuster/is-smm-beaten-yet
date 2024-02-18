@@ -238,10 +238,14 @@ exports.handler = async (event) => {
 
   const getWinner = (levels) => {
     const clearsByCreator = _.countBy(levels, 'firstClearerNnid');
-    const winner = _.orderBy(_.toPairs(clearsByCreator), '1', 'desc')[0];
+    const ranked = _.orderBy(_.toPairs(clearsByCreator), '1', 'desc');
+    const winners = _.takeWhile(
+      ranked,
+      ([_, levels]) => levels === ranked[0][1],
+    );
     return {
-      creator: winner[0],
-      levels: winner[1],
+      creators: _.map(winners, '0'),
+      levels: winners[0][1],
     };
   };
 
