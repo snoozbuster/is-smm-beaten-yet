@@ -72,7 +72,10 @@
           <UnclearedByDate :uncleared-levels="uncleared" />
         </StatSection>
         <StatSection card>
-          <ClearsOverTime :clears-by-date="clearSummary.clearsByDate ?? {}" />
+          <ClearsOverTime
+            :uncleared-level-count="uncleared.length"
+            :clears-by-date="clearSummary.clearsByDate ?? {}"
+          />
         </StatSection>
         <StatSection card>
           <ClearLeaderboard

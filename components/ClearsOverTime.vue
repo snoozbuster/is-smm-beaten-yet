@@ -37,6 +37,10 @@ ChartJS.register(
 );
 
 const props = defineProps({
+  unclearedLevelCount: {
+    type: Number,
+    required: true,
+  },
   clearsByDate: {
     type: Object as PropType<Record<string, number>>,
     required: true,
@@ -84,6 +88,17 @@ const options = computed(() => ({
         tooltipFormat: 'DDD',
       },
     },
+    yClears: {
+      type: 'linear',
+      position: 'left',
+    },
+    yRemaining: {
+      type: 'linear',
+      position: 'right',
+      grid: {
+        drawOnChartArea: false,
+      },
+    },
   },
 }));
 
@@ -93,18 +108,37 @@ const orderedDays = computed(() =>
   ),
 );
 
-const weeklyData = computed(() => {
+const remainingLevelsByDate = computed(() => {
+  const remainingByDate: Record<string, number> = {};
+  const dates = [...unref(orderedDays)];
+  let lastDay = dates.pop()!;
+  remainingByDate[lastDay] =
+    props.clearsByDate[lastDay] + props.unclearedLevelCount;
+  while (dates.length) {
+    const currentDay = dates.pop()!;
+    remainingByDate[currentDay] =
+      remainingByDate[lastDay] + props.clearsByDate[currentDay];
+    lastDay = currentDay;
+  }
+
+  return remainingByDate;
+});
+
+const computeWeeklyData = (datapoints: Record<string, number>, sum = true) => {
   return useMapValues(
     useGroupBy(unref(orderedDays), (day) =>
       DateTime.fromISO(day).startOf('week').toISOWeekDate(),
     ),
-    (days) => useSumBy(days, (d) => props.clearsByDate[d]),
+    (days) =>
+      sum ? useSumBy(days, (d) => datapoints[d]) : datapoints[days[0]],
   );
-});
+};
 
 const data = computed(() => {
   const datapoints =
-    unref(tab) === 'daily' ? props.clearsByDate : unref(weeklyData);
+    unref(tab) === 'daily'
+      ? props.clearsByDate
+      : computeWeeklyData(props.clearsByDate);
   const leftEdge =
     unref(tab) === 'daily'
       ? DateTime.now().minus({ month: 1 }).toISODate()
@@ -115,6 +149,11 @@ const data = computed(() => {
   const days = useSortBy(Object.keys(datapoints)).filter(
     (dateCleared) => dateCleared >= leftEdge,
   );
+
+  const remainingDatapoints =
+    unref(tab) === 'daily'
+      ? unref(remainingLevelsByDate)
+      : computeWeeklyData(unref(remainingLevelsByDate), false);
   return {
     datasets: [
       {
@@ -125,6 +164,19 @@ const data = computed(() => {
         })),
         pointRadius: 0,
         pointHitRadius: 5,
+        yAxisID: 'yClears',
+      },
+      {
+        label: 'Remaining',
+        data: days.map((d) => ({
+          x: d,
+          y: remainingDatapoints[d],
+        })),
+        borderColor: '#8f2532aa',
+        backgroundColor: '#8f2532aa',
+        pointRadius: 0,
+        pointHitRadius: 5,
+        yAxisID: 'yRemaining',
       },
     ],
   };
