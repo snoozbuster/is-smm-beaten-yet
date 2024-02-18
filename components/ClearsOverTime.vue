@@ -26,6 +26,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import { DateTime } from 'luxon';
+import type { TooltipItem } from 'chart.js';
 
 ChartJS.register(
   LineController,
@@ -59,6 +60,17 @@ const options = computed(() => ({
   plugins: {
     tooltip: {
       position: 'average',
+      callbacks:
+        unref(tab) === 'weekly'
+          ? {
+              title: (items: TooltipItem<any>[]) =>
+                `${items[0].label} - ${DateTime.fromISO(
+                  (items[0].raw as { x: string; y: number }).x,
+                )
+                  .endOf('week')
+                  .toLocaleString(DateTime.DATE_MED)}`,
+            }
+          : undefined,
     },
     legend: {
       display: false,
@@ -68,21 +80,40 @@ const options = computed(() => ({
     x: {
       type: 'time',
       time: {
-        unit: unref(tab) === 'daily' ? 'day' : 'week',
+        unit: unref(tab) === 'daily' ? 'day' : 'month',
         tooltipFormat: 'DDD',
       },
     },
   },
 }));
 
-const data = computed(() => {
-  const leftEdge = DateTime.now()
-    .minus({ month: unref(tab) === 'daily' ? 1 : 3 })
-    .toISODate();
-  const days = useSortBy(
-    Object.keys(props.clearsByDate).filter(
-      (dateCleared) => dateCleared >= leftEdge,
+const orderedDays = computed(() =>
+  useSortBy(Object.keys(props.clearsByDate)).filter(
+    (d) => DateTime.fromISO(d).isValid,
+  ),
+);
+
+const weeklyData = computed(() => {
+  return useMapValues(
+    useGroupBy(unref(orderedDays), (day) =>
+      DateTime.fromISO(day).startOf('week').toISOWeekDate(),
     ),
+    (days) => useSumBy(days, (d) => props.clearsByDate[d]),
+  );
+});
+
+const data = computed(() => {
+  const datapoints =
+    unref(tab) === 'daily' ? props.clearsByDate : unref(weeklyData);
+  const leftEdge =
+    unref(tab) === 'daily'
+      ? DateTime.now().minus({ month: 1 }).toISODate()
+      : /* there is a huge spike of 6k the week before this which dwarfs the
+         * rest of the chart
+         */
+        DateTime.fromISO('2023-02-06').toISOWeekDate()!;
+  const days = useSortBy(Object.keys(datapoints)).filter(
+    (dateCleared) => dateCleared >= leftEdge,
   );
   return {
     datasets: [
@@ -90,7 +121,7 @@ const data = computed(() => {
         label: 'Clears',
         data: days.map((d) => ({
           x: d,
-          y: props.clearsByDate[d],
+          y: datapoints[d],
         })),
         pointRadius: 0,
         pointHitRadius: 5,
