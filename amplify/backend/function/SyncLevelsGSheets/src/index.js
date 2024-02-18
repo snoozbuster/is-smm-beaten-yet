@@ -236,16 +236,25 @@ exports.handler = async (event) => {
     'length',
   );
 
+  const getWinner = (levels) => {
+    const clearsByCreator = _.countBy(levels, 'firstClearerNnid');
+    const winner = _.orderBy(_.toPairs(clearsByCreator), '1', 'desc')[0];
+    return {
+      creator: winner[0],
+      levels: winner[1],
+    };
+  };
+
   const dailyWinners = _.mapValues(
     _.groupBy(clearedFinal, 'dateCleared'),
-    (levels) => {
-      const clearsByCreator = _.countBy(levels, 'firstClearerNnid');
-      const winner = _.orderBy(_.toPairs(clearsByCreator), '1', 'desc')[0];
-      return {
-        creator: winner[0],
-        levels: winner[1],
-      };
-    },
+    getWinner,
+  );
+
+  const weeklyWinners = _.mapValues(
+    _.groupBy(clearedFinal, ({ dateCleared }) =>
+      DateTime.fromISO(dateCleared).startOf('week').toISOWeekDate(),
+    ),
+    getWinner,
   );
 
   const clearsByPerson = _.mapValues(
@@ -256,7 +265,10 @@ exports.handler = async (event) => {
   const clearStats = {
     clearsByDate,
     clearsByPerson,
-    dailyWinners,
+    winners: {
+      daily: dailyWinners,
+      weekly: weeklyWinners,
+    },
     clearedTotal: clearedFinal.length,
   };
 
