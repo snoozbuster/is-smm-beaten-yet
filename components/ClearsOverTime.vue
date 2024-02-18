@@ -29,6 +29,7 @@ import { DateTime } from 'luxon';
 import type { TooltipItem } from 'chart.js';
 import type { PropType } from 'vue';
 import type { ClearedLevelStatSummary } from '~/types/levels';
+import { SHUTDOWN_DATE } from '~/constants/levelData';
 
 ChartJS.register(
   LineController,
@@ -66,7 +67,12 @@ const topClearerTooltipCallback = (items: TooltipItem<any>[]) => {
   const day = (items[0].raw as { x: string; y: number }).x;
   const winner = props.winners[unref(tab)][day];
 
-  return `Most clears: ${winner.creators.join(', ')} (${
+  const creators = useCompact([
+    `${winner.creators[0]}`,
+    winner.creators.slice(1).join(', '),
+  ]).join(',\n');
+
+  return `Most clears: ${creators} (${
     winner.creators.length > 1 ? 'tied with ' : ''
   }${formatNumber(winner.levels)} levels)`;
 };
@@ -107,6 +113,9 @@ const options = computed(() => ({
       time: {
         unit: unref(tab) === 'daily' ? 'day' : 'month',
         tooltipFormat: 'DDD',
+      },
+      grid: {
+        drawOnChartArea: false,
       },
     },
     yClears: {
@@ -175,6 +184,15 @@ const data = computed(() => {
     unref(tab) === 'daily'
       ? unref(remainingLevelsByDate)
       : computeWeeklyData(unref(remainingLevelsByDate), false);
+
+  const shutdown = DateTime.fromISO(SHUTDOWN_DATE);
+  const rateToBeat = useMapValues(
+    remainingDatapoints,
+    (remainingLevels, day) => {
+      const remainingDays = shutdown.diff(DateTime.fromISO(day), 'days').days;
+      return Math.ceil(remainingLevels / remainingDays);
+    },
+  );
   return {
     datasets: [
       {
@@ -183,6 +201,19 @@ const data = computed(() => {
           x: d,
           y: datapoints[d],
         })),
+        pointRadius: 0,
+        pointHitRadius: 5,
+        yAxisID: 'yClears',
+      },
+      {
+        label: `${useCapitalize(unref(tab))} clear target`,
+        data: days.map((d) => ({
+          x: d,
+          y: rateToBeat[d],
+        })),
+        borderDash: [4, 4],
+        borderColor: '#6c43a1',
+        backgroundColor: '#6c43a1',
         pointRadius: 0,
         pointHitRadius: 5,
         yAxisID: 'yClears',

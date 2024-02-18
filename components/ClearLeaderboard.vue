@@ -38,6 +38,9 @@ const options = computed(() => ({
       ticks: {
         autoSkip: false,
       },
+      grid: {
+        display: false,
+      },
     },
   },
 }));

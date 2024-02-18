@@ -20,7 +20,7 @@
               {{ formatNumber(uncleared.length) }} levels left to clear
             </h2>
             <span>
-              before the server shutdown on {{ formatDate('2024-04-08') }}
+              before the server shutdown on {{ formatDate(SHUTDOWN_DATE) }}
             </span>
             <NuxtLink to="/levels">
               <PrimeButton
@@ -110,7 +110,7 @@ import {
 import type { SetupContext } from 'vue';
 import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
 import type { ClearedLevelStatSummary } from '~/types/levels';
-import { DATA_ROOT_URL } from '~/constants/levelData';
+import { DATA_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
 import CourseWorldCard from '~/components/CourseWorldCard';
 
 declare module 'chart.js' {

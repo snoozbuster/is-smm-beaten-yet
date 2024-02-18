@@ -17,3 +17,6 @@ export const COUNTRIES = [
   { value: 'AT', name: 'Austria' },
   { value: 'NZ', name: 'New Zealand' },
 ];
+
+// April 8, 2024 at 4PM PDT
+export const SHUTDOWN_DATE = '2024-04-08T16:00:00-07:00';

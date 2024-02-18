@@ -54,6 +54,7 @@ const options = computed(() => {
         type: 'time',
         grid: {
           offset: unref(tab) === 'year',
+          display: false,
         },
         time: {
           unit: 'year',
