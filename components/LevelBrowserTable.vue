@@ -74,8 +74,7 @@
           @click="selectRandomLevel()"
         />
         <span class="text-xl self-center ml-5">
-          {{ formatNumber(levels.length) }} levels from
-          {{ formatNumber(creators.length) }} creators
+          {{ formatNumber(numRows) }} levels
           <span
             v-show="props.levels.length && numRows !== props.levels.length"
             class="font-normal"
