@@ -353,38 +353,47 @@ function blinkObj(obj: CourseObject, { rotation }: { rotation?: number } = {}) {
 }
 
 const objectHandlers = {
-  Door: (obj: MonsterObject[], objects: CourseObject[]) => {
-    const otherDoor = objects.find(
-      (o) => o !== obj && o.name === 'Door' && o.doorLink === obj.doorLink,
-    );
+  Door: {
+    onClick: (obj: MonsterObject, objects: CourseObject[]) => {
+      const otherDoor = objects.find(
+        (o) => o !== obj && o.name === 'Door' && o.doorLink === obj.doorLink,
+      );
 
-    if (otherDoor) {
-      blinkObj(otherDoor);
-    }
+      if (otherDoor) {
+        blinkObj(otherDoor);
+      }
+    },
   },
-  Dokan: (obj: BlockObject[]) => {
-    const otherWorldObjs =
-      unref(tab) === 'main' ? worldData.sub!.objects : worldData.main!.objects;
+  Dokan: {
+    hasInteraction: (obj: BlockObject) => {
+      return obj.pipeLink !== -1;
+    },
+    onClick: (obj: BlockObject) => {
+      const otherWorldObjs =
+        unref(tab) === 'main'
+          ? worldData.sub!.objects
+          : worldData.main!.objects;
 
-    const otherPipe = otherWorldObjs.find(
-      (o) => o.name === 'Dokan' && o.pipeLink === obj.pipeLink,
-    );
+      const otherPipe = otherWorldObjs.find(
+        (o) => o.name === 'Dokan' && o.pipeLink === obj.pipeLink,
+      );
 
-    if (otherPipe) {
-      tab.value = tab.value === 'main' ? 'sub' : 'main';
-      nextTick(() => {
-        blinkObj(otherPipe, {
-          rotation:
-            otherPipe.direction === 0
-              ? 90
-              : otherPipe.direction === 3
-                ? 180
-                : otherPipe.direction === 1
-                  ? 270
-                  : 0,
+      if (otherPipe) {
+        tab.value = tab.value === 'main' ? 'sub' : 'main';
+        nextTick(() => {
+          blinkObj(otherPipe, {
+            rotation:
+              otherPipe.direction === 0
+                ? 90
+                : otherPipe.direction === 3
+                  ? 180
+                  : otherPipe.direction === 1
+                    ? 270
+                    : 0,
+          });
         });
-      });
-    }
+      }
+    },
   },
 };
 
@@ -393,7 +402,13 @@ function handleMouseover(event: MouseEvent) {
   const intersections = getObjectIntersections(coords);
 
   const canvas = getCanvasEl();
-  if (intersections.some(({ name }) => name in objectHandlers)) {
+  if (
+    intersections.some(
+      (obj) =>
+        obj.name in objectHandlers &&
+        (objectHandlers[obj.name].hasInteraction?.(obj) ?? true),
+    )
+  ) {
     canvas?.classList.add('cursor-pointer');
   } else {
     canvas?.classList.remove('cursor-pointer');
@@ -406,8 +421,13 @@ function handleClick(event: MouseEvent) {
 
   const target = intersections.find(({ name }) => name in objectHandlers);
 
-  if (target?.name in objectHandlers) {
-    objectHandlers[target.name](target, worldData[unref(tab)]?.objects);
+  console.log(target, intersections);
+
+  if (
+    target?.name in objectHandlers &&
+    (objectHandlers[target.name].hasInteraction?.(target) ?? true)
+  ) {
+    objectHandlers[target.name].onClick(target, worldData[unref(tab)]?.objects);
   }
 }
 
