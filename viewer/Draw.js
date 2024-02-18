@@ -1,4 +1,5 @@
 import { BlockDraw } from './BlockDraw';
+import { BlockObject } from './BlockObject';
 import { MonsterDraw } from './MonsterDraw';
 
 /**
@@ -178,27 +179,28 @@ export class Draw {
           const type = courseObject.type;
           if ($this._blocks.hasDraw(type)) {
             $this._drawObjectFromTheme($this._blocks, courseObject);
-            // Fix items in boxes/pipes opacity or border?
-            if (type != 7) {
-              // Don't run for Ground Blocks
-              if (type != 6) {
-                // Don't run for Hard Blocks
-                if (type != 4) {
-                  // Don't run for Brick Blocks
-                  if (type != 49) {
-                    // Don't run for Bridge
-                    const ctype = courseObject.childType;
-                    if ($this._monsters.hasDraw(ctype)) {
-                      courseObject.type = ctype;
-                      courseObject.extend = [];
-                      $this._drawObjectFromTheme($this._monsters, courseObject);
-                    }
-                  }
-                }
-              }
+
+            if (
+              ![
+                BlockObject.codes.Ground,
+                BlockObject.codes.HardBlock,
+                BlockObject.codes.RengaBlock,
+                BlockObject.codes.CastleBridge,
+              ].includes(type) &&
+              $this._monsters.hasDraw(courseObject.childType)
+            ) {
+              $this._drawObjectFromTheme(
+                $this._monsters,
+                {
+                  ...courseObject,
+                  type: courseObject.childType,
+                  extend: [],
+                },
+                { scale: 0.75, opacity: 0.8 },
+              );
             }
 
-            if (type === 9) {
+            if (type === BlockObject.codes.Dokan) {
               // Pipe Labelling
               let PR = courseObject.pipeLink;
               PR = PR.toString();
@@ -271,7 +273,7 @@ export class Draw {
    * @access private
    * @return {null}
    */
-  _drawObjectFromTheme(_theme, courseObject) {
+  _drawObjectFromTheme(_theme, courseObject, paintExt = {}) {
     const $this = this;
     const def = _theme.getDef(courseObject.type);
     const _titleset = _theme.getTheme();
@@ -301,6 +303,7 @@ export class Draw {
           width: courseObject.width,
           opacity,
           rotation,
+          ...paintExt,
         };
         $this._paintObject(objectPaint);
       });
@@ -327,6 +330,7 @@ export class Draw {
         yBase: _base,
         size: courseObject.size,
         width: courseObject.width,
+        ...paintExt,
       };
       $this._paintObject(objectPaint);
     }
@@ -366,8 +370,8 @@ export class Draw {
       _size === 1
         ? this._yFix - (_y + _yExt) * this._base - this._base
         : this._yFix - (_y + _yExt * _size + 1) * this._base - this._base;
-    const xBase = _xBase * _size;
-    const yBase = _yBase * _size;
+    const xBase = _xBase * _size * (_objectPaint.scale ?? 1);
+    const yBase = _yBase * _size * (_objectPaint.scale ?? 1);
     /* process opacity */
     if (_opacity) {
       this._context.save();
