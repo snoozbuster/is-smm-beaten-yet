@@ -522,6 +522,9 @@
       :show-filter-menu="false"
       sortable
     >
+      <template #body="{ data }">
+        <span class="pi pi-clock"></span> {{ data.timer }}
+      </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeMultiSelect
           v-model="filterModel.value"
