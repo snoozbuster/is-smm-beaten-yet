@@ -75,6 +75,7 @@
           <ClearsOverTime
             :uncleared-level-count="uncleared.length"
             :clears-by-date="clearSummary.clearsByDate ?? {}"
+            :winners="clearSummary.winners ?? ({} as any)"
           />
         </StatSection>
         <StatSection card>

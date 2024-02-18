@@ -27,6 +27,8 @@ import {
 import 'chartjs-adapter-luxon';
 import { DateTime } from 'luxon';
 import type { TooltipItem } from 'chart.js';
+import type { PropType } from 'vue';
+import type { ClearedLevelStatSummary } from '~/types/levels';
 
 ChartJS.register(
   LineController,
@@ -45,14 +47,29 @@ const props = defineProps({
     type: Object as PropType<Record<string, number>>,
     required: true,
   },
+  winners: {
+    type: Object as PropType<ClearedLevelStatSummary['winners']>,
+    required: true,
+  },
 });
 
-const tab = ref('daily');
+const tab = ref<'daily' | 'weekly'>('daily');
 
 const tabs = [
   { label: 'Daily', command: () => (tab.value = 'daily') },
   { label: 'Weekly', command: () => (tab.value = 'weekly') },
 ];
+
+const { formatNumber } = useFormatters();
+
+const topClearerTooltipCallback = (items: TooltipItem<any>[]) => {
+  const day = (items[0].raw as { x: string; y: number }).x;
+  const winner = props.winners[unref(tab)][day];
+
+  return `Most clears: ${winner.creators.join(', ')} (${
+    winner.creators.length > 1 ? 'tied with ' : ''
+  }${formatNumber(winner.levels)} levels)`;
+};
 
 const options = computed(() => ({
   responsive: true,
@@ -64,6 +81,7 @@ const options = computed(() => ({
   plugins: {
     tooltip: {
       position: 'average',
+      footerFont: { weight: 'normal' },
       callbacks:
         unref(tab) === 'weekly'
           ? {
@@ -73,8 +91,11 @@ const options = computed(() => ({
                 )
                   .endOf('week')
                   .toLocaleString(DateTime.DATE_MED)}`,
+              footer: topClearerTooltipCallback,
             }
-          : undefined,
+          : {
+              footer: topClearerTooltipCallback,
+            },
     },
     legend: {
       display: false,

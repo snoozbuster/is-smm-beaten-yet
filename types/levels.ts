@@ -25,8 +25,17 @@ export interface HackedClear
 
 export type UnclearedLevel = HackedClear | LevelData;
 
+export interface DailyWinner {
+  creators: string[];
+  levels: number;
+}
+
 export interface ClearedLevelStatSummary {
   clearsByDate: Record<string, number>;
   clearsByPerson: Record<string, number>;
+  winners: {
+    weekly: Record<string, DailyWinner>;
+    daily: Record<string, DailyWinner>;
+  };
   clearedTotal: number;
 }
