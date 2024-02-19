@@ -139,6 +139,33 @@ export class Draw {
     }
     const drawBlock = drawSimple.bind(this, $this._blocks);
     const drawMonster = drawSimple.bind(this, $this._monsters);
+    function drawChild(courseObject, background = false) {
+      if (
+        ![
+          BlockObject.codes.Ground,
+          BlockObject.codes.HardBlock,
+          BlockObject.codes.RengaBlock,
+          BlockObject.codes.CastleBridge,
+        ].includes(courseObject.type) &&
+        $this._monsters.hasDraw(courseObject.childType)
+      ) {
+        $this._drawObjectFromTheme(
+          $this._monsters,
+          new MonsterObject({
+            ...courseObject,
+            type: courseObject.childType,
+            flags: courseObject.childFlags,
+          }),
+          {
+            scale: 0.8,
+            opacity: 0.8,
+            // make sure big monsters in boxes don't render huge
+            size: 1,
+            drawBackground: background,
+          },
+        );
+      }
+    }
     /* onerror event */
     const onerror = function (err) {
       const img = err.target;
@@ -189,30 +216,7 @@ export class Draw {
           if ($this._blocks.hasDraw(type)) {
             $this._drawObjectFromTheme($this._blocks, courseObject);
 
-            if (
-              ![
-                BlockObject.codes.Ground,
-                BlockObject.codes.HardBlock,
-                BlockObject.codes.RengaBlock,
-                BlockObject.codes.CastleBridge,
-              ].includes(type) &&
-              $this._monsters.hasDraw(courseObject.childType)
-            ) {
-              $this._drawObjectFromTheme(
-                $this._monsters,
-                new MonsterObject({
-                  ...courseObject,
-                  type: courseObject.childType,
-                  flags: courseObject.childFlags,
-                }),
-                {
-                  scale: 0.8,
-                  opacity: 0.8,
-                  // make sure big monsters in boxes don't render huge
-                  size: 1,
-                },
-              );
-            }
+            drawChild(courseObject);
 
             if (type === BlockObject.codes.Dokan) {
               // Pipe Labelling
@@ -230,6 +234,7 @@ export class Draw {
             }
           } else if ($this._monsters.hasDraw(type)) {
             $this._drawObjectFromTheme($this._monsters, courseObject);
+            drawChild(courseObject, true);
             if (type === 55) {
               // Door Labelling
               let PR = courseObject.doorLink;
@@ -387,13 +392,44 @@ export class Draw {
       _size === 1
         ? this._yFix - (_y + _yExt) * this._base - this._base
         : this._yFix - (_y + _yExt * _size + 1) * this._base - this._base;
-    const xBase = _xBase * _size * (_objectPaint.scale ?? 1);
-    const yBase = _yBase * _size * (_objectPaint.scale ?? 1);
+    const unscaledXBase = _xBase * _size;
+    const unscaledYBase = _yBase * _size;
+    const xBase = unscaledXBase * (_objectPaint.scale ?? 1);
+    const yBase = unscaledYBase * (_objectPaint.scale ?? 1);
     /* process opacity */
     if (_opacity) {
       this._context.save();
+      if (_objectPaint.drawBackground) {
+        // used for child draws of keys
+        this._context.save();
+        this._context.beginPath();
+        this._context.ellipse(
+          x + unscaledXBase / 2,
+          y + unscaledXBase / 2,
+          unscaledXBase / 2,
+          unscaledYBase / 2,
+          Math.PI / 4,
+          0,
+          2 * Math.PI,
+        );
+        this._context.globalAlpha = 0.3;
+        this._context.fillStyle = 'lightblue';
+        this._context.stroke();
+        this._context.fill();
+        this._context.restore();
+      }
       this._context.globalAlpha = _opacity;
-      this._context.drawImage(_titleset, xT, yT, xTs, yTs, x, y, xBase, yBase);
+      this._context.drawImage(
+        _titleset,
+        xT,
+        yT,
+        xTs,
+        yTs,
+        x + (unscaledXBase - xBase) / 2,
+        y + (unscaledYBase - yBase) / 2,
+        xBase,
+        yBase,
+      );
       this._context.restore();
     } else if (_rotation) {
       const degree = (_rotation * Math.PI) / 180;
