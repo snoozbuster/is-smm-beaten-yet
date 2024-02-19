@@ -1,6 +1,7 @@
 import { BlockDraw } from './BlockDraw';
 import { BlockObject } from './BlockObject';
 import { MonsterDraw } from './MonsterDraw';
+import { MonsterObject } from './MonsterObject';
 
 /**
  * @module Draw
@@ -127,6 +128,17 @@ export class Draw {
     const $this = this;
     const imageCount = $this._images.length;
     let loadedCount = 0;
+    function drawSimple(theme, courseObject) {
+      const type = courseObject.type;
+      if (theme.hasDraw(type)) {
+        $this._drawObjectFromTheme(theme, courseObject);
+      } else {
+        console.log('fault: ' + type);
+        $this._drawText(courseObject.x, courseObject.y, type);
+      }
+    }
+    const drawBlock = drawSimple.bind(this, $this._blocks);
+    const drawMonster = drawSimple.bind(this, $this._monsters);
     /* onerror event */
     const onerror = function (err) {
       const img = err.target;
@@ -141,27 +153,20 @@ export class Draw {
         const mushroomterrain = _objects.filter((obj) => {
           return obj.type === 14;
         });
+        const halfhitwalls = _objects.filter((obj) => {
+          return obj.type === MonsterObject.codes.HalfHitWall;
+        });
         const remainingObjs = _objects.filter((obj) => {
-          return obj.type != 16 && obj.type != 14;
+          return (
+            obj.type != 16 &&
+            obj.type != 14 &&
+            obj.type !== MonsterObject.codes.HalfHitWall
+          );
         });
-        semisolids.forEach(function (courseObject) {
-          const type = courseObject.type;
-          if ($this._blocks.hasDraw(type)) {
-            $this._drawObjectFromTheme($this._blocks, courseObject);
-          } else {
-            console.log('fault: ' + type);
-            $this._drawText(courseObject.x, courseObject.y, type);
-          }
-        });
-        mushroomterrain.forEach(function (courseObject) {
-          const type = courseObject.type;
-          if ($this._blocks.hasDraw(type)) {
-            $this._drawObjectFromTheme($this._blocks, courseObject);
-          } else {
-            console.log('fault: ' + type);
-            $this._drawText(courseObject.x, courseObject.y, type);
-          }
-        });
+
+        semisolids.forEach(drawBlock);
+        mushroomterrain.forEach(drawBlock);
+        halfhitwalls.forEach(drawMonster);
 
         const doorsPipesHash = {
           0: 'A',
