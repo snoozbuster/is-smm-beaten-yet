@@ -205,16 +205,19 @@ exports.handler = async (event) => {
     }))
     .concat(JSON.parse(await legacyClearsPromise));
 
-  const clearedFinal = _.uniqBy(
-    _.sortBy(
-      joinedClears.filter(({ creator }) => !BANNED_NNIDS.has(creator)),
-      'dateCleared',
+  const sortedClears = _.sortBy(
+    joinedClears.filter(
+      ({ firstClearerNnid }) => !BANNED_NNIDS.has(firstClearerNnid),
     ),
-    'levelId',
+    'dateCleared',
   );
 
-  const filteredClearCount = joinedClears.length - clearedFinal.length;
+  const clearedFinal = _.uniqBy(sortedClears, 'levelId');
+
+  const filteredClearCount = joinedClears.length - sortedClears.length;
+  const dedupedCount = sortedClears.length - clearedFinal.length;
   console.log('Removed', filteredClearCount, 'cleared from banned NNIDs');
+  console.log('Removed', dedupedCount, 'duplicate clears');
 
   console.log(
     'UNCLEARED:',
@@ -303,6 +306,7 @@ exports.handler = async (event) => {
       totalCleared: clearedFinal.length,
 
       filteredClears: filteredClearCount,
+      dedupedCount,
     },
   };
 };
