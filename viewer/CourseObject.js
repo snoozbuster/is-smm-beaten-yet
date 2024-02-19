@@ -100,4 +100,8 @@ CourseObject.extensions = {
     courseObject.doorLink = Math.floor(courseObject.flags / 0x200000) % 2;
     courseObject.doorType = (courseObject.flags >> 18) & 3;
   },
+  // half-hit wall
+  67: (courseObject) => {
+    courseObject.direction = (courseObject.flags >> 22) & 3;
+  },
 };

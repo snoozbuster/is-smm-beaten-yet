@@ -90,10 +90,10 @@ export class MonsterDraw {
    * @arg {Integer} y            Y-axis position addition
    * @static
    * @access private
-   * @return {Array[Object]}
+   * @return {object[]}
    */
-  static _extendForObjects(extend, weight, height, xT, yT, x = 0, y = 0) {
-    for (let w = 0; w < weight; w++) {
+  static _extendForObjects(extend, width, height, xT, yT, x = 0, y = 0) {
+    for (let w = 0; w < width; w++) {
       for (let h = 0; h < height; h++) {
         extend.push({ x: -w + x, y: h + y, xT: xT - w, yT: yT - h });
       }
@@ -595,7 +595,41 @@ MonsterDraw._defitions = {
   },
   67: {
     extend: function (courseObject) {
-      return MonsterDraw._extendForObjects([], 2, 2, 6, 9);
+      const dirToRotation = {
+        // left
+        2: 0,
+        // down
+        1: 90,
+        // right
+        0: 180,
+        // up
+        3: 270,
+      };
+      const tiles = MonsterDraw._extendForObjects([], 2, 2, 6, 9);
+
+      // this assumes some things about the order that _extendForObjects()
+      // generates the tiles in and it assumes a lot about the number of tiles.
+      // general gist is we want to rotate the tiles visually and also rotate
+      // them in a circle.  so we rearrange the arrays so that they're arranged
+      // in a circle instead of column-row order, and then rotate the array so
+      // the positions are in the right place. then we replace each tile's
+      // tileset coordinates with the ones from that original index positionones
+      // from that original index position.
+      const rotation = dirToRotation[courseObject.direction];
+      let shifts = rotation / 90;
+      [tiles[2], tiles[3]] = [tiles[3], tiles[2]];
+      const tileCoordinates = tiles.map(({ xT, yT }) => ({ xT, yT }));
+      while (shifts > 0) {
+        tiles.unshift(tiles.pop());
+        shifts--;
+      }
+
+      return tiles.map(({ x, y }, i) => ({
+        ...tileCoordinates[i],
+        x,
+        y,
+        rotation,
+      }));
     },
   },
   68: {

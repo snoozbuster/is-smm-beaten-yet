@@ -32,7 +32,7 @@ export class MonsterObject extends CourseObject {
     this.wing = ext.wing;
     this.size = ext.size;
     this.y = this.y + ext.addY;
-    this.direction = ext.direction;
+    this.direction = this.direction ?? ext.direction;
   }
 
   /**

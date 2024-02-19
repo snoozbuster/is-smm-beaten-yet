@@ -270,6 +270,7 @@ export class Draw {
    * Draw a object from a theme
    * @arg {Object} _theme         BlockDraw, or MonsterDraw
    * @arg {Object} courseObject   CourseObject
+   * @arg {Object} paintExt       Extra overrides to pass to _paintObject (takes priority over internal function logic)
    * @access private
    * @return {null}
    */
