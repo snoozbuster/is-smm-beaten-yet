@@ -259,15 +259,31 @@ MonsterDraw._defitions = {
   25: {
     extend: function (courseObject) {
       const extend = courseObject.extend;
-      extend.push({ x: 0, y: 0, xT: 2, yT: 4 });
+      const shellmet = courseObject.subType === 1;
+      const ceiling = !((courseObject.flags >> 25) & 1);
+      extend.push({
+        x: 0,
+        y: 0,
+        xT: shellmet ? 11 : 2,
+        yT: shellmet ? 10 : 4,
+        rotation: ceiling ? 180 : undefined,
+      });
       return extend;
     },
   },
   27: { xT: 0, yT: 0 },
   28: {
     extend: function (courseObject) {
+      const shellmet = courseObject.subType === 1;
+      const ceiling = !((courseObject.flags >> 25) & 1);
       const extend = courseObject.extend;
-      extend.push({ x: 0, y: 0, xT: 4, yT: 4 });
+      extend.push({
+        x: 0,
+        y: 0,
+        xT: shellmet ? 10 : 4,
+        yT: shellmet ? 10 : 4,
+        rotation: ceiling ? 180 : undefined,
+      });
       return extend;
     },
   },
