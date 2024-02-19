@@ -67,17 +67,11 @@ export class MonsterObject extends CourseObject {
 
     // type = 0 (normal), 1 (wings)
     // size = 0 (normal), 1 (big)
-    /* if(wing){ -------------------------------- math wings is broke for monsters size 2
-            let x = (courseObject.width - 1), xAdd = 0.7 * size,
-                y = (courseObject.height/(5.0));
-            extend.push({"x": xAdd/(size), "y": y, "xT": 1, "yT": 2});
-            extend.push({"x": -(x+xAdd)/(size), "y": y, "xT": 0, "yT": 2});
-
-            if(size-1){
-                console.log([courseObject.type, courseObject.width, courseObject.height, size]);
-                console.log([-(x+xAdd), xAdd]);
-            }
-        } */
+    if (wing) {
+      const y = (_objectData.height - 1) / 5.0;
+      extend.push({ x: 0.65, y, xT: 1, yT: 2 }); // right wing
+      extend.push({ x: -0.65, y, xT: 0, yT: 2 }); // left wing
+    }
     return {
       extend,
       subType,

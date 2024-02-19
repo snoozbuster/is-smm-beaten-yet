@@ -196,7 +196,7 @@ export class Draw {
                   type: courseObject.childType,
                   extend: [],
                 },
-                { scale: 0.75, opacity: 0.8 },
+                { scale: 0.8, opacity: 0.8 },
               );
             }
 
