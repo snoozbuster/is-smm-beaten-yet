@@ -190,7 +190,10 @@ const data = computed(() => {
     remainingDatapoints,
     (remainingLevels, day) => {
       const remainingDays = shutdown.diff(DateTime.fromISO(day), 'days').days;
-      return Math.ceil(remainingLevels / remainingDays);
+      return (
+        Math.ceil(remainingLevels / remainingDays) *
+        (unref(tab) === 'daily' ? 1 : 7)
+      );
     },
   );
   return {
@@ -219,7 +222,7 @@ const data = computed(() => {
         yAxisID: 'yClears',
       },
       {
-        label: 'Remaining',
+        label: 'Remaining (start of day)',
         data: days.map((d) => ({
           x: d,
           y: remainingDatapoints[d],
