@@ -29,12 +29,17 @@ const props = defineProps({
 
 const { formatPercent } = useFormatters();
 
-const percentClear = computed(() =>
-  formatPercent(
-    props.clearedLevels,
-    props.clearedLevels + props.unclearedLevels,
-  ),
-);
+const percentClear = computed(() => {
+  const numerator = props.clearedLevels;
+  const denominator = props.clearedLevels + props.unclearedLevels;
+
+  const precision = numerator / denominator >= 0.991 ? 2 : 0;
+
+  return formatPercent(numerator, denominator, {
+    precision,
+    rounding: 'trunc',
+  });
+});
 
 const options = computed(() => ({
   responsive: true,

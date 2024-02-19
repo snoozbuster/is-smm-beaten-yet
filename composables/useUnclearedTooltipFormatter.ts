@@ -13,7 +13,7 @@ export default function useUnclearedTooltipFormatter(
       } (${formatPercent(
         item.parsed.y ?? item.parsed,
         unref(unclearedLevels).length,
-        1,
+        { precision: 1 },
       )} of total)`,
   };
 }

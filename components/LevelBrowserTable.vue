@@ -79,7 +79,8 @@
             v-show="props.levels.length && numRows !== props.levels.length"
             class="font-normal"
           >
-            ({{ formatPercent(numRows, props.levels.length, 1) }} of all levels)
+            ({{ formatPercent(numRows, props.levels.length, { precision: 1 }) }}
+            of all levels)
           </span>
         </span>
 
