@@ -48,10 +48,10 @@
                 {{ formatDate('2021-04-01') }}.
               </p>
               <p>
-                Levels are marked as cleared by the community using a
-                custom-made Discord bot built by TheCryptan. Around once a
-                month, the SMM1 API is scraped for any unreported levels that
-                have been cleared.
+                Levels are marked as cleared by the community by running
+                commands for a custom-made Discord bot built by TheCryptan.
+                Additionally, the uncleared list is refreshed periodically to
+                look for any unreported levels that have been cleared.
               </p>
             </PrimeDialog>
           </div>
