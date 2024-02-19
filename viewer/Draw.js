@@ -156,11 +156,15 @@ export class Draw {
         const halfhitwalls = _objects.filter((obj) => {
           return obj.type === MonsterObject.codes.HalfHitWall;
         });
+        const tracks = _objects.filter((obj) => {
+          return obj.type === BlockObject.codes.Rail;
+        });
         const remainingObjs = _objects.filter((obj) => {
           return (
             obj.type != 16 &&
             obj.type != 14 &&
-            obj.type !== MonsterObject.codes.HalfHitWall
+            obj.type !== MonsterObject.codes.HalfHitWall &&
+            obj.type !== BlockObject.codes.Rail
           );
         });
 
@@ -242,6 +246,8 @@ export class Draw {
             $this._drawText(courseObject.x, courseObject.y, type);
           }
         });
+
+        tracks.forEach(drawBlock);
       }
     };
     /* onload event */

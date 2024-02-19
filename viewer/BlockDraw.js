@@ -473,7 +473,12 @@ BlockDraw._defitions = {
       return BlockDraw._extend3x4objects(0, 0, width, 1, tt);
     },
   },
-  59: { xT: 0, yT: 8 } /* not discovered */,
+  59: {
+    extend: function (courseObject) {
+      /* not discovered */
+      return [{ xT: 0, yT: 9, x: 1, y: 1 }];
+    },
+  },
   63: { xT: 8, yT: 7 },
   64: {
     extend: function (courseObject) {
