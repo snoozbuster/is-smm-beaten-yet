@@ -196,12 +196,17 @@ export class Draw {
             ) {
               $this._drawObjectFromTheme(
                 $this._monsters,
-                {
+                new MonsterObject({
                   ...courseObject,
                   type: courseObject.childType,
-                  extend: [],
+                  flags: courseObject.childFlags,
+                }),
+                {
+                  scale: 0.8,
+                  opacity: 0.8,
+                  // make sure big monsters in boxes don't render huge
+                  size: 1,
                 },
-                { scale: 0.8, opacity: 0.8 },
               );
             }
 
