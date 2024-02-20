@@ -409,6 +409,7 @@
           :options="countries"
           option-label="name"
           option-value="value"
+          option-disabled="disabled"
           placeholder="Any"
           class="p-column-filter"
           :max-selected-labels="1"
@@ -416,8 +417,16 @@
           @change="filterCallback()"
         >
           <template #option="{ option }">
-            <CountryFlag class="pr-1" :country-code="option.value" />
-            <div>{{ option.name }}</div>
+            <CountryFlag class="mr-1" :country-code="option.value" />
+            <div class="mr-3">
+              <span class="font-medium">{{ option.name }}</span>
+              <div v-if="option.disabled" class="text-xs">
+                All levels completed!
+              </div>
+            </div>
+            <span v-if="option.count" class="ml-auto">
+              {{ option.count }}
+            </span>
           </template>
         </PrimeMultiSelect>
       </template>
@@ -455,18 +464,21 @@
           @change="filterCallback()"
         >
           <template #option="{ option }">
-            <img
-              class="inline mr-1"
-              :src="`/img/${option.value.toLowerCase()}.png`"
-              :width="16"
-              :height="16"
-            />
-            <div>
-              {{ option.name }}
+            <div class="mr-3">
+              <img
+                class="inline mr-1"
+                :src="`/img/${option.value.toLowerCase()}.png`"
+                :width="16"
+                :height="16"
+              />
+              <span class="font-medium">{{ option.name }}</span>
               <div v-if="option.disabled" class="text-xs">
                 All levels completed!
               </div>
             </div>
+            <span v-if="option.count" class="ml-auto">
+              {{ option.count }}
+            </span>
           </template>
         </PrimeMultiSelect>
       </template>
@@ -494,6 +506,7 @@
           :options="themes"
           option-label="value"
           option-value="value"
+          option-disabled="disabled"
           placeholder="Any"
           class="p-column-filter"
           :max-selected-labels="1"
@@ -502,15 +515,23 @@
           @change="filterCallback()"
         >
           <template #option="{ option }">
-            <img
-              class="inline mr-1"
-              :src="`/img/themes/${option.value
-                .toLowerCase()
-                .replace(' ', '_')}.png`"
-              :width="16"
-              :height="16"
-            />
-            <div>{{ option.value }}</div>
+            <div class="mr-3">
+              <img
+                class="inline mr-1"
+                :src="`/img/themes/${option.value
+                  .toLowerCase()
+                  .replace(' ', '_')}.png`"
+                :width="16"
+                :height="16"
+              />
+              <span class="font-medium">{{ option.value }}</span>
+              <div v-if="option.disabled" class="text-xs">
+                All levels completed!
+              </div>
+            </div>
+            <span v-if="option.count" class="ml-auto">
+              {{ option.count }}
+            </span>
           </template>
         </PrimeMultiSelect>
       </template>
@@ -531,12 +552,26 @@
           :options="timerOptions"
           option-label="value"
           option-value="value"
+          option-disabled="disabled"
           placeholder="Any"
           class="p-column-filter"
           :max-selected-labels="1"
           :show-toggle-all="false"
           @change="filterCallback()"
-        />
+        >
+          <template #option="{ option }">
+            <div class="mr-3">
+              <span class="pi pi-clock mr-1"></span
+              ><span class="font-medium">{{ option.value }}</span>
+              <div v-if="option.disabled" class="text-xs">
+                All levels completed!
+              </div>
+            </div>
+            <span v-if="option.count" class="ml-auto">
+              {{ option.count }}
+            </span>
+          </template>
+        </PrimeMultiSelect>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -640,6 +675,8 @@ FilterService.filters.month = (value: Date, filter: Date) => {
     value.getMonth() === filter.getMonth()
   );
 };
+
+const { formatDate, formatNumber, formatPercent } = useFormatters();
 
 const columns = {
   title: 'Level name',
@@ -767,59 +804,89 @@ const preparedLevels = computed(() => {
   );
 });
 
-const { formatDate, formatNumber, formatPercent } = useFormatters();
-
-const styles = [
-  {
-    value: 'SMB1',
-    name: 'Super Mario Bros.',
-  },
-  {
-    value: 'SMW',
-    name: 'Super Mario World',
-  },
-  {
-    value: 'NSMBU',
-    name: 'New Super Mario Bros. U',
-  },
-  {
-    value: 'SMB3',
-    name: 'Super Mario Bros. 3',
-    disabled: true,
-  },
-];
-
-const themes = [
-  {
-    value: 'Castle',
-  },
-  {
-    value: 'Ground',
-  },
-  {
-    value: 'Underground',
-  },
-  {
-    value: 'Ghost House',
-  },
-  {
-    value: 'Airship',
-  },
-  {
-    value: 'Underwater',
-  },
-];
-
-const countries = COUNTRIES;
-
 const levelsByCreator = computed(() => useGroupBy(props.levels, 'creator'));
+
+function applyDisabledOptions<TOption extends { value: string | number }>(
+  options: TOption[],
+  levelProp: keyof UnclearedLevel,
+) {
+  return useOrderBy(
+    options.map((o) => {
+      const count = props.levels.filter((l) => l[levelProp] === o.value).length;
+      return {
+        ...o,
+        disabled: !count,
+        count,
+      };
+    }),
+    'count',
+    'desc',
+  );
+}
+
+const countries = computed(() =>
+  applyDisabledOptions(COUNTRIES, 'countryCode'),
+);
+const themes = computed(() =>
+  applyDisabledOptions(
+    [
+      {
+        value: 'Castle',
+      },
+      {
+        value: 'Ground',
+      },
+      {
+        value: 'Underground',
+      },
+      {
+        value: 'Ghost House',
+      },
+      {
+        value: 'Airship',
+      },
+      {
+        value: 'Underwater',
+      },
+    ],
+    'theme',
+  ),
+);
+const styles = computed(() =>
+  applyDisabledOptions(
+    [
+      {
+        value: 'SMB1',
+        name: 'Super Mario Bros.',
+      },
+      {
+        value: 'SMW',
+        name: 'Super Mario World',
+      },
+      {
+        value: 'NSMBU',
+        name: 'New Super Mario Bros. U',
+      },
+      {
+        value: 'SMB3',
+        name: 'Super Mario Bros. 3',
+      },
+    ],
+    'style',
+  ),
+);
 
 const timerOptions = computed(() =>
   useOrderBy(
-    useUniq(props.levels.map(({ timer }) => timer)),
-    useIdentity,
+    applyDisabledOptions(
+      useRange(10, 510, 10).map((timer) => ({
+        value: timer,
+      })),
+      'timer',
+    ),
+    'value',
     'asc',
-  ).map((timer) => ({ value: timer })),
+  ),
 );
 
 const creators = computed(() =>
