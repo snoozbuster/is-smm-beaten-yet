@@ -613,11 +613,11 @@ MonsterDraw._defitions = {
     extend: function (courseObject) {
       const dirToRotation = {
         // left
-        2: 0,
+        0: 0,
         // down
         1: 90,
         // right
-        0: 180,
+        2: 180,
         // up
         3: 270,
       };
