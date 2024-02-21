@@ -7,6 +7,7 @@
       :draggable="false"
       modal
       maximizable
+      dismissable-mask
       :pt="{
         content: {
           class: 'flex flex-col',
