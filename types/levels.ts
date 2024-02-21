@@ -9,6 +9,7 @@ export interface LevelData {
   players: number;
   clears: number;
   attempts: number;
+  checkpoints?: number;
   creator: string;
   levelId: string;
   countryCode: string;
@@ -16,6 +17,10 @@ export interface LevelData {
   theme: 'Castle' | 'Ground' | 'Underground' | 'Ghost House' | 'Airship';
   autoscroll: boolean;
   hacked?: boolean;
+  subworld?: {
+    theme: 'Castle' | 'Ground' | 'Underground' | 'Ghost House' | 'Airship';
+    autoscroll: boolean;
+  } | null;
 }
 
 export interface HackedClear

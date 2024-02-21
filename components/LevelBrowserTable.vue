@@ -575,6 +575,45 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('checkpoints')"
+      field="checkpoints"
+      header="Checkpoints"
+      class="text-nowrap"
+      :show-filter-menu="false"
+      sortable
+    >
+      <template #body="{ data }">
+        {{ data.checkpoints }}
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+        <PrimeMultiSelect
+          v-model="filterModel.value"
+          :options="checkpointsOptions"
+          option-label="label"
+          option-value="value"
+          placeholder="Any"
+          class="p-column-filter"
+          option-disabled="disabled"
+          :max-selected-labels="1"
+          :show-toggle-all="false"
+          :pt="{ wrapper: { style: { 'max-height': 'fit-content' } } }"
+          @change="filterCallback()"
+        >
+          <template #option="{ option }">
+            <div class="mr-3">
+              <span class="font-medium">{{ option.name }}</span>
+              <div v-if="option.disabled" class="text-xs">
+                All levels completed!
+              </div>
+            </div>
+            <span v-if="option.count" class="ml-auto">
+              {{ option.count }}
+            </span>
+          </template>
+        </PrimeMultiSelect>
+      </template>
+    </PrimeColumn>
+    <PrimeColumn
       v-if="columnVisible('autoscroll')"
       field="autoscroll"
       header="Autoscroll"
@@ -689,6 +728,7 @@ const columns = {
   style: 'Style',
   theme: 'Theme',
   timer: 'Timer',
+  checkpoints: 'Checkpoints',
   autoscroll: 'Autoscroll',
 };
 
@@ -889,6 +929,21 @@ const timerOptions = computed(() =>
   ),
 );
 
+const checkpointsOptions = computed(() =>
+  useOrderBy(
+    applyDisabledOptions(
+      [
+        { label: 'No checkpoints', value: 0 },
+        { label: '1 checkpoint', value: 1 },
+        { label: '2 checkpoints', value: 2 },
+      ],
+      'checkpoints',
+    ),
+    'value',
+    'asc',
+  ),
+);
+
 const creators = computed(() =>
   useOrderBy(
     useKeys(unref(levelsByCreator)).map((creator) => ({
@@ -939,6 +994,10 @@ function resetFilters() {
       matchMode: FilterMatchMode.IN,
     },
     timer: {
+      value: null,
+      matchMode: FilterMatchMode.IN,
+    },
+    checkpoints: {
       value: null,
       matchMode: FilterMatchMode.IN,
     },

@@ -161,14 +161,18 @@ exports.handler = async (event) => {
 
   console.log('Compiling uncleared levels');
   const translations = JSON.parse(await translationsPromise);
+  const levelMeta = JSON.parse(await levelMetaPromise);
 
   const getLevelTranslation = (level) =>
     level.countryCode === 'JP' || level.hacked
       ? { titleTranslation: translations[level.levelId] }
       : {};
 
+  const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
+
   const unclearedFinal = _.sortBy(
     unclearedClean.map((level) => ({
+      ...getLevelMeta(level),
       ...level,
       ...parseLevelCommon(level),
       ...getLevelTranslation(level),
@@ -181,9 +185,7 @@ exports.handler = async (event) => {
 
   console.log('Compiling cleared levels');
   const uploadDateOverrides = JSON.parse(await uploadOverridesPromise);
-  const levelMeta = JSON.parse(await levelMetaPromise);
 
-  const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
   const getClearDate = (level) => {
     if (level.levelId in uploadDateOverrides) {
       return {
