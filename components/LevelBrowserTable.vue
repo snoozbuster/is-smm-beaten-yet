@@ -614,6 +614,33 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
+      v-if="columnVisible('hasSubworld')"
+      field="hasSubworld"
+      header="Subworld"
+      data-type="boolean"
+      :pt="{
+        filterInput: {
+          class: 'leading-[18px]',
+        },
+      }"
+    >
+      <template #body="{ data }">
+        <i
+          class="pi"
+          :class="{
+            'pi-check-circle text-green-500': data.hasSubworld,
+            'pi-times-circle text-red-400': !data.hasSubworld,
+          }"
+        ></i>
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+        <PrimeTriStateCheckbox
+          v-model="filterModel.value"
+          @change="filterCallback()"
+        />
+      </template>
+    </PrimeColumn>
+    <PrimeColumn
       v-if="columnVisible('autoscroll')"
       field="autoscroll"
       header="Autoscroll"
@@ -730,6 +757,7 @@ const columns = {
   timer: 'Timer',
   checkpoints: 'Checkpoints',
   autoscroll: 'Autoscroll',
+  hasSubworld: 'Subworld',
 };
 
 const levelBrowserSettings = useStorage('levelBrowser', {
@@ -835,6 +863,7 @@ const preparedLevels = computed(() => {
   ).map((level) =>
     markRaw({
       ...level,
+      hasSubworld: Boolean(level.subworld),
       filterDate: new Date(
         DateTime.fromISO(level.uploadDate)
           .setZone(localZone, { keepLocalTime: true })
@@ -1001,6 +1030,7 @@ function resetFilters() {
       value: null,
       matchMode: FilterMatchMode.IN,
     },
+    hasSubworld: { value: null, matchMode: FilterMatchMode.EQUALS },
     autoscroll: { value: null, matchMode: FilterMatchMode.EQUALS },
   };
 }
