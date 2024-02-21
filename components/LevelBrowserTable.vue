@@ -601,7 +601,7 @@
         >
           <template #option="{ option }">
             <div class="mr-3">
-              <span class="font-medium">{{ option.name }}</span>
+              <span class="font-medium">{{ option.label }}</span>
               <div v-if="option.disabled" class="text-xs">
                 All levels completed!
               </div>
