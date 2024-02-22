@@ -71,9 +71,7 @@ async function uploadToS3(s3, filename, data) {
       Body: JSON.stringify(data),
       Bucket: BUCKET_ID,
       Key: filename,
-      Metadata: {
-        'Content-Type': 'application/json',
-      },
+      ContentType: 'application/json',
     }),
   );
 }
