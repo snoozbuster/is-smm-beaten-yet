@@ -15,6 +15,14 @@
       }"
       @update:visible="(v) => !v && navigateTo({ path: '/levels' })"
     >
+      <div v-if="level" class="mb-3">
+        <LevelListItem
+          :level="level"
+          :translate-level-title="shouldShowTranslation(level)"
+          :show-preview="false"
+          :show-icons="false"
+        />
+      </div>
       <ClientOnly>
         <LevelPreview
           v-if="!invalidLevelId"
@@ -30,11 +38,21 @@
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
+import useLevelBrowserSettings from '~/composables/useLevelBrowserSettings';
+
+const { uncleared } = useUnclearedLevels({ defer: false });
 
 const route = useRoute();
 const levelId = computed(
   () => (route.params.levelId as string)?.trim().toUpperCase(),
 );
+
+const level = computed(() =>
+  unref(uncleared).find(({ levelId: id }) => id === levelId.value),
+);
+
+const { shouldShowTranslation } = useLevelBrowserSettings();
+const { formatDate } = useFormatters();
 
 const invalidLevelId = ref(false);
 onBeforeMount(() => {
