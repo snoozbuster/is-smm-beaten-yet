@@ -24,7 +24,8 @@ export interface LevelData {
 }
 
 export interface HackedClear
-  extends Omit<LevelData, 'clears' | 'players' | 'stars'> {
+  extends Omit<LevelData, 'clears' | 'players' | 'stars'>,
+    Partial<Pick<LevelData, 'clears' | 'players' | 'stars'>> {
   hacked: true;
 }
 

@@ -54,6 +54,31 @@ const level = computed(() =>
 const { shouldShowTranslation } = useLevelBrowserSettings();
 const { formatDate } = useFormatters();
 
+const levelName = computed(
+  () =>
+    level.value &&
+    (shouldShowTranslation(level.value)
+      ? level.value.titleTranslation
+      : level.value.title),
+);
+
+useSeoMeta({
+  title: () =>
+    `Super Mario Maker 1 Uncleared Level Browser - ${
+      level.value ? levelName.value : 'Not Found'
+    }`,
+  ogTitle: () =>
+    `Super Mario Maker 1 Uncleared Level Browser - ${
+      level.value ? levelName.value : 'Not Found'
+    }`,
+  description: () =>
+    !level.value
+      ? undefined
+      : `View course data for this ${
+          level.value.style
+        } level uploaded on ${formatDate(level.value.uploadDate)}`,
+});
+
 const invalidLevelId = ref(false);
 onBeforeMount(() => {
   if (!levelId.value.match(/^([0-9A-F]{4}-){3}[0-9A-F]{4}$/i)) {

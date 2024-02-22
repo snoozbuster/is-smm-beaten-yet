@@ -197,7 +197,7 @@ function startAnimation() {
 }
 
 onMounted(async () => {
-  [clearSummary.value, uncleared.value] = await Promise.all([
+  [clearSummary.value] = await Promise.all([
     // this seems wrong but it works? what is the nuxt-y way to do this?
     (async () => (await fetch(`${DATA_ROOT_URL}/clear_summary.json`)).json())(),
     load(),
