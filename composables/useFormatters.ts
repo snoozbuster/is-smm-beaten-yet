@@ -1,6 +1,14 @@
 import { DateTime } from 'luxon';
 import { parse } from 'accept-language-parser';
 
+function getNavigatorLangs() {
+  try {
+    return navigator.languages as string[];
+  } catch {
+    return 'en-US';
+  }
+}
+
 export default function useFormatters() {
   const { 'accept-language': langPref } = useRequestHeaders([
     'Accept-Language',
@@ -19,7 +27,7 @@ export default function useFormatters() {
       return new Intl.NumberFormat(
         langPref
           ? parse(langPref).map(({ code }) => code)
-          : (navigator.languages as string[]),
+          : getNavigatorLangs(),
         {
           style: 'percent',
           maximumFractionDigits: precision,
