@@ -35,8 +35,8 @@
 import { COURSE_WORLD_GREEN } from '~/constants/colors';
 
 useSeoMeta({
-  title: 'Super Mario Maker 1 Uncleared Level Browser',
-  ogTitle: 'Super Mario Maker 1 Uncleared Level Browser',
+  title: 'SMM1 Uncleared Level Browser',
+  ogTitle: 'SMM1 Uncleared Level Browser',
   themeColor: COURSE_WORLD_GREEN,
 });
 

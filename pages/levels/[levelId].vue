@@ -63,11 +63,11 @@ const levelName = computed(
 
 useSeoMeta({
   title: () =>
-    `Super Mario Maker 1 Uncleared Level Browser - ${
+    `SMM1 Uncleared Level Browser - ${
       level.value ? levelName.value : 'Not Found'
     }`,
   ogTitle: () =>
-    `Super Mario Maker 1 Uncleared Level Browser - ${
+    `SMM1 Uncleared Level Browser - ${
       level.value ? levelName.value : 'Not Found'
     }`,
   description: () =>
