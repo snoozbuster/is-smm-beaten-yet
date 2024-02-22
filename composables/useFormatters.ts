@@ -1,6 +1,11 @@
 import { DateTime } from 'luxon';
+import { parse } from 'accept-language-parser';
 
 export default function useFormatters() {
+  const { 'accept-language': langPref } = useRequestHeaders([
+    'Accept-Language',
+  ]);
+
   return {
     formatPercent: (
       numerator: number,
@@ -12,7 +17,9 @@ export default function useFormatters() {
       }
 
       return new Intl.NumberFormat(
-        navigator.languages as string[],
+        langPref
+          ? parse(langPref).map(({ code }) => code)
+          : (navigator.languages as string[]),
         {
           style: 'percent',
           maximumFractionDigits: precision,
