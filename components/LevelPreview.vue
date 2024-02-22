@@ -1,12 +1,6 @@
 <template>
-  <PrimeSkeleton v-if="!worldData.main && !error" width="100%" height="432px" />
-  <div v-else-if="!worldData.main && error" class="text-xl">
-    <Icon name="material-symbols:error" class="text-red-700" /> There was an
-    error loading the preview. Please confirm your internet connection and try
-    again. If the error continues, the Discord may be able to help.
-  </div>
-  <div v-show="worldData.main" class="h-full min-h-0 flex flex-col">
-    <div class="relative mb-3">
+  <div class="h-full min-h-0 flex flex-col">
+    <div v-if="!error" class="relative mb-3">
       <PrimeTabMenu
         v-model:activeIndex="activeTabIndex"
         class="hidden sm:block"
@@ -30,6 +24,17 @@
         placeholder="Tile size"
         @change="drawWorlds"
       />
+    </div>
+
+    <PrimeSkeleton
+      v-if="!worldData.main && !error"
+      width="100%"
+      height="432px"
+    />
+    <div v-else-if="!worldData.main && error" class="text-xl">
+      <Icon name="material-symbols:error" class="text-red-700" /> There was an
+      error loading the preview. Please confirm your internet connection and try
+      again. If the error continues, the Discord may be able to help.
     </div>
 
     <div
