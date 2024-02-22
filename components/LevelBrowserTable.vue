@@ -717,11 +717,13 @@
 
 <script setup lang="ts">
 import { FilterMatchMode, FilterService } from 'primevue/api';
-import { useStorage } from '@vueuse/core';
 import { DateTime } from 'luxon';
 import { useToast } from 'primevue/usetoast';
 import type { UnclearedLevel } from '~/types/levels';
 import { COUNTRIES } from '~/constants/levelData';
+import useLevelBrowserSettings, {
+  LEVEL_BROWSER_COLUMNS,
+} from '~/composables/useLevelBrowserSettings';
 
 const props = defineProps({
   levels: {
@@ -744,31 +746,9 @@ FilterService.filters.month = (value: Date, filter: Date) => {
 
 const { formatDate, formatNumber, formatPercent } = useFormatters();
 
-const columns = {
-  title: 'Level name',
-  uploadDate: 'Upload date',
-  stars: 'Stars',
-  players: 'Players',
-  attempts: 'Attempts',
-  creator: 'Creator',
-  countryCode: 'Country',
-  style: 'Style',
-  theme: 'Theme',
-  timer: 'Timer',
-  checkpoints: 'Checkpoints',
-  autoscroll: 'Autoscroll',
-  hasSubworld: 'Subworld',
-};
-
-const levelBrowserSettings = useStorage('levelBrowser', {
-  includeHackedClears: true,
-  enableTranslation: true,
-  disableRouletteAnimation: false,
-  visibleColumns: useMapValues(
-    columns,
-    (_, columnId) => columnId !== 'autoscroll',
-  ),
-});
+const columns = LEVEL_BROWSER_COLUMNS;
+const { levelBrowserSettings, shouldShowTranslation } =
+  useLevelBrowserSettings();
 
 function initColumns(reset = false) {
   if (!unref(levelBrowserSettings).visibleColumns) {
@@ -984,17 +964,6 @@ const creators = computed(() =>
     'desc',
   ),
 );
-
-function shouldShowTranslation(level: UnclearedLevel) {
-  return (
-    unref(levelBrowserSettings).enableTranslation &&
-    (level.countryCode === 'JP' || level.hacked) &&
-    level.titleTranslation &&
-    level.title.localeCompare(level.titleTranslation, 'en', {
-      sensitivity: 'accent',
-    })
-  );
-}
 
 const datesWithLevels = computed(
   () => new Set(props.levels.map(({ uploadDate }) => uploadDate)),

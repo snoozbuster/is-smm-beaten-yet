@@ -146,6 +146,7 @@
 </template>
 
 <script setup lang="ts">
+import useLevelBrowserSettings from '~/composables/useLevelBrowserSettings';
 import type { UnclearedLevel } from '~/types/levels';
 
 const props = defineProps({
@@ -155,7 +156,7 @@ const props = defineProps({
   },
 });
 
-const { formatNumber, formatDate } = useFormatters();
+const { shouldShowTranslation } = useLevelBrowserSettings();
 
 const globalFilter = ref('');
 
@@ -179,16 +180,6 @@ const filteredLevels = computed(() =>
 );
 
 // copied
-function shouldShowTranslation(level: UnclearedLevel) {
-  return (
-    (level.countryCode === 'JP' || level.hacked) &&
-    level.titleTranslation &&
-    level.title.localeCompare(level.titleTranslation, 'en', {
-      sensitivity: 'accent',
-    })
-  );
-}
-
 const levelsByCreator = computed(() => useGroupBy(props.levels, 'creator'));
 const creators = computed(() =>
   useOrderBy(
