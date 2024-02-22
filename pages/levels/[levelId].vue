@@ -76,6 +76,12 @@ useSeoMeta({
       : `View course data for this ${
           level.value.style
         } level uploaded on ${formatDate(level.value.uploadDate)}`,
+  ogDescription: () =>
+    !level.value
+      ? undefined
+      : `View course data for this ${
+          level.value.style
+        } level uploaded on ${formatDate(level.value.uploadDate)}`,
 });
 
 const invalidLevelId = ref(false);
