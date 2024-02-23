@@ -40,16 +40,12 @@ import { onBeforeMount } from 'vue';
 import useLevelBrowserSettings from '~/composables/useLevelBrowserSettings';
 import { DATA_ROOT_URL } from '~/constants/levelData';
 
-const { uncleared } = useUnclearedLevels({ defer: false });
-
 const route = useRoute();
 const levelId = computed(
   () => (route.params.levelId as string)?.trim().toUpperCase(),
 );
 
-const level = computed(() =>
-  unref(uncleared).find(({ levelId: id }) => id === levelId.value),
-);
+const { level } = useUnclearedLevel(levelId);
 
 const { shouldShowTranslation } = useLevelBrowserSettings();
 const { formatDate } = useFormatters();

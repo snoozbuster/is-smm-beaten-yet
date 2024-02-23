@@ -40,10 +40,7 @@ useSeoMeta({
   themeColor: COURSE_WORLD_GREEN,
 });
 
-const route = useRoute();
-const { uncleared, load } = useUnclearedLevels({
-  defer: !route.params.levelId,
-});
+const { uncleared, load } = useUnclearedLevels();
 
 onMounted(load);
 </script>
