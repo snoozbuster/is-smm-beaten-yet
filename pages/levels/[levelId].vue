@@ -38,6 +38,7 @@
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
 import useLevelBrowserSettings from '~/composables/useLevelBrowserSettings';
+import { DATA_ROOT_URL } from '~/constants/levelData';
 
 const { uncleared } = useUnclearedLevels({ defer: false });
 
@@ -61,6 +62,10 @@ const levelName = computed(
       : level.value.title),
 );
 
+const thumbnailUrl = computed(
+  () => `${DATA_ROOT_URL}/course-data/${unref(levelId)}/thumbnail0.jpg`,
+);
+
 useSeoMeta({
   title: () =>
     `SMM1 Uncleared Level Browser - ${
@@ -82,6 +87,13 @@ useSeoMeta({
       : `View course data for this ${
           level.value.style
         } level uploaded on ${formatDate(level.value.uploadDate)}`,
+  ogImage: {
+    url: unref(thumbnailUrl),
+    alt: `Level thumbnail for ${unref(levelId)}`,
+    type: 'image/jpeg',
+  },
+  ogImageSecureUrl: () => unref(thumbnailUrl),
+  twitterCard: 'summary_large_image',
 });
 
 const invalidLevelId = ref(false);
