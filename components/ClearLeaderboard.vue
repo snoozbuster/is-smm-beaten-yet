@@ -1,5 +1,5 @@
 <template>
-  <h3 class="text-xl mb-3">Top 10 clearers</h3>
+  <h3 class="text-xl mb-3">Top clears leaderboard</h3>
   <ChartContainer>
     <Bar :data="data" :options="options" />
   </ChartContainer>
