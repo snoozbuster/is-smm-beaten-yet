@@ -15,15 +15,90 @@
         placeholder="Tile size"
         @change="drawWorlds"
       />
+      <div class="absolute right-0 bottom-0 sm:mb-1">
       <PrimeDropdown
         v-model="tileSize"
-        class="absolute right-0 bottom-0 sm:mb-1"
         :options="tileSizes"
         option-label="label"
         option-value="value"
         placeholder="Tile size"
         @change="drawWorlds"
       />
+        <PrimeButton
+          class="h-[34px] ml-2"
+          icon="pi pi-filter"
+          severity="secondary"
+          size="small"
+          aria-label="Filter course parts"
+          @click="toggleFilterMenu"
+        />
+      </div>
+      <PrimeOverlayPanel ref="filterMenu">
+        <div
+          class="overflow-y-scroll max-h-[50vh] md:overflow-auto md:grid md:grid-flow-col md:gap-2 p-menu p-component p-0 border-0"
+        >
+          <ul
+            v-for="(group, index) in filteredCoursePartOptions"
+            :key="group.label"
+            class="p-menu-list p-reset md:border-0"
+            :class="
+              index !== filteredCoursePartOptions.length - 1 &&
+              'pb-3 mb-3 border-solid border-b border-b-slate-300'
+            "
+          >
+            <li class="p-menuitem font-medium text-lg">
+              <div class="p-menuitem-content">
+                <label class="p-menuitem-link">
+                  <PrimeCheckbox
+                    v-model="partFilterState[group.label]"
+                    class="mr-3"
+                    binary
+                    @update:model-value="drawWorlds"
+                  />
+                  {{ group.label }}
+                </label>
+              </div>
+            </li>
+            <li
+              v-for="item in group.items"
+              :key="item.label"
+              class="p-menuitem"
+            >
+              <div class="p-menuitem-content">
+                <label class="p-menuitem-link">
+                  <PrimeCheckbox
+                    v-model="partFilterState[item.label]"
+                    binary
+                    @update:model-value="drawWorlds"
+                  />
+                  <img
+                    class="mx-2 object-contain object-left"
+                    :src="`/layout/draw/${item.iconName}`"
+                    width="16"
+                    :style="item.iconStyle"
+                  />
+                  {{ item.label }}
+                </label>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="text-right mt-2">
+          <PrimeButton
+            type="button"
+            icon="pi pi-filter-slash"
+            label="Reset filters"
+            outlined
+            size="small"
+            @click="
+              () => {
+                initPartFilters();
+                drawWorlds();
+              }
+            "
+          />
+        </div>
+      </PrimeOverlayPanel>
     </div>
 
     <PrimeSkeleton
@@ -88,8 +163,8 @@ import { Draw as DrawCourse } from '~/viewer/Draw';
 import { DATA_ROOT_URL } from '~/constants/levelData';
 import type { Course } from '~/viewer/Course';
 import type { CourseObject } from '~/viewer/CourseObject';
-import type { MonsterObject } from '~/viewer/MonsterObject';
-import type { BlockObject } from '~/viewer/BlockObject';
+import { MonsterObject } from '~/viewer/MonsterObject';
+import { BlockObject } from '~/viewer/BlockObject';
 
 const props = defineProps({
   levelId: {
@@ -131,6 +206,8 @@ const tabs = computed(() =>
       value: 'main' as const,
       command: () => {
         tab.value = 'main';
+        initPartFilters();
+        drawWorld('main');
       },
     },
     unref(hasSubworld) && {
@@ -138,6 +215,8 @@ const tabs = computed(() =>
       value: 'sub' as const,
       command: () => {
         tab.value = 'sub';
+        initPartFilters();
+        drawWorld('sub');
       },
     },
   ]),
@@ -182,6 +261,11 @@ const tileSizes = [
 const viewer = new CourseViewer();
 
 const error = ref(false);
+const filterMenu = ref();
+
+function toggleFilterMenu(event: Event) {
+  unref(filterMenu).toggle(event);
+}
 
 const toast = useToast();
 
@@ -209,6 +293,7 @@ onMounted(async () => {
         course,
         objects: objs,
       };
+      initPartFilters();
       drawWorld('main');
     });
 
@@ -248,7 +333,7 @@ function drawWorld(world: 'main' | 'sub') {
   new DrawCourse(
     `course-display-${world}`,
     worldData[world]!.course,
-    worldData[world]!.objects,
+    filterCourseParts(worldData[world]!.objects),
     unref(tileSize),
   );
 }
@@ -261,6 +346,446 @@ function drawWorlds() {
   if (unref(tab) === 'main') {
     drawWorld('sub');
   }
+}
+
+type CourseObjectCode = number;
+type Arrayable<T> = T | T[];
+type CourseObjectMatcher = Arrayable<
+  | CourseObjectCode
+  | ({ type: CourseObjectCode } & (
+      | { iconSuffix?: string; tileCoordinates?: never }
+      | { iconSuffix?: never; tileCoordinates?: { xT: number; yT: number } }
+    ) &
+      ({ subType: 0 | 1 } | { matcher: (obj: CourseObject) => boolean }))
+>;
+const courseObjectGroups = computed<
+  Record<string, Record<string, CourseObjectMatcher>>
+>(() => {
+  const kutsuKuriboStyleToName: Record<string, string> = {
+    WU: 'Yoshi',
+    MW: 'Yoshi',
+    M1: 'Goomba Shoe',
+    M3: 'Goomba Shoe',
+  };
+  const charaKinokoStyleToName: Record<string, string> = {
+    WU: 'Propeller Hat',
+    MW: 'Cape',
+    M1: 'Costume Mushroom',
+    M3: 'Tanooki Suit',
+  };
+  const charaKinokoStyleToIcon: Record<string, string> = {
+    WU: '0d',
+    MW: '0c',
+    M1: '0',
+    M3: '0b',
+  };
+
+  return {
+    Terrain: {
+      [worldData.main?.course.mode === 'MW' ? 'Flip Block' : 'Brick Block']: {
+        type: BlockObject.codes.RengaBlock,
+        subType: 0,
+        tileCoordinates: { xT: 1, yT: 0 },
+      },
+      '? Block': {
+        type: BlockObject.codes.HatenaBlock,
+        subType: 0,
+        tileCoordinates: { xT: 2, yT: 0 },
+      },
+      'Hard Block': {
+        type: BlockObject.codes.HardBlock,
+        subType: 0,
+        tileCoordinates: { xT: 6, yT: 0 },
+      },
+      Ground: {
+        type: BlockObject.codes.Ground,
+        subType: 0,
+        tileCoordinates: { xT: 0, yT: 13 },
+      },
+      'Semi-solid Platform': [
+        {
+          type: BlockObject.codes.GroundMushroom,
+          subType: 0,
+          tileCoordinates: { xT: 3, yT: 2 },
+        },
+        BlockObject.codes.GroundBox,
+      ],
+      'Donut Block': {
+        type: BlockObject.codes.ChikuwaBlock,
+        subType: 0,
+        tileCoordinates: { xT: 0, yT: 4 },
+      },
+      'Cloud Block': {
+        type: BlockObject.codes.KumoBlock,
+        subType: 0,
+        tileCoordinates: { xT: 6, yT: 6 },
+      },
+      'Note Block': {
+        type: BlockObject.codes.OnpuBlock,
+        subType: 0,
+        tileCoordinates: { xT: 4, yT: 0 },
+      },
+      'Kaizo Block': {
+        type: BlockObject.codes.ClearBlock,
+        subType: 0,
+        tileCoordinates: { xT: 3, yT: 0 },
+      },
+      'Spike Block': {
+        type: BlockObject.codes.Toge,
+        subType: 0,
+        tileCoordinates: { xT: 2, yT: 4 },
+      },
+      'Ice Block': {
+        type: BlockObject.codes.IceBlock,
+        subType: 0,
+        tileCoordinates: { xT: 8, yT: 7 },
+      },
+    },
+    Enemies: {
+      Goomba: MonsterObject.codes.Kuribo,
+      'Koopa Troopa': MonsterObject.codes.Nokonoko,
+      'Piranha Plant': MonsterObject.codes.Pakkun,
+      'Hammer Bro': {
+        type: MonsterObject.codes.HammerBro,
+        subType: 0,
+      },
+      'Sledge Bro': {
+        type: MonsterObject.codes.HammerBro,
+        subType: 1,
+      },
+      Thwomp: {
+        type: MonsterObject.codes.Dossun,
+        subType: 0,
+      },
+      'Bill Blaster': MonsterObject.codes.KillerHoudai,
+      'Bob-omb': MonsterObject.codes.Bombhei,
+      Spiny: {
+        type: MonsterObject.codes.Togezo,
+        subType: 0,
+      },
+      'Buzzy Beetle': {
+        type: MonsterObject.codes.Met,
+        subType: 0,
+      },
+      Lakitu: MonsterObject.codes.Jugem,
+      Magikoopa: MonsterObject.codes.Kameck,
+      'Spike Top': MonsterObject.codes.Togemet,
+      Boo: MonsterObject.codes.Teresa,
+      'Dry/Fish Bones': MonsterObject.codes.Karon,
+      Cannon: MonsterObject.codes.SenkanHoudai,
+      Blooper: MonsterObject.codes.Gesso,
+      Wiggler: MonsterObject.codes.Hanachan,
+      'Cheep Cheep': MonsterObject.codes.Pukupuku,
+      Muncher: MonsterObject.codes.BlackPakkun,
+      'Rocky Wrench': {
+        type: MonsterObject.codes.Poo,
+        subType: 0,
+      },
+      'Monty Mole': {
+        type: MonsterObject.codes.Poo,
+        subType: 1,
+      },
+      Podoboo: MonsterObject.codes.Bubble,
+      'Chain Chomp': MonsterObject.codes.Wanwan,
+      Bowser: {
+        type: MonsterObject.codes.Koopa,
+        subType: 0,
+      },
+      'Bowser Jr.': {
+        type: MonsterObject.codes.Koopa,
+        subType: 1,
+      },
+    },
+    Items: {
+      'Key Coin': {
+        type: BlockObject.codes.Coin,
+        subType: 1,
+        tileCoordinates: { xT: 0, yT: 16 },
+      },
+      Trampoline: { type: MonsterObject.codes.JumpStep, subType: 0 },
+      'Sideways Trampoline': { type: MonsterObject.codes.JumpStep, subType: 1 },
+      'P-Switch': {
+        type: MonsterObject.codes.PSwitch,
+        subType: 0,
+      },
+      Key: {
+        type: MonsterObject.codes.PSwitch,
+        subType: 1,
+      },
+      'POW Block': MonsterObject.codes.PowBlock,
+      'Lakitu Cloud': MonsterObject.codes.JugemCloud,
+      'Clown Car': MonsterObject.codes.KoopaClown,
+    },
+    Powerups: {
+      Coin: {
+        type: BlockObject.codes.Coin,
+        subType: 0,
+        tileCoordinates: { xT: 7, yT: 0 },
+      },
+      Mushroom: MonsterObject.codes.SuperKinoko,
+      'Spiked Shellmet': {
+        type: MonsterObject.codes.Togezo,
+        subType: 1,
+        tileCoordinates: { xT: 11, yT: 10 },
+      },
+      Shellmet: {
+        type: MonsterObject.codes.Met,
+        subType: 1,
+        tileCoordinates: { xT: 10, yT: 10 },
+      },
+      '1-UP Mushroom': MonsterObject.codes.UpKinoko,
+      'Fire Flower': MonsterObject.codes.FireFlower,
+      Star: MonsterObject.codes.SuperStar,
+      [charaKinokoStyleToName[worldData.main?.course.mode] ??
+      'Style-specific Powerup']: {
+        type: MonsterObject.codes.CharaKinoko,
+        subType: 0,
+        iconSuffix: charaKinokoStyleToIcon[worldData.main?.course.mode],
+      },
+      [kutsuKuriboStyleToName[worldData.main?.course.mode] ?? 'Boot/Yoshi']: {
+        type: MonsterObject.codes.KutsuKuribo,
+        subType: 0,
+        iconSuffix: ['M1', 'M3'].includes(worldData.main?.course.mode)
+          ? '0b'
+          : '0',
+      },
+      'Lanky Mushroom': MonsterObject.codes.FunnyKinoko,
+      'Giant Mushroom': MonsterObject.codes.DekaKinoko,
+    },
+    Course: {
+      Skewer: {
+        type: MonsterObject.codes.Dossun,
+        subType: 1,
+      },
+      'Warp Pipe': BlockObject.codes.Dokan,
+      Lift: MonsterObject.codes.Lift,
+      Bridge: {
+        type: BlockObject.codes.Bridge,
+        subType: 0,
+        tileCoordinates: { xT: 1, yT: 3 },
+      },
+      Firebar: MonsterObject.codes.FireBar,
+      Vine: {
+        type: BlockObject.codes.Tsuta,
+        subType: 0,
+        tileCoordinates: { xT: 14, yT: 7 },
+      },
+      'Skull Platform': MonsterObject.codes.YouganLift,
+      'Conveyor Belt': {
+        type: BlockObject.codes.BeltConveyor,
+        subType: 0,
+        tileCoordinates: { xT: 8, yT: 0 },
+      },
+      Burner: MonsterObject.codes.Burner,
+      Door: {
+        type: MonsterObject.codes.Door,
+        matcher(obj) {
+          return obj.doorType === 0;
+        },
+      },
+      'P-Door': {
+        type: MonsterObject.codes.Door,
+        iconSuffix: '1',
+        matcher(obj) {
+          return obj.doorType === 1;
+        },
+      },
+      'Key Door': {
+        type: MonsterObject.codes.Door,
+        iconSuffix: '2',
+        matcher(obj) {
+          return obj.doorType === 2;
+        },
+      },
+      Track: {
+        type: BlockObject.codes.Rail,
+        subType: 0,
+        tileCoordinates: { xT: 0, yT: 9 },
+      },
+      'Arrow Sign': {
+        type: MonsterObject.codes.AirSignBoard,
+        subType: 0,
+      },
+      'Checkpoint Flag': {
+        type: MonsterObject.codes.AirSignBoard,
+        subType: 1,
+      },
+      'One-way Wall': MonsterObject.codes.HalfHitWall,
+      Saw: {
+        type: MonsterObject.codes.Saw,
+        subType: 0,
+      },
+      Bumper: {
+        type: MonsterObject.codes.Saw,
+        subType: 1,
+      },
+    },
+  };
+});
+
+const normalizedCoursePartOptions = computed(() => {
+  const createMatchFn = (matcher: CourseObjectMatcher) => {
+    const types = Array.isArray(matcher)
+      ? matcher
+      : typeof matcher === 'number'
+        ? [matcher]
+        : [matcher.type];
+
+    const matchFn =
+      Array.isArray(matcher) || typeof matcher !== 'object'
+        ? useStubTrue
+        : 'matcher' in matcher
+          ? matcher.matcher
+          : (obj: CourseObject) => obj.subType === matcher.subType;
+
+    return (obj: CourseObject) => {
+      return types.includes(obj.type) && matchFn(obj);
+    };
+  };
+
+  const currentWorld = worldData[unref(tab)];
+
+  return Object.keys(unref(courseObjectGroups)).map((groupName) => ({
+    label: groupName,
+    items: useFlatMap(unref(courseObjectGroups)[groupName], (matchers, name) =>
+      (Array.isArray(matchers) ? matchers : [matchers]).map(
+        (matcher, index) => {
+          const type = typeof matcher === 'number' ? matcher : matcher.type;
+          const isObjectMatcher =
+            !Array.isArray(matcher) && typeof matcher === 'object';
+          const iconSuffix =
+            (isObjectMatcher && (matcher.iconSuffix || matcher.subType)) || '0';
+          const isBlockObject = type in BlockObject.names;
+          const iconName =
+            isObjectMatcher && matcher.tileCoordinates && currentWorld
+              ? `${isBlockObject ? 'titleset' : 'monster'}/${useCompact([
+                  'MW',
+                  isBlockObject && currentWorld.course.themeName,
+                ]).join('-')}.png`
+              : `format/${type}-${iconSuffix}.png`;
+          const iconStyle =
+            isObjectMatcher && matcher.tileCoordinates
+              ? `object-fit: none;
+                 object-position: -${matcher.tileCoordinates.xT * 16}px -${
+                   matcher.tileCoordinates.yT * 16
+                 }px;
+                 height: 16px`
+              : undefined;
+
+          return {
+            label: name,
+            iconName,
+            iconStyle,
+            type,
+            hidden: index > 0,
+            match: createMatchFn(matcher),
+          };
+        },
+      ),
+    ),
+  }));
+});
+
+function makeGroupComputedOption(label: string) {
+  return computed({
+    get() {
+      const items = unref(normalizedCoursePartOptions).find(
+        ({ label: l }) => label === l,
+      )?.items;
+      return items?.every(({ label }) => partFilterState[label]);
+    },
+    set(value) {
+      const items = unref(normalizedCoursePartOptions).find(
+        ({ label: l }) => label === l,
+      )?.items;
+      if (items) {
+        items.forEach(({ label }) => (partFilterState[label] = value));
+      }
+    },
+  });
+}
+
+const partFilterState: Record<string, boolean> = reactive(
+  useMapValues(
+    useKeyBy(unref(normalizedCoursePartOptions), 'label'),
+    (_, label) => makeGroupComputedOption(label),
+  ),
+);
+
+function initPartFilters() {
+  unref(normalizedCoursePartOptions).forEach(({ items }) => {
+    items.forEach(({ label }) => (partFilterState[label] = true));
+  });
+}
+
+const filteredCoursePartOptions = computed(() => {
+  const currentWorld = worldData[unref(tab)];
+  if (!currentWorld) {
+    return unref(normalizedCoursePartOptions);
+  }
+
+  let searchOptions = useFlatMap(unref(normalizedCoursePartOptions), 'items');
+  const foundOptions = new Set<string>();
+  useForEach(currentWorld.objects, (obj) => {
+    searchOptions.forEach(({ label, match }) => {
+      if (match(obj)) {
+        foundOptions.add(label);
+      }
+    });
+    searchOptions = searchOptions.filter(
+      ({ label }) => !foundOptions.has(label),
+    );
+
+    if (searchOptions.length === 0) {
+      return false;
+    }
+  });
+
+  return unref(normalizedCoursePartOptions)
+    .map(({ items, ...rest }) => ({
+      ...rest,
+      items: items.filter(
+        ({ label, hidden }) => !hidden && foundOptions.has(label),
+      ),
+    }))
+    .filter(({ items }) => items.length > 0);
+});
+
+function filterCourseParts(objs: CourseObject[]) {
+  const typeMatchers: Record<
+    number,
+    { label: string; match: (o: CourseObject) => boolean }[]
+  > = useGroupBy(
+    useFlatMap(unref(normalizedCoursePartOptions), 'items'),
+    'type',
+  );
+
+  function filterObject(obj: CourseObject) {
+    const hasChildObj =
+      ![
+        BlockObject.codes.Ground,
+        BlockObject.codes.HardBlock,
+        BlockObject.codes.RengaBlock,
+        BlockObject.codes.CastleBridge,
+      ].includes(obj.type) && obj.childType in MonsterObject.names;
+    const objs = useCompact([
+      obj,
+      hasChildObj &&
+        new MonsterObject({
+          ...obj,
+          type: obj.childType,
+          flags: obj.childFlags,
+        }),
+    ]);
+    return objs.some(
+      (o) =>
+        typeMatchers[o.type]?.some(
+          ({ match, label }) => match(o) && partFilterState[label],
+        ) ?? true,
+    );
+  }
+
+  return objs.filter(filterObject);
 }
 
 function getCanvasEl() {
