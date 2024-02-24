@@ -25,6 +25,8 @@ export class BlockObject extends CourseObject {
     super(_objectData);
     this.name = BlockObject.names[this.type];
     this.size = 1;
+    const ext = this._extAttributes(_objectData);
+    this.subType = ext.subType;
   }
 
   /**
@@ -37,6 +39,22 @@ export class BlockObject extends CourseObject {
    */
   static is(_type) {
     return !!BlockObject.names[_type];
+  }
+
+  /**
+   * @method module:BlockObject::_extAttributes
+   * Extends the attributes class
+   * @arg {Object} _objectData    Object data
+   * @access private
+   * @return {Object}
+   */
+  _extAttributes(_objectData) {
+    const flags = _objectData.flags;
+    const subType = (flags & 7) >> 2; // extract bit  3
+
+    return {
+      subType,
+    };
   }
 }
 

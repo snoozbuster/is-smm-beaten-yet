@@ -206,9 +206,9 @@ BlockDraw._defitions = {
   },
   8: {
     func: function (courseObject) {
-      const flags = courseObject.flags;
+      const subtype = courseObject.subType;
       /* red coin */
-      if ((flags & 4) >> 2) {
+      if (subtype === 1) {
         return { xT: 0, yT: 16 };
       }
       /* normal coin */
