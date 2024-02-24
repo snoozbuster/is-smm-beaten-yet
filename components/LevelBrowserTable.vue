@@ -265,19 +265,22 @@ const props = defineProps({
   },
 });
 
-// @ts-expect-error
-FilterService.filters.year = (value: Date, filter: Date) => {
-  return value.getFullYear() === filter.getFullYear();
-};
-// @ts-expect-error
-FilterService.filters.month = (value: Date, filter: Date) => {
-  return (
-    value.getFullYear() === filter.getFullYear() &&
-    value.getMonth() === filter.getMonth()
-  );
-};
+const keyHack = ref(0);
+const sortField = ref('uploadDate');
+const sortOrder = ref(1);
+const currentTableView = ref<UnclearedLevel[]>([]);
+
+watch(
+  toRef(props, 'levels'),
+  () => {
+    currentTableView.value = props.levels;
+  },
+  { immediate: true },
+);
 
 const { formatDate, formatNumber, formatPercent } = useFormatters();
+
+// #region settings and columns
 
 const { levelBrowserSettings, shouldShowTranslation } =
   useLevelBrowserSettings();
@@ -286,31 +289,9 @@ function columnVisible(field: keyof typeof LEVEL_BROWSER_COLUMNS) {
   return unref(levelBrowserSettings).visibleColumns[field] !== false;
 }
 
-const keyHack = ref(0);
-const sortField = ref('uploadDate');
-const sortOrder = ref(1);
-
 const columns = ref(
   unref(levelBrowserSettings).columnOrder ?? DEFAULT_COLUMN_ORDER,
 );
-
-function initColumns(reset = false) {
-  if (!unref(levelBrowserSettings).visibleColumns) {
-    levelBrowserSettings.value.visibleColumns = {} as any;
-  }
-  if (!unref(levelBrowserSettings).columnOrder) {
-    levelBrowserSettings.value.columnOrder = [...DEFAULT_COLUMN_ORDER];
-  }
-  useForEach(LEVEL_BROWSER_COLUMNS, (_, field) => {
-    if (!(field in levelBrowserSettings.value.visibleColumns) || reset) {
-      levelBrowserSettings.value.visibleColumns[
-        field as keyof typeof LEVEL_BROWSER_COLUMNS
-      ] = true;
-    }
-  });
-}
-
-initColumns();
 
 function handleColumnReorder({
   dragIndex,
@@ -329,14 +310,6 @@ function handleColumnReorder({
     ...levelBrowserSettings.value.columnOrder.splice(trueDragIndex, 1),
   );
 }
-
-const numHiddenColumns = computed(
-  () =>
-    useFilter(
-      LEVEL_BROWSER_COLUMNS,
-      (_, field) => !columnVisible(field as keyof typeof LEVEL_BROWSER_COLUMNS),
-    ).length,
-);
 
 const menu = ref();
 const toggle = (event: MouseEvent) => {
@@ -365,16 +338,27 @@ const settingsMenuItems = computed(() => [
   },
 ]);
 
-const currentTableView = ref<UnclearedLevel[]>([]);
-const numRows = computed(() => unref(currentTableView).length);
+function initColumns(reset = false) {
+  if (!unref(levelBrowserSettings).visibleColumns) {
+    levelBrowserSettings.value.visibleColumns = {} as any;
+  }
+  if (!unref(levelBrowserSettings).columnOrder) {
+    levelBrowserSettings.value.columnOrder = [...DEFAULT_COLUMN_ORDER];
+  }
+  useForEach(LEVEL_BROWSER_COLUMNS, (_, field) => {
+    if (!(field in levelBrowserSettings.value.visibleColumns) || reset) {
+      levelBrowserSettings.value.visibleColumns[
+        field as keyof typeof LEVEL_BROWSER_COLUMNS
+      ] = true;
+    }
+  });
+}
 
-watch(
-  toRef(props, 'levels'),
-  () => {
-    currentTableView.value = props.levels;
-  },
-  { immediate: true },
-);
+initColumns();
+
+// #endregion
+
+// #region template computed data
 
 function translateLevels(levels: UnclearedLevel[]) {
   if (!unref(levelBrowserSettings).enableTranslation) {
@@ -394,6 +378,16 @@ function translateLevels(levels: UnclearedLevel[]) {
     });
   });
 }
+
+const numRows = computed(() => unref(currentTableView).length);
+
+const numHiddenColumns = computed(
+  () =>
+    useFilter(
+      LEVEL_BROWSER_COLUMNS,
+      (_, field) => !columnVisible(field as keyof typeof LEVEL_BROWSER_COLUMNS),
+    ).length,
+);
 
 const preparedLevels = computed(() => {
   // all my homies hate JS dates
@@ -417,6 +411,38 @@ const preparedLevels = computed(() => {
 
 const levelsByCreator = computed(() => useGroupBy(props.levels, 'creator'));
 
+const creators = computed(() =>
+  useOrderBy(
+    useKeys(unref(levelsByCreator)).map((creator) => ({
+      value: creator,
+      countryCode: unref(levelsByCreator)[creator][0].countryCode,
+      levelCount: unref(levelsByCreator)[creator].length,
+    })),
+    'levelCount',
+    'desc',
+  ),
+);
+
+const datesWithLevels = computed(
+  () => new Set(props.levels.map(({ uploadDate }) => uploadDate)),
+);
+
+// #endregion
+
+// #region filters and filter options
+
+// @ts-expect-error
+FilterService.filters.year = (value: Date, filter: Date) => {
+  return value.getFullYear() === filter.getFullYear();
+};
+// @ts-expect-error
+FilterService.filters.month = (value: Date, filter: Date) => {
+  return (
+    value.getFullYear() === filter.getFullYear() &&
+    value.getMonth() === filter.getMonth()
+  );
+};
+
 function applyDisabledOptions<TOption extends { value: string | number }>(
   options: TOption[],
   levelProp: keyof UnclearedLevel,
@@ -438,6 +464,7 @@ function applyDisabledOptions<TOption extends { value: string | number }>(
 const countries = computed(() =>
   applyDisabledOptions(COUNTRIES, 'countryCode'),
 );
+
 const themes = computed(() =>
   applyDisabledOptions(
     [
@@ -463,6 +490,7 @@ const themes = computed(() =>
     'theme',
   ),
 );
+
 const styles = computed(() =>
   applyDisabledOptions(
     [
@@ -515,22 +543,6 @@ const checkpointsOptions = computed(() =>
   ),
 );
 
-const creators = computed(() =>
-  useOrderBy(
-    useKeys(unref(levelsByCreator)).map((creator) => ({
-      value: creator,
-      countryCode: unref(levelsByCreator)[creator][0].countryCode,
-      levelCount: unref(levelsByCreator)[creator].length,
-    })),
-    'levelCount',
-    'desc',
-  ),
-);
-
-const datesWithLevels = computed(
-  () => new Set(props.levels.map(({ uploadDate }) => uploadDate)),
-);
-
 const filters = ref();
 function resetFilters() {
   filters.value = {
@@ -568,10 +580,20 @@ function resetFilters() {
 
 resetFilters();
 
+// #endregion
+
+// #region random level generation
+
 const toast = useToast();
 const selected = ref<UnclearedLevel>();
 const isRandomizing = ref(false);
 const randomProgress = ref<number>(0);
+
+function getRowClass(level: UnclearedLevel) {
+  if (level.levelId === selected.value?.levelId) {
+    return 'p-highlight';
+  }
+}
 
 function selectRandomLevel() {
   let lastIndex: number = selected.value
@@ -673,11 +695,9 @@ function selectRandomLevel() {
   })();
 }
 
-function getRowClass(level: UnclearedLevel) {
-  if (level.levelId === selected.value?.levelId) {
-    return 'p-highlight';
-  }
-}
+// #endregion
+
+// #region column rendering
 
 type DataTableLevel = UnclearedLevel &
   ({ translated: true; originalTitle: string } | { translated: false }) & {
@@ -1167,4 +1187,6 @@ const COLUMN_MAP: Record<
     ),
   },
 };
+
+// #endregion
 </script>
