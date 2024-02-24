@@ -65,11 +65,11 @@ const thumbnailUrl = computed(
 useSeoMeta({
   title: () =>
     `SMM1 Uncleared Level Browser - ${
-      level.value ? levelName.value : 'Not Found'
+      level.value ? levelName.value : 'Not Found (or already cleared)'
     }`,
   ogTitle: () =>
     `SMM1 Uncleared Level Browser - ${
-      level.value ? levelName.value : 'Not Found'
+      level.value ? levelName.value : 'Not Found (or already cleared)'
     }`,
   description: () =>
     !level.value
