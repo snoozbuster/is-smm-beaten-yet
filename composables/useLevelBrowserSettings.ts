@@ -17,6 +17,22 @@ export const LEVEL_BROWSER_COLUMNS = {
   hasSubworld: 'Subworld',
 };
 
+export const DEFAULT_COLUMN_ORDER = [
+  'title',
+  'uploadDate',
+  'stars',
+  'players',
+  'attempts',
+  'creator',
+  'countryCode',
+  'style',
+  'theme',
+  'timer',
+  'checkpoints',
+  'autoscroll',
+  'hasSubworld',
+] as (keyof typeof LEVEL_BROWSER_COLUMNS)[];
+
 export default function useLevelBrowserSettings() {
   const legacyLevelBrowserSettings = useStorage('levelBrowser', {});
 
@@ -27,6 +43,7 @@ export default function useLevelBrowserSettings() {
           includeHackedClears: true,
           enableTranslation: true,
           disableRouletteAnimation: false,
+          columnOrder: DEFAULT_COLUMN_ORDER,
           visibleColumns: useMapValues(
             LEVEL_BROWSER_COLUMNS,
             (_, columnId) => columnId !== 'autoscroll',
