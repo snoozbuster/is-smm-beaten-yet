@@ -4,5 +4,12 @@
   },
   "editor.quickSuggestions": {
       "strings": true
-  }
+  },
+  "eslint.options": {
+    "overrideConfig": {
+      "prettier/prettier": "off"
+    }
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }
