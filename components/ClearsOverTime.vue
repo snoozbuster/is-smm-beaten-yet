@@ -121,10 +121,12 @@ const options = computed(() => ({
     yClears: {
       type: 'linear',
       position: 'left',
+      beginAtZero: true,
     },
     yRemaining: {
       type: 'linear',
       position: 'right',
+      beginAtZero: true,
       grid: {
         drawOnChartArea: false,
       },
