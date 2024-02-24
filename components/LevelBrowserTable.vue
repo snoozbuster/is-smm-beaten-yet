@@ -275,7 +275,10 @@
       style="min-width: 150px"
     >
       <template #body="{ data }">
-        {{ data.stars ? formatNumber(data.stars) : data.stars ?? '' }}
+        <template v-if="Number.isFinite(data.stars)">
+          <span class="pi pi-star"></span>
+          {{ formatNumber(data.stars) }}
+        </template>
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeInputNumber
@@ -299,7 +302,10 @@
       style="min-width: 150px"
     >
       <template #body="{ data }">
-        {{ data.players ? formatNumber(data.players) : data.players ?? '' }}
+        <span class="pi pi-users mr-1"></span>
+        <template v-if="Number.isFinite(data.players)">
+          {{ formatNumber(data.players) }}
+        </template>
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeInputNumber
@@ -323,7 +329,10 @@
       style="min-width: 150px"
     >
       <template #body="{ data }">
-        {{ data.attempts ? formatNumber(data.attempts) : data.attempts ?? '' }}
+        <template v-if="Number.isFinite(data.attempts)">
+          <Icon class="-mt-1" name="material-symbols:footprint" />
+          {{ formatNumber(data.attempts) }}
+        </template>
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <PrimeInputNumber
