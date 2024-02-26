@@ -823,25 +823,25 @@ function getObjectIntersections({ x, y }: { x: number; y: number }) {
       // right-facing, origin top-left
       return (
         obj.x * size < x &&
-        x < (obj.x + obj.width) * size &&
-        (obj.y - obj.height / 2) * size < y &&
-        y < (obj.y + obj.height / 2) * size
+        x < (obj.x + obj.height) * size &&
+        (obj.y - obj.width + 1) * size < y &&
+        y < (obj.y + 1) * size
       );
     } else if (obj.direction === 3) {
       // bottom-facing, origin top-right
       return (
-        (obj.x + obj.width / 2) * size > x &&
-        x > (obj.x - obj.width / 2) * size &&
-        (obj.y - obj.height / 2) * size < y &&
-        y < (obj.y + obj.height / 2) * size
+        (obj.x + 1) * size > x &&
+        x > (obj.x - obj.width + 1) * size &&
+        (obj.y + 1) * size > y &&
+        y > (obj.y - obj.height + 1) * size
       );
     } else if (obj.direction === 1) {
       // left-facing, origin bottom-right
       return (
-        (obj.x + obj.width / 2) * size > x &&
-        x > (obj.x - obj.width / 2) * size &&
+        (obj.x + 1) * size > x &&
+        x > (obj.x - obj.height + 1) * size &&
         obj.y * size < y &&
-        y < (obj.y + obj.height) * size
+        y < (obj.y + obj.width) * size
       );
     }
     return false;
