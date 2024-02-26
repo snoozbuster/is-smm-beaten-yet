@@ -950,12 +950,13 @@ function handleClick(event: MouseEvent) {
   const coords = projectMouseEvent(event);
   const intersections = getObjectIntersections(coords);
 
-  const target = intersections.find(({ name }) => name in objectHandlers);
+  const target = intersections.find(
+    (obj) =>
+      obj.name in objectHandlers &&
+      objectHandlers[obj.name].hasInteraction?.(obj),
+  );
 
-  if (
-    target?.name in objectHandlers &&
-    (objectHandlers[target.name].hasInteraction?.(target) ?? true)
-  ) {
+  if (target) {
     objectHandlers[target.name].onClick(target, worldData[unref(tab)]?.objects);
   }
 }
