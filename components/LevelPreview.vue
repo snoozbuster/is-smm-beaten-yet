@@ -957,7 +957,10 @@ function handleClick(event: MouseEvent) {
   const coords = projectMouseEvent(event);
   const intersections = getObjectIntersections(coords);
 
-  const target = intersections.find(
+  // object lists are sorted in roughly render order (so later in the list
+  // renders on top).  by looking for the last match in the list we can usually
+  // match the layering on the image itself.
+  const target = intersections.findLast(
     (obj) =>
       obj.name in objectHandlers &&
       objectHandlers[obj.name].hasInteraction?.(obj),
