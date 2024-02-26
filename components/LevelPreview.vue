@@ -199,25 +199,22 @@ const worldData = reactive<{
 const hasSubworld = computed(() => Boolean(worldData.sub?.objects.length));
 
 const tab = ref<'main' | 'sub'>('main');
+function switchWorld(world: 'main' | 'sub') {
+  tab.value = world;
+  initPartFilters();
+  drawWorld(world);
+}
 const tabs = computed(() =>
   useCompact([
     {
       label: 'Main world',
       value: 'main' as const,
-      command: () => {
-        tab.value = 'main';
-        initPartFilters();
-        drawWorld('main');
-      },
+      command: () => switchWorld('main'),
     },
     unref(hasSubworld) && {
       label: 'Subworld',
       value: 'sub' as const,
-      command: () => {
-        tab.value = 'sub';
-        initPartFilters();
-        drawWorld('sub');
-      },
+      command: () => switchWorld('sub'),
     },
   ]),
 );
@@ -226,7 +223,7 @@ const activeTabIndex = computed({
     return tabs.value.findIndex(({ value }) => value === tab.value);
   },
   set(value) {
-    tab.value = tabs.value[value].value;
+    switchWorld(tabs.value[value].value);
   },
 });
 
@@ -913,7 +910,7 @@ const objectHandlers = {
       );
 
       if (otherPipe) {
-        tab.value = tab.value === 'main' ? 'sub' : 'main';
+        switchWorld(tab.value === 'main' ? 'sub' : 'main');
         nextTick(() => {
           blinkObj(otherPipe, {
             rotation:
