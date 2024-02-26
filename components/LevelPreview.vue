@@ -545,13 +545,13 @@ const courseObjectGroups = computed<
       'Pipe (no warp)': {
         type: BlockObject.codes.Dokan,
         matcher(obj) {
-          return obj.pipeLink === '-1';
+          return obj.pipeLink === -1;
         },
       },
       'Warp Pipe': {
         type: BlockObject.codes.Dokan,
         matcher(obj) {
-          return obj.pipeLink !== '-1';
+          return obj.pipeLink !== -1;
         },
       },
       Lift: MonsterObject.codes.Lift,
