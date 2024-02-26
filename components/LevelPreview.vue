@@ -963,7 +963,7 @@ function handleClick(event: MouseEvent) {
   const target = intersections.findLast(
     (obj) =>
       obj.name in objectHandlers &&
-      objectHandlers[obj.name].hasInteraction?.(obj),
+      (objectHandlers[obj.name].hasInteraction?.(obj) ?? true),
   );
 
   if (target) {
