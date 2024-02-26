@@ -353,7 +353,7 @@ type CourseObjectMatcher = Arrayable<
       | { iconSuffix?: string; tileCoordinates?: never }
       | { iconSuffix?: never; tileCoordinates?: { xT: number; yT: number } }
     ) &
-      ({ subType: 0 | 1 } | { matcher: (obj: CourseObject) => boolean }))
+      ({ subType?: 0 | 1 } | { matcher: (obj: CourseObject) => boolean }))
 >;
 const courseObjectGroups = computed<
   Record<string, Record<string, CourseObjectMatcher>>
@@ -381,60 +381,49 @@ const courseObjectGroups = computed<
     Terrain: {
       [worldData.main?.course.mode === 'MW' ? 'Flip Block' : 'Brick Block']: {
         type: BlockObject.codes.RengaBlock,
-        subType: 0,
         tileCoordinates: { xT: 1, yT: 0 },
       },
       '? Block': {
         type: BlockObject.codes.HatenaBlock,
-        subType: 0,
         tileCoordinates: { xT: 2, yT: 0 },
       },
       'Hard Block': {
         type: BlockObject.codes.HardBlock,
-        subType: 0,
         tileCoordinates: { xT: 6, yT: 0 },
       },
       Ground: {
         type: BlockObject.codes.Ground,
-        subType: 0,
         tileCoordinates: { xT: 0, yT: 13 },
       },
       'Semi-solid Platform': [
         {
           type: BlockObject.codes.GroundMushroom,
-          subType: 0,
           tileCoordinates: { xT: 3, yT: 2 },
         },
         BlockObject.codes.GroundBox,
       ],
       'Donut Block': {
         type: BlockObject.codes.ChikuwaBlock,
-        subType: 0,
         tileCoordinates: { xT: 0, yT: 4 },
       },
       'Cloud Block': {
         type: BlockObject.codes.KumoBlock,
-        subType: 0,
         tileCoordinates: { xT: 6, yT: 6 },
       },
       'Note Block': {
         type: BlockObject.codes.OnpuBlock,
-        subType: 0,
         tileCoordinates: { xT: 4, yT: 0 },
       },
       'Kaizo Block': {
         type: BlockObject.codes.ClearBlock,
-        subType: 0,
         tileCoordinates: { xT: 3, yT: 0 },
       },
       'Spike Block': {
         type: BlockObject.codes.Toge,
-        subType: 0,
         tileCoordinates: { xT: 2, yT: 4 },
       },
       'Ice Block': {
         type: BlockObject.codes.IceBlock,
-        subType: 0,
         tileCoordinates: { xT: 8, yT: 7 },
       },
     },
@@ -536,7 +525,6 @@ const courseObjectGroups = computed<
       [charaKinokoStyleToName[worldData.main?.course.mode] ??
       'Style-specific Powerup']: {
         type: MonsterObject.codes.CharaKinoko,
-        subType: 0,
         iconSuffix: charaKinokoStyleToIcon[worldData.main?.course.mode],
       },
       [kutsuKuriboStyleToName[worldData.main?.course.mode] ?? 'Boot/Yoshi']: {
@@ -554,23 +542,31 @@ const courseObjectGroups = computed<
         type: MonsterObject.codes.Dossun,
         subType: 1,
       },
-      'Warp Pipe': BlockObject.codes.Dokan,
+      'Pipe (no warp)': {
+        type: BlockObject.codes.Dokan,
+        matcher(obj) {
+          return obj.pipeLink === '-1';
+        },
+      },
+      'Warp Pipe': {
+        type: BlockObject.codes.Dokan,
+        matcher(obj) {
+          return obj.pipeLink !== '-1';
+        },
+      },
       Lift: MonsterObject.codes.Lift,
       Bridge: {
         type: BlockObject.codes.Bridge,
-        subType: 0,
         tileCoordinates: { xT: 1, yT: 3 },
       },
       Firebar: MonsterObject.codes.FireBar,
       Vine: {
         type: BlockObject.codes.Tsuta,
-        subType: 0,
         tileCoordinates: { xT: 14, yT: 7 },
       },
       'Skull Platform': MonsterObject.codes.YouganLift,
       'Conveyor Belt': {
         type: BlockObject.codes.BeltConveyor,
-        subType: 0,
         tileCoordinates: { xT: 8, yT: 0 },
       },
       Burner: MonsterObject.codes.Burner,
@@ -596,7 +592,6 @@ const courseObjectGroups = computed<
       },
       Track: {
         type: BlockObject.codes.Rail,
-        subType: 0,
         tileCoordinates: { xT: 0, yT: 9 },
       },
       'Arrow Sign': {
@@ -633,7 +628,9 @@ const normalizedCoursePartOptions = computed(() => {
         ? useStubTrue
         : 'matcher' in matcher
           ? matcher.matcher
-          : (obj: CourseObject) => obj.subType === matcher.subType;
+          : 'subType' in matcher
+            ? (obj: CourseObject) => obj.subType === matcher.subType
+            : useStubTrue;
 
     return (obj: CourseObject) => {
       return types.includes(obj.type) && matchFn(obj);
