@@ -407,7 +407,7 @@ const courseObjectGroups = computed<
         type: BlockObject.codes.OnpuBlock,
         tileCoordinates: { xT: 4, yT: 0 },
       },
-      'Kaizo Block': {
+      'Hidden Block': {
         type: BlockObject.codes.ClearBlock,
         tileCoordinates: { xT: 3, yT: 0 },
       },
@@ -653,8 +653,9 @@ const normalizedCoursePartOptions = computed(() => {
           const iconName =
             isObjectMatcher && matcher.tileCoordinates && currentWorld
               ? `${isBlockObject ? 'titleset' : 'monster'}/${useCompact([
-                  'MW',
+                  currentWorld.course.mode,
                   isBlockObject && currentWorld.course.themeName,
+                  currentWorld.course.mode === 'WU' && '16x16',
                 ]).join('-')}.png`
               : `format/${type}-${iconSuffix}.png`;
           const iconStyle =
