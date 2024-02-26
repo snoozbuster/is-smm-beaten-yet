@@ -13,8 +13,10 @@ export const LEVEL_BROWSER_COLUMNS = {
   theme: 'Theme',
   timer: 'Timer',
   checkpoints: 'Checkpoints',
+  worldLength: 'Main World Length',
   autoscroll: 'Autoscroll',
   hasSubworld: 'Subworld',
+  subWorldLength: 'Subworld Length',
 };
 
 export const DEFAULT_COLUMN_ORDER = [
@@ -28,9 +30,11 @@ export const DEFAULT_COLUMN_ORDER = [
   'style',
   'theme',
   'timer',
-  'checkpoints',
   'autoscroll',
   'hasSubworld',
+  'checkpoints',
+  'worldLength',
+  'subWorldLength',
 ] as (keyof typeof LEVEL_BROWSER_COLUMNS)[];
 
 export default function useLevelBrowserSettings() {

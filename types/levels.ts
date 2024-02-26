@@ -17,9 +17,11 @@ export interface LevelData {
   theme: 'Castle' | 'Ground' | 'Underground' | 'Ghost House' | 'Airship';
   autoscroll: boolean;
   hacked?: boolean;
+  worldLength: number;
   subworld?: {
     theme: 'Castle' | 'Ground' | 'Underground' | 'Ghost House' | 'Airship';
     autoscroll: boolean;
+    worldLength: number;
   } | null;
 }
 

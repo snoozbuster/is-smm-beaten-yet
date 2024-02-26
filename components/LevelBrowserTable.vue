@@ -345,6 +345,13 @@ function initColumns(reset = false) {
   if (!unref(levelBrowserSettings).columnOrder) {
     levelBrowserSettings.value.columnOrder = [...DEFAULT_COLUMN_ORDER];
   }
+  DEFAULT_COLUMN_ORDER.slice(1).forEach((column, i) => {
+    const columnOrder = unref(levelBrowserSettings).columnOrder;
+    if (!columnOrder.includes(column)) {
+      const insertAfter = columnOrder.indexOf(DEFAULT_COLUMN_ORDER[i]);
+      columnOrder.splice(insertAfter + 1, 0, column);
+    }
+  });
   useForEach(LEVEL_BROWSER_COLUMNS, (_, field) => {
     if (!(field in levelBrowserSettings.value.visibleColumns) || reset) {
       levelBrowserSettings.value.visibleColumns[
@@ -400,6 +407,7 @@ const preparedLevels = computed(() => {
     markRaw({
       ...level,
       hasSubworld: Boolean(level.subworld),
+      subWorldLength: level.subworld?.worldLength,
       filterDate: new Date(
         DateTime.fromISO(level.uploadDate)
           .setZone(localZone, { keepLocalTime: true })
@@ -573,7 +581,9 @@ function resetFilters() {
       value: null,
       matchMode: FilterMatchMode.IN,
     },
+    worldLength: { value: null, matchMode: FilterMatchMode.EQUALS },
     hasSubworld: { value: null, matchMode: FilterMatchMode.EQUALS },
+    subWorldLength: { value: null, matchMode: FilterMatchMode.EQUALS },
     autoscroll: { value: null, matchMode: FilterMatchMode.EQUALS },
   };
 }
@@ -746,16 +756,21 @@ const LevelColumn = defineComponent({
   },
 });
 
-function makeNumericCol(key: keyof DataTableLevel, ColIcon: Component) {
+function makeNumericCol(key: keyof DataTableLevel, ColIcon?: Component) {
   return {
     columnProps: {
       dataType: 'numeric',
       style: 'min-width: 150px',
+      pt: {
+        headerCell: {
+          class: 'text-nowrap',
+        },
+      },
     },
     body: (props: { data: DataTableLevel }) =>
       Number.isFinite(props.data[key]) ? (
         <Fragment>
-          <ColIcon />
+          {ColIcon && <ColIcon />}
           {formatNumber(props.data[key] as any)}
         </Fragment>
       ) : undefined,
@@ -1130,6 +1145,7 @@ const COLUMN_MAP: Record<
       </PrimeMultiSelect>
     ),
   },
+  worldLength: makeNumericCol('worldLength'),
   hasSubworld: {
     columnProps: {
       dataType: 'boolean',
@@ -1158,6 +1174,7 @@ const COLUMN_MAP: Record<
       />
     ),
   },
+  subWorldLength: makeNumericCol('subWorldLength'),
   autoscroll: {
     columnProps: {
       dataType: 'boolean',
