@@ -720,7 +720,8 @@ const filteredCoursePartOptions = computed(() => {
 
   let searchOptions = useFlatMap(unref(normalizedCoursePartOptions), 'items');
   const foundOptions = new Set<string>();
-  useForEach(currentWorld.objects, (obj) => {
+  useForEach(currentWorld.objects, (o) => {
+    getCanonicalObjects(o).forEach((obj) => {
     searchOptions.forEach(({ label, match }) => {
       if (match(obj)) {
         foundOptions.add(label);
@@ -729,6 +730,7 @@ const filteredCoursePartOptions = computed(() => {
     searchOptions = searchOptions.filter(
       ({ label }) => !foundOptions.has(label),
     );
+    });
 
     if (searchOptions.length === 0) {
       return false;
@@ -745,6 +747,25 @@ const filteredCoursePartOptions = computed(() => {
     .filter(({ items }) => items.length > 0);
 });
 
+function getCanonicalObjects(obj: CourseObject) {
+    const hasChildObj =
+      ![
+        BlockObject.codes.Ground,
+        BlockObject.codes.HardBlock,
+        BlockObject.codes.RengaBlock,
+        BlockObject.codes.CastleBridge,
+      ].includes(obj.type) && obj.childType in MonsterObject.names;
+  return useCompact([
+      obj,
+      hasChildObj &&
+        new MonsterObject({
+          ...obj,
+          type: obj.childType,
+          flags: obj.childFlags,
+        }),
+    ]);
+}
+
 function filterCourseParts(objs: CourseObject[]) {
   const typeMatchers: Record<
     number,
@@ -755,22 +776,7 @@ function filterCourseParts(objs: CourseObject[]) {
   );
 
   function filterObject(obj: CourseObject) {
-    const hasChildObj =
-      ![
-        BlockObject.codes.Ground,
-        BlockObject.codes.HardBlock,
-        BlockObject.codes.RengaBlock,
-        BlockObject.codes.CastleBridge,
-      ].includes(obj.type) && obj.childType in MonsterObject.names;
-    const objs = useCompact([
-      obj,
-      hasChildObj &&
-        new MonsterObject({
-          ...obj,
-          type: obj.childType,
-          flags: obj.childFlags,
-        }),
-    ]);
+    const objs = getCanonicalObjects(obj);
     return objs.some(
       (o) =>
         typeMatchers[o.type]?.some(
