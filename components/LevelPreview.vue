@@ -782,6 +782,10 @@ function filterCourseParts(objs: CourseObject[]) {
   return objs.filter(filterObject);
 }
 
+const filteredCurrentWorldObjects = computed(() =>
+  filterCourseParts(worldData[unref(tab)]?.objects ?? []),
+);
+
 function getCanvasEl() {
   return document.getElementById(`course-display-${unref(tab)}_courseDraw`);
 }
@@ -804,7 +808,7 @@ function projectMouseEvent(event: MouseEvent) {
 }
 
 function getObjectIntersections({ x, y }: { x: number; y: number }) {
-  const objs = worldData[unref(tab)]?.objects ?? [];
+  const objs = unref(filteredCurrentWorldObjects);
   const size = unref(tileSize);
 
   return objs.filter((obj) => {
