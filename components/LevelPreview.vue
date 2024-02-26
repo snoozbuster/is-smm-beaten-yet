@@ -43,7 +43,7 @@
             class="p-menu-list p-reset md:border-0"
             :class="
               index !== filteredCoursePartOptions.length - 1 &&
-              'pb-3 mb-3 border-solid border-b border-b-slate-300'
+              'pb-3 mb-3 lg:pb-0 lg:mb-0 border-solid border-b border-b-slate-300'
             "
           >
             <li class="p-menuitem font-medium text-lg">
@@ -395,13 +395,6 @@ const courseObjectGroups = computed<
         type: BlockObject.codes.Ground,
         tileCoordinates: { xT: 0, yT: 13 },
       },
-      'Semi-solid Platform': [
-        {
-          type: BlockObject.codes.GroundMushroom,
-          tileCoordinates: { xT: 3, yT: 2 },
-        },
-        BlockObject.codes.GroundBox,
-      ],
       'Donut Block': {
         type: BlockObject.codes.ChikuwaBlock,
         tileCoordinates: { xT: 0, yT: 4 },
@@ -425,6 +418,21 @@ const courseObjectGroups = computed<
       'Ice Block': {
         type: BlockObject.codes.IceBlock,
         tileCoordinates: { xT: 8, yT: 7 },
+      },
+      Vine: {
+        type: BlockObject.codes.Tsuta,
+        tileCoordinates: { xT: 14, yT: 7 },
+      },
+      'Semi-solid Platform': [
+        {
+          type: BlockObject.codes.GroundMushroom,
+          tileCoordinates: { xT: 3, yT: 2 },
+        },
+        BlockObject.codes.GroundBox,
+      ],
+      Bridge: {
+        type: BlockObject.codes.Bridge,
+        tileCoordinates: { xT: 1, yT: 3 },
       },
     },
     Enemies: {
@@ -471,7 +479,7 @@ const courseObjectGroups = computed<
         type: MonsterObject.codes.Poo,
         subType: 1,
       },
-      Podoboo: MonsterObject.codes.Bubble,
+      'Lava Bubble': MonsterObject.codes.Bubble,
       'Chain Chomp': MonsterObject.codes.Wanwan,
       Bowser: {
         type: MonsterObject.codes.Koopa,
@@ -483,6 +491,11 @@ const courseObjectGroups = computed<
       },
     },
     Items: {
+      Coin: {
+        type: BlockObject.codes.Coin,
+        subType: 0,
+        tileCoordinates: { xT: 7, yT: 0 },
+      },
       'Key Coin': {
         type: BlockObject.codes.Coin,
         subType: 1,
@@ -501,13 +514,9 @@ const courseObjectGroups = computed<
       'POW Block': MonsterObject.codes.PowBlock,
       'Lakitu Cloud': MonsterObject.codes.JugemCloud,
       'Clown Car': MonsterObject.codes.KoopaClown,
+      '1-UP Mushroom': MonsterObject.codes.UpKinoko,
     },
     Powerups: {
-      Coin: {
-        type: BlockObject.codes.Coin,
-        subType: 0,
-        tileCoordinates: { xT: 7, yT: 0 },
-      },
       Mushroom: MonsterObject.codes.SuperKinoko,
       'Spiked Shellmet': {
         type: MonsterObject.codes.Togezo,
@@ -519,7 +528,6 @@ const courseObjectGroups = computed<
         subType: 1,
         tileCoordinates: { xT: 10, yT: 10 },
       },
-      '1-UP Mushroom': MonsterObject.codes.UpKinoko,
       'Fire Flower': MonsterObject.codes.FireFlower,
       Star: MonsterObject.codes.SuperStar,
       [charaKinokoStyleToName[worldData.main?.course.mode] ??
@@ -538,10 +546,6 @@ const courseObjectGroups = computed<
       'Giant Mushroom': MonsterObject.codes.DekaKinoko,
     },
     Course: {
-      Skewer: {
-        type: MonsterObject.codes.Dossun,
-        subType: 1,
-      },
       'Pipe (no warp)': {
         type: BlockObject.codes.Dokan,
         matcher(obj) {
@@ -554,22 +558,6 @@ const courseObjectGroups = computed<
           return obj.pipeLink !== -1;
         },
       },
-      Lift: MonsterObject.codes.Lift,
-      Bridge: {
-        type: BlockObject.codes.Bridge,
-        tileCoordinates: { xT: 1, yT: 3 },
-      },
-      Firebar: MonsterObject.codes.FireBar,
-      Vine: {
-        type: BlockObject.codes.Tsuta,
-        tileCoordinates: { xT: 14, yT: 7 },
-      },
-      'Skull Platform': MonsterObject.codes.YouganLift,
-      'Conveyor Belt': {
-        type: BlockObject.codes.BeltConveyor,
-        tileCoordinates: { xT: 8, yT: 0 },
-      },
-      Burner: MonsterObject.codes.Burner,
       Door: {
         type: MonsterObject.codes.Door,
         matcher(obj) {
@@ -590,6 +578,31 @@ const courseObjectGroups = computed<
           return obj.doorType === 2;
         },
       },
+      Saw: {
+        type: MonsterObject.codes.Saw,
+        subType: 0,
+      },
+      Skewer: {
+        type: MonsterObject.codes.Dossun,
+        subType: 1,
+      },
+      Lift: MonsterObject.codes.Lift,
+      Firebar: MonsterObject.codes.FireBar,
+      'Skull Platform': MonsterObject.codes.YouganLift,
+      'Conveyor Belt': {
+        type: BlockObject.codes.BeltConveyor,
+        tileCoordinates: { xT: 8, yT: 0 },
+      },
+      Burner: MonsterObject.codes.Burner,
+      'Checkpoint Flag': {
+        type: MonsterObject.codes.AirSignBoard,
+        subType: 1,
+      },
+      'One-way Wall': MonsterObject.codes.HalfHitWall,
+      Bumper: {
+        type: MonsterObject.codes.Saw,
+        subType: 1,
+      },
       Track: {
         type: BlockObject.codes.Rail,
         tileCoordinates: { xT: 0, yT: 9 },
@@ -597,19 +610,6 @@ const courseObjectGroups = computed<
       'Arrow Sign': {
         type: MonsterObject.codes.AirSignBoard,
         subType: 0,
-      },
-      'Checkpoint Flag': {
-        type: MonsterObject.codes.AirSignBoard,
-        subType: 1,
-      },
-      'One-way Wall': MonsterObject.codes.HalfHitWall,
-      Saw: {
-        type: MonsterObject.codes.Saw,
-        subType: 0,
-      },
-      Bumper: {
-        type: MonsterObject.codes.Saw,
-        subType: 1,
       },
     },
   };
