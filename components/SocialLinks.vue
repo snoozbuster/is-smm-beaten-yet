@@ -9,6 +9,19 @@
     >
       <Icon :name="link.icon" size="2em" />
     </a>
+    <button
+      v-tooltip.bottom="`Support this site`"
+      @click="donateVisible = true"
+    >
+      <Icon name="simple-icons:kofi" size="2em" />
+    </button>
+    <PrimeDialog
+      v-model:visible="donateVisible"
+      header="Support this site"
+      modal
+    >
+      <DonationPanel />
+    </PrimeDialog>
   </div>
 </template>
 
@@ -35,4 +48,6 @@ const links = [
     icon: 'logos:github-icon',
   },
 ];
+
+const donateVisible = ref(false);
 </script>
