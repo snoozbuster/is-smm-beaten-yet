@@ -16,14 +16,14 @@
         @change="drawWorlds"
       />
       <div class="absolute right-0 bottom-0 sm:mb-1">
-      <PrimeDropdown
-        v-model="tileSize"
-        :options="tileSizes"
-        option-label="label"
-        option-value="value"
-        placeholder="Tile size"
-        @change="drawWorlds"
-      />
+        <PrimeDropdown
+          v-model="tileSize"
+          :options="tileSizes"
+          option-label="label"
+          option-value="value"
+          placeholder="Tile size"
+          @change="drawWorlds"
+        />
         <PrimeButton
           class="h-[34px] ml-2"
           icon="pi pi-filter"
@@ -73,7 +73,7 @@
                   />
                   <img
                     class="mx-2 object-contain object-left"
-                    :src="`/layout/draw/${item.iconName}`"
+                    :src="filterMenuImages[item.iconName]"
                     width="16"
                     :style="item.iconStyle"
                   />
@@ -158,6 +158,7 @@
 </style>
 
 <script setup lang="ts">
+import { filename } from 'pathe/utils';
 import CourseViewer from '~/viewer/SmmCourseViewer';
 import { Draw as DrawCourse } from '~/viewer/Draw';
 import { DATA_ROOT_URL } from '~/constants/levelData';
@@ -178,6 +179,18 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['not-found']);
+
+const filterMenuImages = Object.fromEntries([
+  ...Object.entries(
+    import.meta.glob('~/assets/layout/draw/format/*.png', { eager: true }),
+  ).map(([key, value]) => [`format/${filename(key)}.png`, value.default]),
+  ...Object.entries(
+    import.meta.glob('~/assets/layout/draw/titleset/*.png', { eager: true }),
+  ).map(([key, value]) => [`titleset/${filename(key)}.png`, value.default]),
+  ...Object.entries(
+    import.meta.glob('~/assets/layout/draw/monster/*.png', { eager: true }),
+  ).map(([key, value]) => [`monster/${filename(key)}.png`, value.default]),
+]);
 
 const levelUrl = computed(
   () => `${DATA_ROOT_URL}/course-data/${props.levelId}`,
@@ -723,14 +736,14 @@ const filteredCoursePartOptions = computed(() => {
   const foundOptions = new Set<string>();
   useForEach(currentWorld.objects, (o) => {
     getCanonicalObjects(o).forEach((obj) => {
-    searchOptions.forEach(({ label, match }) => {
-      if (match(obj)) {
-        foundOptions.add(label);
-      }
-    });
-    searchOptions = searchOptions.filter(
-      ({ label }) => !foundOptions.has(label),
-    );
+      searchOptions.forEach(({ label, match }) => {
+        if (match(obj)) {
+          foundOptions.add(label);
+        }
+      });
+      searchOptions = searchOptions.filter(
+        ({ label }) => !foundOptions.has(label),
+      );
     });
 
     if (searchOptions.length === 0) {
@@ -749,22 +762,22 @@ const filteredCoursePartOptions = computed(() => {
 });
 
 function getCanonicalObjects(obj: CourseObject) {
-    const hasChildObj =
-      ![
-        BlockObject.codes.Ground,
-        BlockObject.codes.HardBlock,
-        BlockObject.codes.RengaBlock,
-        BlockObject.codes.CastleBridge,
-      ].includes(obj.type) && obj.childType in MonsterObject.names;
+  const hasChildObj =
+    ![
+      BlockObject.codes.Ground,
+      BlockObject.codes.HardBlock,
+      BlockObject.codes.RengaBlock,
+      BlockObject.codes.CastleBridge,
+    ].includes(obj.type) && obj.childType in MonsterObject.names;
   return useCompact([
-      obj,
-      hasChildObj &&
-        new MonsterObject({
-          ...obj,
-          type: obj.childType,
-          flags: obj.childFlags,
-        }),
-    ]);
+    obj,
+    hasChildObj &&
+      new MonsterObject({
+        ...obj,
+        type: obj.childType,
+        flags: obj.childFlags,
+      }),
+  ]);
 }
 
 function filterCourseParts(objs: CourseObject[]) {

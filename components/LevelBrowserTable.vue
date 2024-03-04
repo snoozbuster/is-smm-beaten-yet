@@ -719,6 +719,8 @@ function selectRandomLevel() {
 
 // #region column rendering
 
+const { themeImages, styleImages } = useLevelAssets();
+
 type DataTableLevel = UnclearedLevel &
   ({ translated: true; originalTitle: string } | { translated: false }) & {
     hasSubworld: boolean;
@@ -1009,7 +1011,7 @@ const COLUMN_MAP: Record<
         {props.data.style ? (
           <img
             class="inline mr-2"
-            src={`/img/${props.data.style.toLowerCase()}.png`}
+            src={styleImages[props.data.style.toLowerCase()]}
             width="16"
             height="16"
           />
@@ -1035,7 +1037,7 @@ const COLUMN_MAP: Record<
           option: makeMultiselectOption('name', ({ option }) => (
             <img
               class="inline mr-2"
-              src={`/img/${option.value.toLowerCase()}.png`}
+              src={styleImages[props.data.style.toLowerCase()]}
               width="16"
               height="16"
             />
@@ -1053,9 +1055,7 @@ const COLUMN_MAP: Record<
         {props.data.theme ? (
           <img
             class="inline mr-2"
-            src={`/img/themes/${props.data.theme
-              .toLowerCase()
-              .replace(' ', '_')}.png`}
+            src={themeImages[props.data.theme.toLowerCase().replace(' ', '_')]}
             width="20"
             height="20"
           />
@@ -1081,9 +1081,9 @@ const COLUMN_MAP: Record<
           option: makeMultiselectOption('value', ({ option }) => (
             <img
               class="inline mr-2"
-              src={`/img/themes/${option.value
-                .toLowerCase()
-                .replace(' ', '_')}.png`}
+              src={
+                themeImages[props.data.theme.toLowerCase().replace(' ', '_')]
+              }
               width="20"
               height="20"
             />

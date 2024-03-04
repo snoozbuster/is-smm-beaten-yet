@@ -1,3 +1,11 @@
+import { filename } from 'pathe/utils';
+const glob = import.meta.glob('~/assets/layout/draw/monster/*.png', {
+  eager: true,
+});
+const images = Object.fromEntries(
+  Object.entries(glob).map(([key, value]) => [filename(key), value.default]),
+);
+
 /**
  * @module MonsterDraw
  * This class draw the monsters from layout/draw/monster/.
@@ -33,7 +41,7 @@ export class MonsterDraw {
       this._themeSize * this._themeLimit.length.x,
       this._themeSize * this._themeLimit.length.y,
     );
-    this._theme.src = '/layout/draw/monster/' + _gameMode + '.png';
+    this._theme.src = images[_gameMode];
   }
 
   /**

@@ -1,3 +1,11 @@
+import { filename } from 'pathe/utils';
+const glob = import.meta.glob('~/assets/layout/draw/titleset/*.png', {
+  eager: true,
+});
+const images = Object.fromEntries(
+  Object.entries(glob).map(([key, value]) => [filename(key), value.default]),
+);
+
 /**
  * @module BlockDraw
  * This class draw the blocks from layout/draw/titleset/.
@@ -33,8 +41,7 @@ export class BlockDraw {
       this._themeSize * this._themeLimit.length.x,
       this._themeSize * this._themeLimit.length.y,
     );
-    this._theme.src =
-      '/layout/draw/titleset/' + _gameMode + '-' + _gameTheme + '.png';
+    this._theme.src = images[_gameMode + '-' + _gameTheme];
   }
 
   /**

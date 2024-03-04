@@ -2,6 +2,7 @@ import { BlockDraw } from './BlockDraw';
 import { BlockObject } from './BlockObject';
 import { MonsterDraw } from './MonsterDraw';
 import { MonsterObject } from './MonsterObject';
+import squareBg from '~/assets/layout/draw/support/bg-square.png';
 
 /**
  * @module Draw
@@ -114,7 +115,7 @@ export class Draw {
     bg.onerror = function () {
       console.error('Draw: Error: squares don"t load.');
     };
-    bg.src = '/layout/draw/support/bg-square.png';
+    bg.src = squareBg;
   }
 
   /**
