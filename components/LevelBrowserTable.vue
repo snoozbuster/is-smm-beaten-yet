@@ -76,6 +76,14 @@
           :disabled="isRandomizing || currentTableView.length < 2"
           @click="selectRandomLevel()"
         />
+        <PrimeButton
+          v-tooltip.bottom="`Check for updates`"
+          type="button"
+          icon="pi pi-refresh"
+          outlined
+          size="small"
+          @click="$emit('refresh')"
+        />
         <span class="text-xl self-center ml-5">
           {{ formatNumber(numRows) }} levels
           <span
@@ -264,6 +272,8 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+defineEmits(['refresh']);
 
 const keyHack = ref(0);
 const sortField = ref('uploadDate');

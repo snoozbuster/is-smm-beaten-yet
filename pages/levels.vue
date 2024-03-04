@@ -20,7 +20,7 @@
       </h1>
       <div class="hidden lg:block grow">
         <CourseWorldCard :grid="false" class="h-full">
-          <LevelBrowserTable :levels="uncleared" />
+          <LevelBrowserTable :levels="uncleared" @refresh="refreshLevels" />
         </CourseWorldCard>
       </div>
       <div class="lg:hidden grow">
@@ -40,7 +40,28 @@ useSeoMeta({
   themeColor: COURSE_WORLD_GREEN,
 });
 
+const toast = useToast();
+
 const { uncleared, load } = useUnclearedLevels();
 
+const { formatNumber } = useFormatters();
+
 onMounted(load);
+
+async function refreshLevels() {
+  const previousLevelCount = uncleared.value.length;
+  await load();
+  const newLevelCount = uncleared.value.length;
+  const levelsRemoved = previousLevelCount - newLevelCount;
+  toast.add({
+    severity: 'success',
+    summary: 'Table refreshed',
+    detail: levelsRemoved
+      ? `${formatNumber(
+          levelsRemoved,
+        )} levels have been cleared since last update`
+      : 'No levels cleared since last update. Note that the level list may be up to 5 minutes behind.',
+    life: 4000,
+  });
+}
 </script>
