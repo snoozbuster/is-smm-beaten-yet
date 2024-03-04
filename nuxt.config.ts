@@ -42,6 +42,9 @@ export default defineNuxtConfig({
         'Calendar',
       ],
     },
+    directives: {
+      include: ['Ripple', 'Tooltip'],
+    },
     options: {
       ripple: true,
       pt: {
