@@ -58,8 +58,8 @@
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
             <p class="mb-2">
-              All you have to do to be a part of Team 0% is clear one level.
-              Every clear counts!
+              There are still many ways to help out, even if you're not a
+              platforming pro. We'd love for you to join our community!
             </p>
             <SocialLinks />
           </div>
