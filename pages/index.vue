@@ -23,7 +23,7 @@
         </a>
       </div>
     </div>
-    <LevelData
+    <UnclearedStats
       id="stats"
       class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh"
       :visible="scrolled"
