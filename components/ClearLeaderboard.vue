@@ -3,6 +3,7 @@
   <ChartContainer>
     <Bar :data="data" :options="options" />
   </ChartContainer>
+  <span class="text-sm"> Full leaderboards coming soon! </span>
 </template>
 
 <script lang="ts" setup>

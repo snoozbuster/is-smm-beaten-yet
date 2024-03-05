@@ -18,12 +18,20 @@
           class="-translate-x-2/4 mb-5 text-xl grid place-content-center relative text-center"
           @click.prevent="smoothScroll"
         >
-          <div>See how we're doing</div>
+          <div>{{ promptText }}</div>
           <div class="scroll-arrow justify-self-center"></div>
         </a>
       </div>
     </div>
+    <ClearedStats
+      v-if="theAnswer === 'Yes'"
+      id="stats"
+      class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh"
+      :visible="scrolled"
+      @ready="promptScroll"
+    />
     <UnclearedStats
+      v-else
       id="stats"
       class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh"
       :visible="scrolled"
@@ -85,6 +93,14 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
   themeColor: SMM_YELLOW,
 });
+
+const { theAnswer } = useTheAnswer();
+
+const promptText = computed(() =>
+  unref(theAnswer) === 'Not yet'
+    ? "See how we're doing"
+    : 'Check out the journey',
+);
 
 const route = useRoute();
 const dataReady = ref(false);

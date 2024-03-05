@@ -2,7 +2,8 @@ import { DateTime } from 'luxon';
 import { DATA_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
 import type { UnclearedLevel } from '~/types/levels';
 
-const __DEBUG_0PERCENT_MODE__ = true;
+// this is way sketchy
+const __DEBUG_0PERCENT_MODE__ = false;
 
 export function useTheAnswer() {
   const { data: theAnswer, pending } = useAsyncData<

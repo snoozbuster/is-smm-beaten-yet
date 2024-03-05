@@ -52,6 +52,10 @@ const props = defineProps({
     type: Object as PropType<ClearedLevelStatSummary['winners']>,
     required: true,
   },
+  allTime: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const tab = ref<'daily' | 'weekly'>('daily');
@@ -173,7 +177,10 @@ const data = computed(() => {
       : computeWeeklyData(props.clearsByDate);
   const leftEdge =
     unref(tab) === 'daily'
-      ? DateTime.now().minus({ month: 1 }).toISODate()
+      ? (props.allTime
+          ? DateTime.fromISO('2023-02-06')!
+          : DateTime.now().minus({ month: 1 })
+        ).toISODate()
       : /* there is a huge spike of 6k the week before this which dwarfs the
          * rest of the chart
          */

@@ -4,7 +4,7 @@
   >
     <span class="text-smm sm:text-2xl"> Is Super Mario Maker beaten yet?</span>
     <h1 id="the-answer" :class="['text-smm', !animationStarted && 'opacity-0']">
-      Not yet
+      {{ theAnswer }}
     </h1>
     <SocialLinks
       class="absolute top-0 right-0 p-7 opacity-50 hover:opacity-100 transition-opacity hidden sm:flex"
@@ -20,10 +20,16 @@
 }
 
 :deep(.word) {
-  @apply ml-[0.1em] -mr-[0.1em] md:mx-0;
+  @apply ml-[0.1em] -mr-[0.1em];
 
-  &:first-of-type {
-    @apply ml-[0.15em] md:mx-0;
+  &:first-of-type:not(:last-of-type) {
+    @apply ml-[0.15em];
+  }
+
+  &:not(:first-of-type:last-of-type) {
+    // need the above adjustments when there is only 1 word even on large screens.
+    // for 2 words, adjustments are not necessary on large screens
+    @apply md:mx-0;
   }
 }
 
@@ -37,6 +43,9 @@
 <script setup lang="ts">
 import SplitType from 'split-type';
 import gsap from 'gsap';
+import { useTheAnswer } from '~/composables/useUnclearedLevels';
+
+const { theAnswer } = useTheAnswer();
 
 const animationStarted = ref(false);
 
