@@ -9,7 +9,7 @@ frontend:
     build:
       commands:
         - yarn run build
-        - aws s3 sync .amplify-hosting/static/_nuxt/ s3://is-smm-beaten-yet-public-data/_nuxt/
+        - aws s3 sync .amplify-hosting/static/_nuxt/ s3://is-smm-beaten-yet-public-data/_nuxt/ --cache-control public,max-age=31536000,immutable
   artifacts:
     baseDirectory: .amplify-hosting
     files:
