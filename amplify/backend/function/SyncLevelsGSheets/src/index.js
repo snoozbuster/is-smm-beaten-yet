@@ -288,6 +288,9 @@ exports.handler = async (event) => {
       weekly: weeklyWinners,
     },
     clearedTotal: clearedFinal.length,
+    mostRecentClear: _.last(
+      clearedFinal.filter(({ dateCleared }) => dateCleared),
+    ),
   };
 
   if (!event.localrun) {
