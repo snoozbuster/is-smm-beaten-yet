@@ -15,9 +15,19 @@
           <div class="placement"></div>
           <div class="self-center mb-6">
             <h2>
-              <span class="text-lg">The last First Clear was:</span>
+              <span class="text-xl"
+                >The last
+                <img
+                  class="inline"
+                  src="~/assets/img/first_clear.png"
+                  alt="First Clear"
+                  title="First Clear"
+                  width="50"
+                />
+                was:</span
+              >
               <div
-                class="text-4xl md:text-3xl xl:text-4xl my-2 font-semibold text-balance"
+                class="text-4xl md:text-3xl xl:text-4xl mb-2 font-semibold text-balance"
               >
                 {{ clearSummary.mostRecentClear?.title }}
               </div>
