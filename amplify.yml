@@ -1,0 +1,16 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm use 18
+        - corepack enable
+        - npx --yes nypm i
+    build:
+      commands:
+        - yarn run build
+        - aws s3 sync .amplify-hosting/static/_nuxt/ s3://is-smm-beaten-yet-public-data/nuxt/
+  artifacts:
+    baseDirectory: .amplify-hosting
+    files:
+      - '**/*'

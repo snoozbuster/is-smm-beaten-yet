@@ -76,6 +76,7 @@ $size: 30px;
 
 <script setup lang="ts">
 import { SMM_YELLOW } from '~/constants/colors';
+import marioPng from '~/assets/img/mario.png';
 
 useSeoMeta({
   title: 'Is Super Mario Maker Beaten Yet?',
@@ -83,13 +84,13 @@ useSeoMeta({
   description: 'Click here to find out!',
   ogDescription: 'Click here to find out!',
   ogImage: {
-    url: 'https://www.issmmbeatenyet.com/img/mario.png',
+    url: marioPng,
     width: 775,
     height: 775,
     alt: 'Mario in a builder outfit',
     type: 'image/png',
   },
-  ogImageSecureUrl: 'https://www.issmmbeatenyet.com/img/mario.png',
+  ogImageSecureUrl: marioPng,
   twitterCard: 'summary_large_image',
   themeColor: SMM_YELLOW,
 });
