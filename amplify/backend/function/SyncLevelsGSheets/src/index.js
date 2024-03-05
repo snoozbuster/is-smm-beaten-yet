@@ -23,7 +23,6 @@ function getSheetDownloadUrl(sheetId, sheetName) {
 }
 
 const COMMON_TITLE_TO_KEY = {
-  Title: 'title',
   'Upload Date': 'uploadDate',
   Stars: 'stars',
   Players: 'players',
@@ -34,6 +33,7 @@ const COMMON_TITLE_TO_KEY = {
 
 const UNCLEARED_TITLE_TO_KEY = {
   ...COMMON_TITLE_TO_KEY,
+  Title: 'title',
   Code: 'countryCode',
   Style: 'style',
   Theme: 'theme',
@@ -44,6 +44,8 @@ const UNCLEARED_TITLE_TO_KEY = {
 
 const CLEARED_TITLE_TO_KEY = {
   ...COMMON_TITLE_TO_KEY,
+  Clears: 'clears',
+  'Level Name': 'title',
   'First Clearer NNID': 'firstClearerNnid',
   'Date Cleared': 'dateCleared',
 };

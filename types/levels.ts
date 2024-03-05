@@ -25,13 +25,26 @@ export interface LevelData {
   } | null;
 }
 
+// this is not a good name, but it is a punny name
+type PartialPartial<TT, TP extends keyof TT> = Omit<TT, TP> &
+  Partial<Pick<TT, TP>>;
+
 export interface HackedClear
-  extends Omit<LevelData, 'clears' | 'players' | 'stars'>,
-    Partial<Pick<LevelData, 'clears' | 'players' | 'stars'>> {
+  extends PartialPartial<LevelData, 'clears' | 'players' | 'stars'> {
   hacked: true;
 }
 
 export type UnclearedLevel = HackedClear | LevelData;
+
+export interface ClearedLevel
+  extends PartialPartial<
+    LevelData,
+    'worldLength' | 'autoscroll' | 'style' | 'theme' | 'countryCode' | 'timer'
+  > {
+  firstClearerNnid: string;
+  dateCleared: string;
+  clearDateEstimated?: boolean;
+}
 
 export interface DailyWinner {
   creators: string[];
@@ -46,4 +59,5 @@ export interface ClearedLevelStatSummary {
     daily: Record<string, DailyWinner>;
   };
   clearedTotal: number;
+  mostRecentClear: ClearedLevel;
 }
