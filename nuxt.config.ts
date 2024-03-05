@@ -3,7 +3,7 @@ import colors from 'tailwindcss/colors';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
-    cdnURL: 'https://static.issmmbeatenyet.com/nuxt',
+    cdnURL: 'https://static.issmmbeatenyet.com/',
   },
   devtools: { enabled: true },
   css: [
