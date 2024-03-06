@@ -2,8 +2,8 @@ import { DateTime } from 'luxon';
 import { DATA_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
 import type { UnclearedLevel } from '~/types/levels';
 
-// this is way sketchy
-const __DEBUG_0PERCENT_MODE__ = false;
+const __DEBUG_0PERCENT_MODE__ =
+  process.env.DEBUG_0PERCENT_MODE === 'true' && process.dev;
 
 export function useTheAnswer() {
   const { data: theAnswer, pending } = useAsyncData<
@@ -16,7 +16,7 @@ export function useTheAnswer() {
     server: true,
     lazy: true,
     transform: (levels) =>
-      !levels.length || (__DEBUG_0PERCENT_MODE__ && process.dev)
+      !levels.length || __DEBUG_0PERCENT_MODE__
         ? 'Yes'
         : DateTime.now() < DateTime.fromISO(SHUTDOWN_DATE)
           ? 'Not yet'
