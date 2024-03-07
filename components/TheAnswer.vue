@@ -24,8 +24,8 @@
       <button
         @click="
           () => {
-            audioPreference.muted = !audioPreference.muted;
-            if (!audioPreference.muted && !audioPreference.volume) {
+            audioPreference.muted = muted = !muted;
+            if (!muted && !audioPreference.volume) {
               audioPreference.volume = 0.4;
             }
           }
@@ -33,7 +33,7 @@
       >
         <Icon
           :name="
-            audioPreference.muted === false
+            muted === false
               ? 'mingcute:volume-line'
               : 'mingcute:volume-off-line'
           "
@@ -143,16 +143,17 @@ const audioPreference = useCookie('audioSettings', {
     muted: undefined as boolean | undefined,
   }),
 });
+// need local copy because preference is allowed to be undefined (which means
+// "use browser autoplay policy") but we need an actual yes/no value to find out
+// if we should be muted or not
+const muted = ref(audioPreference.value.muted);
 
 const slapSound = ref<HTMLAudioElement>();
 
 const finalVolume = computed({
-  get: () =>
-    audioPreference.value.muted || audioPreference.value.muted === undefined
-      ? 0
-      : audioPreference.value.volume,
+  get: () => (muted.value !== false ? 0 : audioPreference.value.volume),
   set(value) {
-    audioPreference.value.muted = !value;
+    audioPreference.value.muted = muted.value = !value;
     audioPreference.value.volume = value;
   },
 });
@@ -193,14 +194,16 @@ async function playSlapSound(times: number, delay: number) {
   try {
     await newSlapSound.play();
     if (audioPreference.value.muted === undefined) {
-      audioPreference.value.muted = false;
+      audioPreference.value.muted = muted.value = false;
     }
     newSlapSound.onended = () => {
       track.disconnect();
       newSlapSound.remove();
     };
   } catch (e) {
-    // most likely browser rejected autoplaying sounds. oh well
+    if ((e as Error).name === 'NotAllowedError') {
+      muted.value = true;
+    }
   }
 
   times--;
