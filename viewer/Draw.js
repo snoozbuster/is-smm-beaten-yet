@@ -142,17 +142,37 @@ export class Draw {
     const drawMonster = drawSimple.bind(this, $this._monsters);
     function drawChild(courseObject, background = false) {
       if (
-        ![
+        [
           BlockObject.codes.Ground,
           BlockObject.codes.HardBlock,
-          BlockObject.codes.RengaBlock,
           BlockObject.codes.CastleBridge,
-        ].includes(courseObject.type) &&
-        $this._monsters.hasDraw(courseObject.childType)
+        ].includes(courseObject.type)
       ) {
+        return;
+      }
+
+      if ($this._monsters.hasDraw(courseObject.childType)) {
         $this._drawObjectFromTheme(
           $this._monsters,
           new MonsterObject({
+            ...courseObject,
+            type: courseObject.childType,
+            flags: courseObject.childFlags,
+          }),
+          {
+            scale: 0.8,
+            opacity: 0.8,
+            // make sure big monsters in boxes don't render huge
+            size: 1,
+            drawBackground: background,
+          },
+        );
+      } else if ($this._blocks.hasDraw(courseObject.childType)) {
+        // coins are blocks, for some asinine reason. I think that's the only
+        // "block" object that can be put in blocks
+        $this._drawObjectFromTheme(
+          $this._blocks,
+          new BlockObject({
             ...courseObject,
             type: courseObject.childType,
             flags: courseObject.childFlags,
@@ -236,7 +256,7 @@ export class Draw {
           } else if ($this._monsters.hasDraw(type)) {
             $this._drawObjectFromTheme($this._monsters, courseObject);
             drawChild(courseObject, true);
-            if (type === 55) {
+            if (type === MonsterObject.codes.Door) {
               // Door Labelling
               let PR = courseObject.doorLink;
               PR = PR.toString();

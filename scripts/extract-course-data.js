@@ -283,9 +283,8 @@ function computeObjectSummary(mode, objs) {
       ![
         BlockObject.codes.Ground,
         BlockObject.codes.HardBlock,
-        BlockObject.codes.RengaBlock,
         BlockObject.codes.CastleBridge,
-      ].includes(obj.type) && obj.childType in MonsterObject.names;
+      ].includes(obj.type) && obj.childType in MonsterObject.names; // this won't detect coins inside brick/? blocks (ten coin blocks)
 
     return _.compact([
       obj,

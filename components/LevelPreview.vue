@@ -766,7 +766,6 @@ function getCanonicalObjects(obj: CourseObject) {
     ![
       BlockObject.codes.Ground,
       BlockObject.codes.HardBlock,
-      BlockObject.codes.RengaBlock,
       BlockObject.codes.CastleBridge,
     ].includes(obj.type) && obj.childType in MonsterObject.names;
   return useCompact([
