@@ -23,7 +23,7 @@
           >
             <img
               v-if="level.style"
-              :src="`/img/${level.style.toLowerCase()}.png`"
+              :src="styleImages[level.style.toLowerCase()]"
               :width="12"
               :height="12"
             />
@@ -35,9 +35,7 @@
             class="mr-3 align-middle"
           >
             <img
-              :src="`/img/themes/${level.theme
-                .toLowerCase()
-                .replace(' ', '_')}.png`"
+              :src="themeImages[level.theme.toLowerCase().replace(' ', '_')]"
               :width="16"
               :height="16"
             />
@@ -137,4 +135,5 @@ defineProps({
 });
 
 const { formatDate, formatNumber } = useFormatters();
+const { themeImages, styleImages } = useLevelAssets();
 </script>
