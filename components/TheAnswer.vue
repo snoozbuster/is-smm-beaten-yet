@@ -231,7 +231,7 @@ function makeAnimation(targets: HTMLCollectionOf<Element> | Element[]) {
       x: 0,
       startAt: {
         opacity: 1,
-        transform: `rotate(random(0, 360)deg) translateX(50%) translateY(50%)`,
+        transform: `rotate(random(0, 360, 5)deg) translateX(50%) translateY(50%)`,
       },
       stagger,
       duration: pawAnimLength,
