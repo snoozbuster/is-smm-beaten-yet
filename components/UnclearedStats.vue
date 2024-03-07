@@ -32,11 +32,13 @@
               />
             </NuxtLink>
             <PrimeButton
-              class="text-course-world-contrast"
+              class="text-course-world-contrast inline"
               link
-              label="How is this calculated?"
               @click="showFaq = true"
-            />
+            >
+              How is this calculated? <span class="pi pi-angle-right"></span>
+            </PrimeButton>
+
             <PrimeDialog
               v-model:visible="showFaq"
               class="w-80"
