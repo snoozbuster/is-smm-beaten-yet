@@ -43,6 +43,7 @@ export default defineNuxtConfig({
         'OverlayPanel',
         'Dialog',
         'Calendar',
+        'Slider',
       ],
     },
     directives: {
