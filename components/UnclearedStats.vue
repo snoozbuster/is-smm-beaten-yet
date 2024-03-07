@@ -17,7 +17,8 @@
             <h2
               class="text-4xl md:text-3xl xl:text-4xl font-semibold text-balance"
             >
-              {{ formatNumber(uncleared.length) }} levels left to clear
+              {{ formatNumber(uncleared.length) }}
+              {{ uncleared.length === 1 ? 'level' : 'levels' }} left to clear
             </h2>
             <span>
               before the server shutdown on {{ formatDate(SHUTDOWN_DATE) }}
