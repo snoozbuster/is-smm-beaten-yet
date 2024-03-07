@@ -10,20 +10,30 @@
       class="absolute top-0 right-0 p-7 opacity-50 hover:opacity-100 transition-opacity hidden sm:flex"
     />
 
-    <div class="absolute bottom-0 left-0 p-4 w-[10vw] flex items-center">
+    <div
+      class="flex flex-col md:flex-row absolute bottom-0 left-0 p-4 h-[150px] md:w-[150px] md:h-auto items-center"
+    >
+      <PrimeSlider
+        class="block md:hidden h-full mb-2"
+        v-model="finalVolume"
+        :min="0"
+        :max="1"
+        :step="0.01"
+        orientation="vertical"
+      />
       <button
         @click="
           () => {
-            muted = !muted;
-            if (!muted && !volume) {
-              volume = 0.4;
+            audioPreference.muted = !audioPreference.muted;
+            if (!audioPreference.muted && !audioPreference.volume) {
+              audioPreference.volume = 0.4;
             }
           }
         "
       >
         <Icon
           :name="
-            muted === false
+            audioPreference.muted === false
               ? 'mingcute:volume-line'
               : 'mingcute:volume-off-line'
           "
@@ -31,7 +41,7 @@
         />
       </button>
       <PrimeSlider
-        class="inline w-full ml-2"
+        class="hidden md:block w-full ml-2"
         v-model="finalVolume"
         :min="0"
         :max="1"
@@ -127,15 +137,23 @@ const { theAnswer } = useTheAnswer();
 
 const animationStarted = ref(false);
 
+const audioPreference = useCookie('audioSettings', {
+  default: () => ({
+    volume: 0.4,
+    muted: undefined as boolean | undefined,
+  }),
+});
+
 const slapSound = ref<HTMLAudioElement>();
-const volume = ref(0.4);
-const muted = ref<boolean>();
 
 const finalVolume = computed({
-  get: () => (muted.value || muted.value === undefined ? 0 : volume.value),
+  get: () =>
+    audioPreference.value.muted || audioPreference.value.muted === undefined
+      ? 0
+      : audioPreference.value.volume,
   set(value) {
-    muted.value = !value;
-    volume.value = value;
+    audioPreference.value.muted = !value;
+    audioPreference.value.volume = value;
   },
 });
 
@@ -174,17 +192,15 @@ async function playSlapSound(times: number, delay: number) {
   track.connect(vol).connect(ac.destination);
   try {
     await newSlapSound.play();
-    if (muted.value === undefined) {
-      muted.value = false;
+    if (audioPreference.value.muted === undefined) {
+      audioPreference.value.muted = false;
     }
     newSlapSound.onended = () => {
       track.disconnect();
       newSlapSound.remove();
     };
   } catch (e) {
-    if ((e as Error).name === 'NotAllowedError') {
-      muted.value = true;
-    }
+    // most likely browser rejected autoplaying sounds. oh well
   }
 
   times--;
