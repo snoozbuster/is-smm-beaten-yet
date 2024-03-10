@@ -4,7 +4,7 @@
   >
     <div
       v-if="isMarioDay"
-      class="bg-[url('~/assets/img/banner.png')] bg-center bg-no-repeat bg-contain h-[50px] text-center text-white mb-4 text-xl pt-[5px]"
+      class="bg-[url('~/assets/img/banner.png')] bg-center select-none bg-no-repeat bg-contain h-[50px] text-center text-white mb-4 text-xl pt-[5px]"
     >
       Happy MAR10 Day!
     </div>
@@ -169,9 +169,7 @@ watch(finalVolume, () => {
   getAudioController().vol.gain.value = finalVolume.value;
 });
 
-const isMarioDay = computed(() =>
-  DateTime.now().hasSame(DateTime.fromISO('2024-03-10'), 'day'),
-);
+const isMarioDay = ref(false);
 
 const getChildren = (
   targets: HTMLCollectionOf<Element> | Element[],
@@ -300,6 +298,10 @@ function makeAnimation(targets: HTMLCollectionOf<Element> | Element[]) {
 }
 
 onMounted(() => {
+  isMarioDay.value = DateTime.now().hasSame(
+    DateTime.fromISO('2024-03-10'),
+    'day',
+  );
   nextTick(() => {
     // eslint-disable-next-line no-new
     new SplitType('#the-answer');
