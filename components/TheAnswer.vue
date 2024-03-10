@@ -2,6 +2,12 @@
   <section
     class="text-center grid place-content-center bg-smm-yellow uppercase relative overflow-hidden"
   >
+    <div
+      v-if="isMarioDay"
+      class="bg-[url('~/assets/img/banner.png')] bg-center bg-no-repeat bg-contain h-[50px] text-center text-white mb-4 text-xl pt-[5px]"
+    >
+      Happy MAR10 Day!
+    </div>
     <span class="text-smm sm:text-2xl"> Is Super Mario Maker beaten yet?</span>
     <h1 id="the-answer" :class="['text-smm', !animationStarted && 'opacity-0']">
       {{ theAnswer }}
@@ -132,6 +138,7 @@ import SplitType from 'split-type';
 import gsap from 'gsap';
 import catPaw from '~/assets/img/cat_paw.png';
 import { useTheAnswer } from '~/composables/useUnclearedLevels';
+import { DateTime } from 'luxon';
 
 const { theAnswer } = useTheAnswer();
 
@@ -161,6 +168,10 @@ const finalVolume = computed({
 watch(finalVolume, () => {
   getAudioController().vol.gain.value = finalVolume.value;
 });
+
+const isMarioDay = computed(() =>
+  DateTime.now().hasSame(DateTime.fromISO('2024-03-10'), 'day'),
+);
 
 const getChildren = (
   targets: HTMLCollectionOf<Element> | Element[],
