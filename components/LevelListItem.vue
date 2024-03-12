@@ -1,13 +1,22 @@
 <template>
   <PrimeTag
-    v-if="level.hacked"
+    v-if="level.hacked && !isClearedLevel"
     v-tooltip.focus="
       'This level\'s only clears are from known cheaters and still needs to be cleared legitimately'
     "
     class="cursor-default mb-1"
     severity="danger"
-    icon="pi pi-danger"
     value="Hacked clear"
+    tabindex="1"
+  />
+  <PrimeTag
+    v-else-if="level.hacked"
+    v-tooltip.focus="
+      'This level was first cleared by a cheater, but has now been cleared legitimately'
+    "
+    class="cursor-default mb-1"
+    severity="info"
+    value="True clear"
     tabindex="1"
   />
   <div class="flex">
@@ -138,7 +147,7 @@
 <script setup lang="ts">
 import type { ClearedLevel, UnclearedLevel } from '~/types/levels';
 
-defineProps({
+const props = defineProps({
   level: {
     type: Object as PropType<UnclearedLevel | ClearedLevel>,
     required: true,
@@ -159,4 +168,6 @@ defineProps({
 
 const { formatDate, formatNumber } = useFormatters();
 const { themeImages, styleImages } = useLevelAssets();
+
+const isClearedLevel = computed(() => 'dateCleared' in (props.level || {}));
 </script>
