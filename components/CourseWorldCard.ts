@@ -12,7 +12,7 @@ export default function CourseWorldCard(
         'text-center bg-course-world-card text-course-world-card-contrast rounded-2xl shadow-lg p-4',
       ],
     },
-    slots.default?.(),
+    { default: slots.default },
   );
 }
 CourseWorldCard.props = {

@@ -1,7 +1,7 @@
 <template>
   <div class="bg-course-world text-course-world-contrast">
     <div
-      class="grid p-7 grid-flow-row grid-rows-1 md:grid-rows-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full h-full gap-7 overflow-hidden"
+      class="grid p-7 grid-flow-row grid-rows-1 grid-cols-1 md:grid-rows-3 md:grid-cols-2 xl:grid-rows-2 xl:grid-cols-3 w-full h-full gap-7 overflow-hidden"
       :class="!visible && !animationStarted && 'invisible'"
     >
       <template v-if="animationStarted">
@@ -81,7 +81,12 @@
             <h3 class="text-2xl font-semibold mt-7">More stats</h3>
           </div>
         </StatSection>
-        <StatSection card> </StatSection>
+        <StatSection card>
+          <MostRecentClear
+            :clear="clearSummary.mostRecentClear"
+            :recent-clears="clearSummary.lastClears"
+          />
+        </StatSection>
         <StatSection card>
           <ClearsOverTime
             :uncleared-level-count="uncleared.length"
@@ -163,13 +168,13 @@ const StatSection = (
   { slots, attrs }: SetupContext,
 ) =>
   props.card
-    ? h(CourseWorldCard, attrs, slots.default?.())
+    ? h(CourseWorldCard, attrs, { default: slots.default })
     : h(
         'div',
         {
           class: ['stat-section grid place-content-center text-center'],
         },
-        slots.default?.(),
+        { default: slots.default },
       );
 StatSection.props = {
   card: {
