@@ -78,7 +78,7 @@ const topClearerTooltipCallback = (items: TooltipItem<any>[]) => {
 
   return `Most clears: ${creators} (${
     winner.creators.length > 1 ? 'tied with ' : ''
-  }${formatNumber(winner.levels)} levels)`;
+  }${formatNumber(winner.levels)} level${winner.levels === 1 ? '' : 's'})`;
 };
 
 const options = computed(() => ({
