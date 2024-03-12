@@ -13,7 +13,7 @@
         </div>
         <StatSection class="md:grid-rows-[1fr_2fr_1fr]">
           <p class="self-end mb-6 md:mb-0 text-pretty">
-            On {{ formatDate('2024-03-31') }}, level uploads in Super Mario
+            On {{ formatDate('2021-03-31') }}, level uploads in Super Mario
             Maker 1 were disabled<span class="md:hidden lg:inline"
               >, making it possible for the first time ever to "beat" the game
               by clearing every level</span
