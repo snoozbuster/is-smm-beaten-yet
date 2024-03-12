@@ -12,17 +12,15 @@
           />
         </div>
         <StatSection class="md:grid-rows-[1fr_2fr_1fr]">
-          <p class="self-end mb-6 md:mb-0 text-pretty">
+          <p
+            class="self-end mb-6 md:mb-0 text-pretty md:max-xl:hidden reduced-size"
+          >
             On {{ formatDate('2021-03-31') }}, level uploads in Super Mario
-            Maker 1 were disabled<span class="md:hidden lg:inline"
-              >, making it possible for the first time ever to "beat" the game
-              by clearing every level</span
-            >. Now, there are only
+            Maker 1 were disabled, making it finally possible to "beat" the game
+            by clearing every level. Now, there are only
           </p>
           <div class="self-center">
-            <h2
-              class="text-4xl md:text-3xl xl:text-4xl font-semibold text-balance"
-            >
+            <h2 class="text-4xl md:max-xl:text-3xl font-semibold text-balance">
               {{ formatNumber(uncleared.length) }}
               {{ uncleared.length === 1 ? 'level' : 'levels' }} left to clear
             </h2>
@@ -39,7 +37,7 @@
               />
             </NuxtLink>
             <PrimeButton
-              class="text-course-world-contrast inline"
+              class="text-course-world-contrast inline p-0 mb-2 hover:underline"
               link
               @click="showFaq = true"
             >
@@ -72,10 +70,9 @@
           </div>
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
-            <p class="mb-2 block md:hidden xl:block">
+            <p class="mb-2 block md:max-xl:hidden reduced-size">
               Come help cheer us on, help route, or even try to secure a clear
-              on one of the last remaining levels. We'd love for you to join our
-              community!
+              on one of the final levels!
             </p>
             <SocialLinks />
           </div>
@@ -121,6 +118,12 @@
 
   &.force-visible {
     opacity: 1;
+  }
+}
+
+@media (max-height: 760px) {
+  .reduced-size {
+    @apply text-sm;
   }
 }
 </style>
