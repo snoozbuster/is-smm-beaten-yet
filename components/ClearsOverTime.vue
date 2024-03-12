@@ -179,7 +179,7 @@ const data = computed(() => {
     unref(tab) === 'daily'
       ? (props.allTime
           ? DateTime.fromISO('2023-02-06')!
-          : DateTime.now().minus({ month: 1 })
+          : DateTime.now().minus({ month: 2 })
         ).toISODate()
       : /* there is a huge spike of 6k the week before this which dwarfs the
          * rest of the chart
