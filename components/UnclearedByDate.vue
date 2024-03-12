@@ -1,6 +1,4 @@
 <template>
-  <h3 class="text-xl">Uncleared levels by date</h3>
-  <PrimeTabMenu class="mb-3" :model="tabs" />
   <ChartContainer>
     <Bar :data="data" :options="options" />
   </ChartContainer>
@@ -24,14 +22,11 @@ const props = defineProps({
     type: Object as PropType<UnclearedLevel[]>,
     required: true,
   },
+  unit: {
+    type: String as PropType<'year' | 'month'>,
+    default: 'year',
+  },
 });
-
-const tab = ref('year');
-
-const tabs = [
-  { label: 'Year', command: () => (tab.value = 'year') },
-  { label: 'Month', command: () => (tab.value = 'month') },
-];
 
 const tooltipCallbacks = useUnclearedTooltipFormatter(
   toRef(props, 'unclearedLevels'),
@@ -53,14 +48,14 @@ const options = computed(() => {
       x: {
         type: 'time',
         grid: {
-          offset: unref(tab) === 'year',
+          offset: props.unit === 'year',
           display: false,
         },
         time: {
           unit: 'year',
-          tooltipFormat: unref(tab) === 'year' ? 'yyyy' : 'LLLL yyyy',
+          tooltipFormat: props.unit === 'year' ? 'yyyy' : 'LLLL yyyy',
           displayFormats:
-            unref(tab) === 'year'
+            props.unit === 'year'
               ? {}
               : {
                   month: 'LLL yyyy',
@@ -80,7 +75,7 @@ const data = computed(() => {
     useGroupBy(
       props.unclearedLevels.filter(({ uploadDate }) => uploadDate),
       ({ uploadDate }) =>
-        uploadDate.substring(0, unref(tab) === 'year' ? 4 : 7),
+        uploadDate.substring(0, props.unit === 'year' ? 4 : 7),
     ),
     'length',
   );

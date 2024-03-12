@@ -1,8 +1,4 @@
 <template>
-  <h3 class="text-xl">
-    Uncleared levels by {{ tab === 'countryCode' ? 'country' : tab }}
-  </h3>
-  <PrimeTabMenu class="mb-3 -mx-2 md:mx-0" :model="tabs" />
   <ChartContainer>
     <Pie :data="data" :options="options" />
   </ChartContainer>
@@ -26,6 +22,10 @@ const props = defineProps({
     type: Object as PropType<UnclearedLevel[]>,
     required: true,
   },
+  style: {
+    type: String as PropType<'style' | 'theme' | 'countryCode'>,
+    default: 'style',
+  },
 });
 
 const tooltipCallbacks = useUnclearedTooltipFormatter(
@@ -47,8 +47,6 @@ const options = computed(() => ({
   },
 }));
 
-const tab = ref<'style' | 'countryCode' | 'theme'>('style');
-
 const labelMaps = {
   style: {
     SMB1: 'Super Mario Bros.',
@@ -61,9 +59,9 @@ const labelMaps = {
 };
 
 const styleData = computed(() => {
-  const styles = useToPairs(useGroupBy(props.unclearedLevels, unref(tab)));
+  const styles = useToPairs(useGroupBy(props.unclearedLevels, props.style));
 
-  const styleLabelKey = labelMaps[unref(tab)];
+  const styleLabelKey = labelMaps[props.style];
 
   return {
     labels: styles.map(([style]) =>
@@ -85,12 +83,6 @@ const styleData = computed(() => {
     ],
   };
 });
-
-const tabs = [
-  { label: 'Style', command: () => (tab.value = 'style') },
-  { label: 'Theme', command: () => (tab.value = 'theme') },
-  { label: 'Country', command: () => (tab.value = 'countryCode') },
-];
 
 const data = computed(() => {
   return styleData.value;

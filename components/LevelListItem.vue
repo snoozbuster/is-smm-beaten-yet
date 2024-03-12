@@ -42,20 +42,29 @@
           </button>
         </template>
 
-        <span
-          v-if="translateLevelTitle"
-          v-tooltip.focus="`Translated from &quot;${level.title}&quot;`"
-          class="cursor-pointer text-left"
-          tabindex="1"
+        <slot
+          name="title"
+          :title="level.title"
+          :translation="level.titleTranslation"
         >
-          <span class="border-dotted border-black border-b">
-            {{ level.titleTranslation }}
+          <span
+            v-if="translateLevelTitle"
+            v-tooltip.focus="`Translated from &quot;${level.title}&quot;`"
+            class="cursor-pointer text-left"
+            tabindex="1"
+          >
+            <span class="border-dotted border-black border-b">
+              {{ level.titleTranslation }}
+            </span>
           </span>
-        </span>
-        <span v-else>{{ level.title }}</span>
+          <span v-else>{{ level.title }}</span>
+        </slot>
       </div>
       <div class="mb-1 font-medium">
-        <CountryFlag :country-code="level.countryCode" />
+        <CountryFlag
+          v-if="level.countryCode"
+          :country-code="level.countryCode"
+        />
         {{ level.creator }}
       </div>
       <div v-if="showPreview">
@@ -73,51 +82,65 @@
     </div>
 
     <div class="ml-auto text-right">
-      <div class="font-medium text-nowrap">
-        <span class="hidden lg:inline">Uploaded on</span>
-        {{ level.uploadDate ? formatDate(level.uploadDate, true) : '' }}
-      </div>
-      <div class="text-nowrap">
-        <template v-if="Number.isFinite(level.stars)">
-          <span class="pi pi-star"></span>
-          {{ formatNumber(level.stars) }}
-        </template>
+      <template v-if="!('dateCleared' in level)">
+        <div class="font-medium text-nowrap">
+          <span class="hidden lg:inline">Uploaded on</span>
+          {{ level.uploadDate ? formatDate(level.uploadDate, true) : '' }}
+        </div>
 
-        <span class="pi pi-clock ml-3"></span> {{ level.timer }}
-        <button
-          v-if="level.autoscroll"
-          v-tooltip.left.focus="'Contains auto-scroll'"
-          class="ml-2"
-        >
-          <span class="pi pi-forward"></span>
-        </button>
-      </div>
-      <div>
-        <button v-tooltip.focus.left="'Total attempts of this level'">
-          <Icon class="-mt-1" name="material-symbols:footprint" />
-          {{ formatNumber(level.attempts) }}
-        </button>
-        <button
-          v-if="Number.isFinite(level.players)"
-          v-tooltip.focus.left="
-            'Number of players that have attempted this level'
-          "
-          class="ml-3"
-        >
-          <span class="pi pi-users"></span>
-          {{ formatNumber(level.players) }}
-        </button>
-      </div>
+        <div class="text-nowrap">
+          <template v-if="Number.isFinite(level.stars)">
+            <span class="pi pi-star"></span>
+            {{ formatNumber(level.stars) }}
+          </template>
+
+          <span class="pi pi-clock ml-3"></span> {{ level.timer }}
+          <button
+            v-if="level.autoscroll"
+            v-tooltip.left.focus="'Contains auto-scroll'"
+            class="ml-2"
+          >
+            <span class="pi pi-forward"></span>
+          </button>
+        </div>
+
+        <div>
+          <button v-tooltip.focus.left="'Total attempts of this level'">
+            <Icon class="-mt-1" name="material-symbols:footprint" />
+            {{ formatNumber(level.attempts) }}
+          </button>
+          <button
+            v-if="Number.isFinite(level.players)"
+            v-tooltip.focus.left="
+              'Number of players that have attempted this level'
+            "
+            class="ml-3"
+          >
+            <span class="pi pi-users"></span>
+            {{ formatNumber(level.players) }}
+          </button>
+        </div>
+      </template>
+      <template v-else>
+        <div class="font-medium text-nowrap">
+          <span class="hidden lg:inline">Cleared on</span>
+          {{ formatDate(level.dateCleared, true) }}
+        </div>
+        <div class="text-nowrap">
+          Achieved by
+          <span class="font-semibold">{{ level.firstClearerNnid }}</span>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel, UnclearedLevel } from '~/types/levels';
 
 defineProps({
   level: {
-    type: Object as PropType<UnclearedLevel>,
+    type: Object as PropType<UnclearedLevel | ClearedLevel>,
     required: true,
   },
   translateLevelTitle: {

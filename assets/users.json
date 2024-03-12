@@ -1,0 +1,373 @@
+[
+  {
+    "nnid": "Fritzef",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "",
+        "reason": "Cleared the final SMB1 2015 level"
+      },
+      {
+        "name": "Human TAS",
+        "awardDate": "2024-13-01",
+        "reason": {
+          "type": "level",
+          "levelId": "CCCC-0000-03B6-7A15"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "pcadee",
+    "discord": "Cap",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-11",
+        "reason": "Cleared the final 2021 level (which was also the final hacked clear)"
+      }
+    ]
+  },
+  {
+    "nnid": "carmenarwhal",
+    "discord": "Carmenarwhal",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-09",
+        "reason": "Cleared the final SMB1 2020 level"
+      }
+    ]
+  },
+  {
+    "nnid": "rg920qm",
+    "discord": "Nick",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-02",
+        "reason": "Cleared the final SMW 2018 level"
+      }
+    ]
+  },
+  {
+    "nnid": "hallo9358",
+    "discord": "0815Ryan",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-02",
+        "reason": "Cleared the final SMB1 2021 level"
+      }
+    ]
+  },
+  {
+    "nnid": "m2o0l0i1",
+    "discord": "Morilli",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-02-16",
+        "reason": "Cleared the final 2016 level (NSMBU)"
+      }
+    ]
+  },
+  {
+    "nnid": "tatsu1236",
+    "discord": "Norway",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-02-16",
+        "reason": "Cleared the final SMW 2019 level"
+      },
+      {
+        "name": "Human TAS",
+        "awardDate": "2024-02-19",
+        "reason": {
+          "type": "level",
+          "levelId": "8DDE-0000-0424-77C8"
+        }
+      },
+      {
+        "name": "Big Brain",
+        "awardDate": "2024-02-28",
+        "reason": "Cleared many levels others thought to be impossible due to patched tech"
+      }
+    ]
+  },
+  {
+    "nnid": "wentou5",
+    "discord": "4yaya♪",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-01-29",
+        "reason": "Cleared the final SMW 2020 level"
+      }
+    ]
+  },
+  {
+    "nnid": "C4SSSY",
+    "discord": "Krypta",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-01-28",
+        "reason": "Cleared the final SMB1 2016 level, which was also the last Feburary 2016 level, last hacked clear from 2016, and the final level from creator siropikuminnn"
+      },
+      {
+        "name": "Human TAS",
+        "awardDate": "2024-01-28",
+        "reason": {
+          "type": "level",
+          "levelId": "EA95-0000-027A-2D96"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "Pufi36",
+    "discord": "Bartek",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-01-24",
+        "reason": "Cleared the final SMB3 2017 level"
+      }
+    ]
+  },
+  {
+    "nnid": "Anthonyrocks29",
+    "discord": "Anthony (timeattacktony)",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-01-23",
+        "reason": "Cleared the final SMB3 level (from 2018)"
+      }
+    ]
+  },
+  {
+    "nnid": "gravityrad",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2023-10-01",
+        "reason": "Cleared the final SMB3 2020 level"
+      },
+      {
+        "name": "Human TAS",
+        "awardDate": "2024-02-06",
+        "reason": {
+          "type": "level",
+          "levelId": "3DD3-0000-03CF-209B"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "ASMagician",
+    "discord": "ASMagician Maks",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2023-06-14",
+        "reason": "Cleared the final SMB3 2016 level"
+      }
+    ]
+  },
+  {
+    "nnid": "xeroplanes",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2023-01-21",
+        "reason": "Cleared the final 2015 level"
+      }
+    ]
+  },
+  {
+    "nnid": "tatiaus",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2022-04-30",
+        "reason": "True cleared the final January 2016 level (all hacked clears re-cleared legit)"
+      }
+    ]
+  },
+  {
+    "nnid": "SchwozW6803",
+    "discord": "Parx",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2022-04-30",
+        "reason": "Cleared the final January 2016 level (before hacked clears of other levels were discovered)"
+      }
+    ]
+  },
+  {
+    "nnid": "ZPappa7",
+    "discord": "Z7",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2023-10-09",
+        "reason": "Cleared the final SMW 2021 level (before hacked clears of other levels were discovered)"
+      },
+      {
+        "name": "Human TAS",
+        "awardDate": "2018-01-28",
+        "reason": {
+          "type": "level",
+          "levelId": "98BF-0000-0131-810A"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "oomorikanata",
+    "discord": "ネス / Ness",
+    "awards": [
+      {
+        "name": "Human TAS",
+        "awardDate": "2023-11-18",
+        "reason": {
+          "type": "level",
+          "levelId": "C2F9-0000-03D0-E08D"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "msmsmsmsmsmsmmsm",
+    "discord": "* (Tea)",
+    "awards": [
+      {
+        "name": "Human TAS",
+        "awardDate": "2024-01-17",
+        "reason": {
+          "type": "level",
+          "levelId": "7CA3-0000-039F-F588"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "HyperNES",
+    "discord": "KingBoo",
+    "awards": [
+      {
+        "name": "Human TAS",
+        "awardDate": "2024-01-22",
+        "reason": {
+          "type": "level",
+          "levelId": "7CA3-0000-039F-F588"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "wiiu802",
+    "discord": "えいりあん / EiriaAn",
+    "awards": [
+      {
+        "name": "Human TAS",
+        "awardDate": "2024-02-09",
+        "reason": {
+          "type": "level",
+          "levelId": "12D3-0000-0361-4CCA"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "A2003t",
+    "discord": "Demon",
+    "awards": [
+      {
+        "name": "Big Brain",
+        "awardDate": "2024-02-28",
+        "reason": "Cleared levels others thought to be impossible due to patched tech"
+      }
+    ]
+  },
+  {
+    "nnid": "A2003t",
+    "discord": "Demon",
+    "awards": [
+      {
+        "name": "Big Brain",
+        "awardDate": "2024-02-28",
+        "reason": "Cleared levels others thought to be impossible due to patched tech"
+      }
+    ]
+  },
+  {
+    "nnid": "eLogic",
+    "discord": "Logic",
+    "awards": [
+      {
+        "name": "Leprechaun",
+        "awardDate": "2021-02-18",
+        "reason": "Found the correct RNG seed to clear Lucky Draw"
+      }
+    ]
+  },
+  {
+    "discord": "PastyWhite7",
+    "awards": [
+      {
+        "name": "Leprechaun",
+        "awardDate": "2019-05-29",
+        "reason": "Found the correct RNG seed to clear Lucky Draw"
+      }
+    ]
+  },
+  {
+    "discord": "hoagie",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2018-08-12",
+        "reason": "Cleared the final 2015 level (before a few extras + the hacked clears were discovered)"
+      }
+    ]
+  },
+  {
+    "discord": "ordi",
+    "awards": [
+      {
+        "name": "Sniper",
+        "reason": "Cleared the final SMB1 2015 level"
+      }
+    ]
+  },
+  {
+    "discord": "DankDrew",
+    "awards": [
+      {
+        "name": "Sniper",
+        "reason": "Cleared the final SMB3 2015 level"
+      }
+    ]
+  },
+  {
+    "nnid": "snoozbuster",
+    "awards": [
+      {
+        "name": "Developer"
+      }
+    ]
+  },
+  {
+    "nnid": "I_Hate_Snooz",
+    "awards": [
+      {
+        "name": "Edgelord"
+      }
+    ]
+  }
+]

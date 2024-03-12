@@ -60,4 +60,5 @@ export interface ClearedLevelStatSummary {
   };
   clearedTotal: number;
   mostRecentClear: ClearedLevel;
+  lastClears: ClearedLevel[];
 }
