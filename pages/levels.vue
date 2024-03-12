@@ -11,7 +11,7 @@
         <span class="lg:hidden"> Uncleared levels </span>
         <button
           v-tooltip.focus="
-            'Level list is synced with the game every ~5 minutes.'
+            'Level list is synced with the game every ~2 minutes.'
           "
           class="ml-2 opacity-50 hover:opacity-100 transition-opacity"
         >
@@ -60,7 +60,7 @@ async function refreshLevels() {
       ? `${formatNumber(
           levelsRemoved,
         )} levels have been cleared since last update`
-      : 'No levels cleared since last update. Note that the level list may be up to 5 minutes behind.',
+      : 'No levels cleared since last update. Note that the level list may be up to 2 minutes behind.',
     life: 4000,
   });
 }

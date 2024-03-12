@@ -200,15 +200,25 @@ function startAnimation() {
 }
 
 onMounted(async () => {
-  [clearSummary.value] = await Promise.all([
-    // this seems wrong but it works? what is the nuxt-y way to do this?
-    (async () => (await fetch(`${DATA_ROOT_URL}/clear_summary.json`)).json())(),
-    load(),
-  ]);
+  let intervalId: NodeJS.Timeout;
+  onUnmounted(() => clearInterval(intervalId));
+
+  async function refreshData() {
+    [clearSummary.value] = await Promise.all([
+      // this seems wrong but it works? what is the nuxt-y way to do this?
+      (async () =>
+        (await fetch(`${DATA_ROOT_URL}/clear_summary.json`)).json())(),
+      load(),
+    ]);
+  }
+
+  await refreshData();
 
   ready.value = true;
   emit('ready');
   startAnimation();
+
+  intervalId = setInterval(refreshData, 1000 * 60 * 2);
 });
 
 const { formatNumber, formatDate } = useFormatters();
