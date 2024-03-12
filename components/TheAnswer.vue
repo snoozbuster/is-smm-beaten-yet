@@ -189,7 +189,7 @@ const getAudioController = useMemoize(() => {
   };
 });
 
-async function playSlapSound(times: number, delay: number) {
+async function playSlapSound() {
   const { ac, vol } = getAudioController();
   if (ac.state === 'suspended') {
     ac.resume();
@@ -214,11 +214,6 @@ async function playSlapSound(times: number, delay: number) {
       muted.value = true;
     }
   }
-
-  times--;
-  if (times > 0) {
-    gsap.delayedCall(delay, () => playSlapSound(times, delay));
-  }
 }
 
 function makeAnimation(targets: HTMLCollectionOf<Element> | Element[]) {
@@ -232,55 +227,53 @@ function makeAnimation(targets: HTMLCollectionOf<Element> | Element[]) {
 
   const tl = gsap.timeline();
   const pawAnimLength = 0.25;
+  const pawFadeOutTime = 0.1;
   const stagger = { amount: 1 };
   tl.to(
     paws,
     {
-      y: 0,
-      x: 0,
-      startAt: {
-        opacity: 1,
-        transform: `rotate(random(0, 360, 5)deg) translateX(50%) translateY(50%)`,
-      },
+      keyframes: [
+        {
+          y: 0,
+          x: 0,
+          startAt: {
+            opacity: 1,
+            transform: `rotate(random(0, 360, 5)deg) translateX(50%) translateY(50%)`,
+          },
+          duration: pawAnimLength,
+          ease: 'circ.out',
+        },
+        { opacity: 0, duration: pawFadeOutTime, ease: 'none' },
+      ],
       stagger,
-      duration: pawAnimLength,
-      ease: 'circ.out',
     },
     'pawIn',
-  )
-    .to(
-      paws,
-      { opacity: 0, duration: 0.1, stagger, ease: 'none' },
-      `pawIn+=${pawAnimLength}`,
-    )
-    .to(
-      bursts,
-      {
-        scale: 1,
-        stagger,
-        duration: 0.1,
-        startAt: {
-          opacity: 1,
-          background: 'yellow',
-          scale: 0,
+  ).to(
+    bursts,
+    {
+      keyframes: [
+        {
+          scale: 1,
+          duration: pawFadeOutTime,
+          startAt: {
+            opacity: 1,
+            background: 'yellow',
+            scale: 0,
+          },
+          background: 'red',
+          onStart() {
+            playSlapSound();
+          },
         },
-        background: 'red',
-        onStart(...args) {
-          playSlapSound(bursts.length, stagger.amount / (bursts.length - 1));
+        {
+          opacity: 0,
+          duration: 0,
         },
-      },
-      `pawIn+=${pawAnimLength - 0.1}`,
-    )
-    .to(
-      bursts,
-      {
-        stagger,
-        delay: 0.1,
-        opacity: 0,
-        duration: 0,
-      },
-      '<',
-    );
+      ],
+      stagger,
+    },
+    `pawIn+=${pawAnimLength - pawFadeOutTime}`,
+  );
 
   if (letters.length) {
     tl.to(
