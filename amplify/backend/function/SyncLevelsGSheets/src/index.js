@@ -68,6 +68,7 @@ async function getS3File(s3, filename) {
 }
 
 async function uploadToS3(s3, filename, data) {
+  console.log(`Uploading "${filename}" to S3`);
   await s3.send(
     new PutObjectCommand({
       Body: JSON.stringify(data),
@@ -119,6 +120,108 @@ function parseLevelCommon(level) {
   };
 }
 
+function generateClearSummary(clearedLevels) {
+  const clearsByDate = _.mapValues(
+    _.groupBy(clearedLevels, 'dateCleared'),
+    'length',
+  );
+
+  const getWinner = (levels) => {
+    const clearsByCreator = _.countBy(levels, 'firstClearerNnid');
+    const ranked = _.orderBy(_.toPairs(clearsByCreator), '1', 'desc');
+    const winners = _.takeWhile(
+      ranked,
+      ([_, levels]) => levels === ranked[0][1],
+    );
+    return {
+      creators: _.map(winners, '0'),
+      levels: winners[0][1],
+    };
+  };
+
+  const dailyWinners = _.mapValues(
+    _.groupBy(clearedLevels, 'dateCleared'),
+    getWinner,
+  );
+
+  const weeklyWinners = _.mapValues(
+    _.groupBy(clearedLevels, ({ dateCleared }) =>
+      DateTime.fromISO(dateCleared).startOf('week').toISOWeekDate(),
+    ),
+    getWinner,
+  );
+
+  const clearsByPerson = _.mapValues(
+    _.groupBy(clearedLevels, 'firstClearerNnid'),
+    'length',
+  );
+
+  return {
+    clearsByDate,
+    clearsByPerson,
+    winners: {
+      daily: dailyWinners,
+      weekly: weeklyWinners,
+    },
+    clearedTotal: clearedLevels.length,
+    mostRecentClear: _.last(
+      clearedLevels.filter(({ dateCleared }) => dateCleared),
+    ),
+    lastClears: _.takeRight(
+      clearedLevels.filter(({ dateCleared }) => dateCleared),
+      10,
+    ),
+  };
+}
+
+async function uploadGroups(s3, prefix, clearedLevelGroups) {
+  console.log('Uploading groups for', prefix);
+  for (const [name, levels] of Object.entries(clearedLevelGroups)) {
+    const summary = generateClearSummary(levels);
+    await Promise.all([
+      uploadToS3(s3, [prefix, `${name}.json`].join('/'), levels),
+      uploadToS3(s3, [prefix, `${name}_summary.json`].join('/'), summary),
+    ]);
+  }
+}
+
+async function buildGroupings(s3, clearedLevels) {
+  console.log('Building groupings');
+  const byYear = _.groupBy(
+    clearedLevels,
+    ({ uploadDate }) => DateTime.fromISO(uploadDate).year,
+  );
+  const byTheme = _.omit(_.groupBy(clearedLevels, 'theme'), [
+    'undefined',
+    'null',
+  ]);
+  const byStyle = _.omit(_.groupBy(clearedLevels, 'style'), [
+    'undefined',
+    'null',
+  ]);
+  const byCountry = _.omit(_.groupBy(clearedLevels, 'countryCode'), [
+    'undefined',
+    'null',
+  ]);
+
+  await Promise.all(
+    [
+      ['levels/year', byYear],
+      ['levels/style', byStyle],
+      ['levels/country', byCountry],
+      ['levels/theme', byTheme],
+    ].map(([prefix, levels]) => uploadGroups(s3, prefix, levels)),
+  );
+}
+
+async function uploadPlayerStats(s3, clearedLevels) {
+  console.log('Uploading player stats');
+  const byPlayer = _.groupBy(clearedLevels, 'firstClearerNnid');
+  for (const [name, levels] of Object.entries(byPlayer)) {
+    await uploadToS3(s3, ['players', `${name}.json`].join('/'), levels);
+  }
+}
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
@@ -137,6 +240,7 @@ exports.handler = async (event) => {
     s3,
     'static/upload_date_overrides.json',
   );
+  const hackedClearPromise = getS3File(s3, 'static/hacked_clears.json');
 
   console.log('Downloading gsheets');
   const [unclearedLevels, clearedLevels] = await Promise.all([
@@ -185,6 +289,7 @@ exports.handler = async (event) => {
 
   console.log('Compiling cleared levels');
   const uploadDateOverrides = JSON.parse(await uploadOverridesPromise);
+  const hackedClears = new Set(JSON.parse(await hackedClearPromise));
 
   const getClearDate = (level) => {
     if (level.levelId in uploadDateOverrides) {
@@ -205,7 +310,11 @@ exports.handler = async (event) => {
       ...getLevelMeta(level),
       ...getClearDate(level),
     }))
-    .concat(JSON.parse(await legacyClearsPromise));
+    .concat(JSON.parse(await legacyClearsPromise))
+    .map((level) => ({
+      ...level,
+      hacked: hackedClears.has(level.levelId),
+    }));
 
   const sortedClears = _.sortBy(
     joinedClears.filter(
@@ -245,61 +354,18 @@ exports.handler = async (event) => {
     console.log('Skipping S3 upload due to local run');
   }
 
-  console.log('Creating clear summary data');
+  console.log('Creating master clear summary data');
 
-  const clearsByDate = _.mapValues(
-    _.groupBy(clearedFinal, 'dateCleared'),
-    'length',
-  );
-
-  const getWinner = (levels) => {
-    const clearsByCreator = _.countBy(levels, 'firstClearerNnid');
-    const ranked = _.orderBy(_.toPairs(clearsByCreator), '1', 'desc');
-    const winners = _.takeWhile(
-      ranked,
-      ([_, levels]) => levels === ranked[0][1],
-    );
-    return {
-      creators: _.map(winners, '0'),
-      levels: winners[0][1],
-    };
-  };
-
-  const dailyWinners = _.mapValues(
-    _.groupBy(clearedFinal, 'dateCleared'),
-    getWinner,
-  );
-
-  const weeklyWinners = _.mapValues(
-    _.groupBy(clearedFinal, ({ dateCleared }) =>
-      DateTime.fromISO(dateCleared).startOf('week').toISOWeekDate(),
-    ),
-    getWinner,
-  );
-
-  const clearsByPerson = _.mapValues(
-    _.groupBy(clearedFinal, 'firstClearerNnid'),
-    'length',
-  );
-
-  const clearStats = {
-    clearsByDate,
-    clearsByPerson,
-    winners: {
-      daily: dailyWinners,
-      weekly: weeklyWinners,
-    },
-    clearedTotal: clearedFinal.length,
-    mostRecentClear: _.last(
-      clearedFinal.filter(({ dateCleared }) => dateCleared),
-    ),
-  };
+  const clearStats = generateClearSummary(clearedFinal);
 
   if (!event.localrun) {
     await uploadToS3(s3, 'levels/clear_summary.json', clearStats);
   } else {
     console.log('Skipping S3 upload due to local run');
   }
+
+  // await buildGroupings(s3, clearedFinal);
+  // await uploadPlayerStats(s3, clearedFinal);
 
   return {
     statusCode: 200,
