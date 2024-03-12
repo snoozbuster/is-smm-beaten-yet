@@ -13,7 +13,7 @@
         was:
       </span>
       <button
-        class="text-3xl md:text-xl xl:text-3xl mb-2 font-semibold text-balance"
+        class="text-2xl md:max-xl:text-xl mb-2 font-semibold text-balance"
         @click="viewing = clear"
       >
         {{ clear.title }}
