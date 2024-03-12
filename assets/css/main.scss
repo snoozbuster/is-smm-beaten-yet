@@ -1,7 +1,8 @@
 @import './smm-font.scss';
 @import 'primeicons/primeicons.css';
 
-html, body {
+html,
+body {
   overflow: visible;
 }
 
@@ -22,7 +23,8 @@ html, body {
 }
 
 @layer primevue-overrides {
-  .p-menuitem-link:not(:hover), .p-highlight .p-menuitem-link {
+  .p-menuitem-link:not(:hover),
+  .p-highlight .p-menuitem-link {
     background-color: transparent;
   }
 
@@ -31,17 +33,25 @@ html, body {
     width: unset !important;
   }
 
-  .p-inputtext, .p-multiselect-label, .p-button-sm {
+  .p-inputtext,
+  .p-multiselect-label,
+  .p-button-sm {
     padding: 4px 8px;
   }
   .p-input-icon-left > .p-inputtext {
     padding-left: 2.5rem;
   }
 
-  .p-frozencolumn {
+  .p-frozen-column {
     z-index: 10;
   }
-  .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):hover, tr:focus {
+
+  .p-datatable.p-datatable-hoverable-rows .p-datatable-tbody > tr:hover,
+  tr:focus {
     background-color: #f3f5b7;
+  }
+
+  tr.p-highlight td:first-child {
+    background-color: #d2d8bc;
   }
 }
