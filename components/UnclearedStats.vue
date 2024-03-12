@@ -12,7 +12,13 @@
           />
         </div>
         <StatSection class="md:grid-rows-[1fr_2fr_1fr]">
-          <div class="placement"></div>
+          <p class="self-end mb-6 md:mb-0 text-pretty">
+            On {{ formatDate('2024-03-31') }}, level uploads in Super Mario
+            Maker 1 were disabled<span class="md:hidden lg:inline"
+              >, making it possible for the first time ever to "beat" the game
+              by clearing every level</span
+            >. Now, there are only
+          </p>
           <div class="self-center">
             <h2
               class="text-4xl md:text-3xl xl:text-4xl font-semibold text-balance"
@@ -21,7 +27,8 @@
               {{ uncleared.length === 1 ? 'level' : 'levels' }} left to clear
             </h2>
             <span>
-              before the server shutdown on {{ formatDate(SHUTDOWN_DATE) }}
+              before the servers shutdown for good on
+              {{ formatDate(SHUTDOWN_DATE) }}.
             </span>
             <NuxtLink to="/levels">
               <PrimeButton
@@ -46,23 +53,29 @@
               modal
             >
               <p class="mb-4">
-                Percentages calculated out of ~{{ formatNumber(48000) }} levels
-                that were still uncleared when level upload was disabled on
-                {{ formatDate('2021-04-01') }}.
+                Percentages calculated out of
+                {{
+                  formatNumber(
+                    clearSummary?.clearedTotal ?? 0 + uncleared.length,
+                  )
+                }}
+                levels that were still uncleared when level upload was disabled
+                on {{ formatDate('2021-03-31') }}.
               </p>
               <p>
                 Levels are marked as cleared by the community by running
-                commands for a custom-made Discord bot built by TheCryptan.
-                Additionally, the uncleared list is refreshed periodically to
-                look for any unreported levels that have been cleared.
+                commands for a custom-made Discord bot built by TheCryptan,
+                which then pulls final clear stats for the level directly from
+                the game.
               </p>
             </PrimeDialog>
           </div>
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
-            <p class="mb-2">
-              There are still many ways to help out, even if you're not a
-              platforming pro. We'd love for you to join our community!
+            <p class="mb-2 block md:hidden xl:block">
+              Come help cheer us on, help route, or even try to secure a clear
+              on one of the last remaining levels. We'd love for you to join our
+              community!
             </p>
             <SocialLinks />
           </div>
