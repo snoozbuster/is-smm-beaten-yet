@@ -72,8 +72,8 @@ const topClearerTooltipCallback = (items: TooltipItem<any>[]) => {
   const winner = props.winners[unref(tab)][day];
 
   const creators = useCompact([
-    `${winner.creators[0]}`,
-    winner.creators.slice(1).join(', '),
+    winner.creators[0],
+    ...useChunk(winner.creators.slice(1), 2).map((s) => s.join(', ')),
   ]).join(',\n');
 
   return `Most clears: ${creators} (${
