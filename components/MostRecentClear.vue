@@ -24,6 +24,7 @@
       <span class="font-semibold">
         {{ clear.firstClearerNnid }}
       </span>
+      on <span class="font-semibold">{{ formatDate(clear.dateCleared) }}</span>
     </span>
     <template v-if="others.length">
       <h3 class="text-lg font-semibold">Other recent clears</h3>
@@ -31,7 +32,7 @@
         <div
           v-for="(level, i) in others"
           :key="level.levelId"
-          class="mb-2 pb-2 border-b border-course-world-card-contrast"
+          class="mb-2 pb-2 border-b border-course-world-card-contrast mr-2"
           :class="i === 0 && 'border-t border-course-world-card-contrast pt-2'"
         >
           <LevelListItem
@@ -100,9 +101,12 @@ const props = defineProps({
 });
 
 const others = computed(() =>
-  props.recentClears.filter(({ levelId }) => levelId !== props.clear?.levelId),
+  props.recentClears
+    .filter(({ levelId }) => levelId !== props.clear?.levelId)
+    .reverse(),
 );
 
 const viewing = ref<ClearedLevel>();
 const { shouldShowTranslation } = useLevelBrowserSettings();
+const { formatDate } = useFormatters();
 </script>
