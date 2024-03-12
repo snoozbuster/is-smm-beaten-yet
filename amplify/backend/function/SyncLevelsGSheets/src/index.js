@@ -268,7 +268,7 @@ exports.handler = async (event) => {
   const levelMeta = JSON.parse(await levelMetaPromise);
 
   const getLevelTranslation = (level) =>
-    level.countryCode === 'JP' || level.hacked
+    level.countryCode === 'JP' && level.levelId in translations
       ? { titleTranslation: translations[level.levelId] }
       : {};
 
@@ -309,6 +309,7 @@ exports.handler = async (event) => {
       ...parseLevelCommon(level),
       ...getLevelMeta(level),
       ...getClearDate(level),
+      ...getLevelTranslation(level),
     }))
     .concat(JSON.parse(await legacyClearsPromise))
     .map((level) => ({
