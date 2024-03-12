@@ -8,12 +8,12 @@
           src="~/assets/img/first_clear.png"
           alt="First Clear"
           title="First Clear"
-          width="50"
+          width="40"
         />
         was:
       </span>
       <button
-        class="text-4xl md:text-xl xl:text-4xl mb-2 font-semibold text-balance"
+        class="text-3xl md:text-xl xl:text-3xl mb-2 font-semibold text-balance"
         @click="viewing = clear"
       >
         {{ clear.title }}
