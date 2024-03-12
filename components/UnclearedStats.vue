@@ -241,10 +241,14 @@ onMounted(async () => {
     () => {
       refreshData();
       if (!uncleared.value.length && !error.value) {
-        if (document.hasFocus()) {
+        const restart = () => {
+          window.location.hash = '';
           window.location.reload();
+        }
+        if (document.hasFocus()) {
+          restart();
         } else {
-          window.onfocus = () => window.location.reload();
+          window.onfocus = restart;
         }
       }
     },
