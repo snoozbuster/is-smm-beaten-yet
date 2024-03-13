@@ -57,6 +57,7 @@ export default function useUnclearedLevels() {
   const {
     data: uncleared,
     pending,
+    error,
     execute,
   } = useFetch<UnclearedLevel[]>(`${DATA_ROOT_URL}/uncleared.json`, {
     key: 'uncleared',
@@ -70,6 +71,7 @@ export default function useUnclearedLevels() {
   return {
     uncleared,
     pending,
+    error,
     load: execute,
   };
 }

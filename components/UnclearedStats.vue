@@ -198,7 +198,7 @@ const ready = ref(false);
 
 const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
 
-const { uncleared, load } = useUnclearedLevels();
+const { uncleared, load, error } = useUnclearedLevels();
 
 function startAnimation() {
   if (unref(ready) && props.visible && !animationStarted.value) {
@@ -234,7 +234,19 @@ onMounted(async () => {
   emit('ready');
   startAnimation();
 
-  intervalId = setInterval(refreshData, 1000 * 60 * 2);
+  intervalId = setInterval(
+    () => {
+      refreshData();
+      if (!uncleared.value.length && !error.value) {
+        if (document.hasFocus()) {
+          window.location.reload();
+        } else {
+          window.onfocus = () => window.location.reload();
+        }
+      }
+    },
+    1000 * 60 * 2,
+  );
 });
 
 const { formatNumber, formatDate } = useFormatters();
