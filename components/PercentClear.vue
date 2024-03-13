@@ -65,6 +65,7 @@ const data = computed(() => {
       {
         data: [props.clearedLevels, props.unclearedLevels],
         backgroundColor: [SMM_YELLOW, COURSE_WORLD_CARD],
+        borderColor: props.unclearedLevels === 0 ? 'transparent' : undefined,
       },
     ],
   };
