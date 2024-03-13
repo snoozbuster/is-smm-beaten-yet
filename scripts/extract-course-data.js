@@ -321,18 +321,27 @@ function readCourse(levelId, courseData) {
 
 const courseData = {};
 
+const errors = [];
+
 for (const levelId of levelDirs) {
   console.log(`Reading ${levelId}`);
   const levelPath = path.join(inputDir, levelId);
-  const [main, sub] = await loadCourseFiles(levelPath);
-  const [mainRes, subRes] = await Promise.all([
-    readCourse(levelId, main),
-    readCourse(levelId, sub),
-  ]);
-  courseData[levelId] = {
-    main: mainRes,
-    sub: subRes,
-  };
+  try {
+    const [main, sub] = await loadCourseFiles(levelPath);
+    const [mainRes, subRes] = await Promise.all([
+      readCourse(levelId, main),
+      readCourse(levelId, sub),
+    ]);
+    courseData[levelId] = {
+      main: mainRes,
+      sub: subRes,
+    };
+  } catch (e) {
+    console.error(e);
+    errors.push(levelId);
+  }
 }
+
+console.error('Errors in:', errors);
 
 await writeFile(outfile, JSON.stringify(courseData, undefined, 2));
