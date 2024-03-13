@@ -8,8 +8,14 @@
     >
       Happy MAR10 Day!
     </div>
-    <span class="text-smm sm:text-2xl"> Is Super Mario Maker beaten yet?</span>
-    <h1 id="the-answer" :class="['text-smm', !animationStarted && 'opacity-0']">
+    <span class="text-smm sm:text-2xl mb-10">
+      Is Super Mario Maker beaten yet?</span
+    >
+    <h1
+      id="the-answer"
+      class="text-smm leading-tight md:leading-none"
+      :class="[!animationStarted && 'opacity-0']"
+    >
       {{ theAnswer }}
     </h1>
     <Yatta v-if="theAnswer === 'Yes'" />
