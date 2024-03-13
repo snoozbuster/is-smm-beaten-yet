@@ -81,9 +81,7 @@
             <h3 class="text-2xl font-semibold mt-7">More stats</h3>
           </div>
         </StatSection>
-        <StatSection card>
-          <UnclearedByDate :uncleared-levels="uncleared" />
-        </StatSection>
+        <StatSection card> </StatSection>
         <StatSection card>
           <ClearsOverTime
             :uncleared-level-count="uncleared.length"
@@ -97,7 +95,7 @@
           />
         </StatSection>
         <StatSection card>
-          <StylePieChart :uncleared-levels="uncleared" />
+          <UnclearedBreakdown :uncleared="uncleared" />
         </StatSection>
       </template>
       <template v-else>
