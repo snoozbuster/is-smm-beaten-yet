@@ -12,6 +12,8 @@
     <h1 id="the-answer" :class="['text-smm', !animationStarted && 'opacity-0']">
       {{ theAnswer }}
     </h1>
+    <Yatta v-if="theAnswer === 'Yes'" />
+
     <SocialLinks
       class="absolute top-0 right-0 p-7 opacity-50 hover:opacity-100 transition-opacity hidden sm:flex"
     />
@@ -53,12 +55,12 @@
         :max="1"
         :step="0.01"
       />
-    </div>
 
-    <audio ref="slapSound" crossorigin="anonymous" preload="auto">
-      <source src="~/assets/sound/slapp.ogg" />
-      <source src="~/assets/sound/slapp.mp3" />
-    </audio>
+      <audio ref="slapSound" crossorigin="anonymous" preload="auto">
+        <source src="~/assets/sound/slapp.ogg" />
+        <source src="~/assets/sound/slapp.mp3" />
+      </audio>
+    </div>
   </section>
 </template>
 
