@@ -177,6 +177,21 @@ export default class SmmCourseViewer {
   }
 
   /**
+   * @method module:_SmmCourseViewer::_rawHex2string
+   * Convert hexadecimal array to UCS-2 string
+   * @arg {Array[String]} _rawHex    Raw hexadecimal array
+   * @arg {Integer} _pos             Index of the vector
+   * @arg {Integer} _size            Length of the vector
+   * @access private
+   * @return {String}
+   */
+  _rawHex2name(_rawHex, _pos, _size = 1) {
+    return new TextDecoder('ucs-2').decode(
+      new Uint8Array(_rawHex.slice(_pos, _size)),
+    );
+  }
+
+  /**
    * @method module:_SmmCourseViewer::_interpreterBinaryFile
    * Interpreter the binary file
    * @arg {Array[String]} _rawHex    Raw hexadecimal array
@@ -227,7 +242,7 @@ export default class SmmCourseViewer {
     const day = this._rawHex2uint(_rawHex, 0x13, 1);
     const hour = this._rawHex2uint(_rawHex, 0x14, 1);
     const minute = this._rawHex2uint(_rawHex, 0x15, 1);
-    const name = this._rawHex2string(_rawHex, 0x28, 66);
+    const name = this._rawHex2name(_rawHex, 0x28, 66);
     const mode = this._rawHex2string(_rawHex, 0x6a, 2);
     const themesMap = {
       0: 'overworld',
