@@ -79,17 +79,21 @@ async function uploadToS3(s3, filename, data) {
   );
 }
 
-async function downloadCsv(downloadUrl, transformer) {
-  const { data } = await axios.get(downloadUrl);
-
+async function parseCsv(csv, transformer) {
   return new Promise((resolve, reject) => {
-    Papa.parse(data, {
+    Papa.parse(csv, {
       header: true,
       transformHeader: (title) => transformer[title] ?? title,
       complete: ({ data }) => resolve(data),
       error: (e) => reject(e),
     });
   });
+}
+
+async function downloadCsv(downloadUrl, transformer) {
+  const { data } = await axios.get(downloadUrl);
+
+  return parseCsv(data, transformer);
 }
 
 function cleanList(levels, allowedProps) {
@@ -232,8 +236,8 @@ exports.handler = async (event) => {
   const s3 = new S3Client();
 
   console.log('Queue static GETs');
-  const legacyClearsPromise = getS3File(s3, 'static/legacy_clears.json');
 
+  const archivedClearsPromise = getS3File(s3, 'static/clears_archive.csv');
   const levelMetaPromise = getS3File(s3, 'static/static_level_data.json');
   const translationsPromise = getS3File(s3, 'static/jp_en_translations.json');
   const uploadOverridesPromise = getS3File(
@@ -259,7 +263,9 @@ exports.handler = async (event) => {
     Object.values(UNCLEARED_TITLE_TO_KEY),
   );
   const clearedClean = cleanList(
-    clearedLevels,
+    clearedLevels.concat(
+      await parseCsv(await archivedClearsPromise, CLEARED_TITLE_TO_KEY),
+    ),
     Object.values(CLEARED_TITLE_TO_KEY),
   );
 
@@ -311,7 +317,6 @@ exports.handler = async (event) => {
       ...getClearDate(level),
       ...getLevelTranslation(level),
     }))
-    .concat(JSON.parse(await legacyClearsPromise))
     .map((level) => ({
       ...level,
       hacked: hackedClears.has(level.levelId),
@@ -368,17 +373,21 @@ exports.handler = async (event) => {
   // await buildGroupings(s3, clearedFinal);
   // await uploadPlayerStats(s3, clearedFinal);
 
+  const results = {
+    processedUncleareds: unclearedClean.length,
+    processedCleareds: clearedClean.length,
+
+    totalUncleared: unclearedFinal.length,
+    totalCleared: clearedFinal.length,
+
+    filteredClears: filteredClearCount,
+    dedupedCount,
+  };
+
+  console.log('Results:', results);
+
   return {
     statusCode: 200,
-    body: {
-      processedUncleareds: unclearedClean.length,
-      processedCleareds: clearedLevels.length,
-
-      totalUncleared: unclearedFinal.length,
-      totalCleared: clearedFinal.length,
-
-      filteredClears: filteredClearCount,
-      dedupedCount,
-    },
+    body: results,
   };
 };
