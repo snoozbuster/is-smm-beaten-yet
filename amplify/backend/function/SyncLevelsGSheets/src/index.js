@@ -245,6 +245,7 @@ exports.handler = async (event) => {
     'static/upload_date_overrides.json',
   );
   const hackedClearPromise = getS3File(s3, 'static/hacked_clears.json');
+  const legacyClearsPromise = getS3File(s3, 'static/legacy_clears.json');
 
   console.log('Downloading gsheets');
   const [unclearedLevels, clearedLevels] = await Promise.all([
@@ -362,7 +363,11 @@ exports.handler = async (event) => {
 
   console.log('Creating master clear summary data');
 
-  const clearStats = generateClearSummary(clearedFinal);
+  const legacyClears = JSON.parse(await legacyClearsPromise);
+  const clearStats = {
+    ...generateClearSummary(clearedFinal),
+    legacyClearsByPerson: legacyClears,
+  };
 
   if (!event.localrun) {
     await uploadToS3(s3, 'levels/clear_summary.json', clearStats);
