@@ -17,7 +17,7 @@
           >
             On {{ formatDate('2021-03-31') }}, level uploads in Super Mario
             Maker 1 were disabled, making it finally possible to "beat" the game
-            by clearing every level. Now, there are only
+            by clearing every level. Now, there is only
           </p>
           <div class="self-center">
             <h2 class="text-4xl md:max-xl:text-3xl font-semibold text-balance">
