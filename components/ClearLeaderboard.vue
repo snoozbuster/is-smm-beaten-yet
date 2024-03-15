@@ -52,7 +52,7 @@ const options = computed(() => ({
         label: (item: TooltipItem<any>) => {
           const label =
             item.dataset.label === 'Clears' && item.label in props.legacyClears
-              ? 'Tracked clears'
+              ? 'Tracked Clears'
               : item.dataset.label;
           return `${item.formattedValue} ${label}`;
         },
