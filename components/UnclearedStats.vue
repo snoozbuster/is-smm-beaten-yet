@@ -71,7 +71,8 @@
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
             <p class="mb-2 block md:max-xl:hidden reduced-size">
-              Come help cheer us on as we head to the garden to take on the final level: <a href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5" target="_blank">Trimming the Herbs</a>!
+              Come help cheer us on as we head to the garden to take on the final level: 
+              <a class="text-blue-900 hover:underline" href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5" target="_blank">Trimming the Herbs</a>!
             </p>
             <SocialLinks />
           </div>
