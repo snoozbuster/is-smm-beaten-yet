@@ -1,8 +1,8 @@
 <template>
   <div class="text-left h-full flex flex-col">
     <span class="text-xl mb-3 text-course-world-contrast">
-      {{ formatNumber(levels.length) }} levels from
-      {{ formatNumber(creators.length) }} creators
+      {{ formatNumber(levels.length) }} {{ levels.length === 1 ? 'level' : 'levels' }} from
+      {{ formatNumber(creators.length) }} {{ creators.length === 1 ? 'creator' : 'creators' }}
     </span>
 
     <div
