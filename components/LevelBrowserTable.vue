@@ -85,7 +85,7 @@
           @click="$emit('refresh')"
         />
         <span class="text-xl self-center ml-5">
-          {{ formatNumber(numRows) }} {{ props.levels.length === 1 'level' : 'levels' }}
+          {{ formatNumber(numRows) }} {{ props.levels.length === 1 ? 'level' : 'levels' }}
           <span
             v-show="props.levels.length && numRows !== props.levels.length"
             class="font-normal"
