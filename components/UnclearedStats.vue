@@ -71,8 +71,7 @@
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
             <p class="mb-2 block md:max-xl:hidden reduced-size">
-              Come help cheer us on, help route, or even try to secure a clear
-              on one of the final levels!
+              Come help cheer us on as we head to the garden to take on the final level: [Trimming the Herbs](https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5)!
             </p>
             <SocialLinks />
           </div>
