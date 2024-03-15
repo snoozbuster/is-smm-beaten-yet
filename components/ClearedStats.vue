@@ -59,6 +59,7 @@
         <StatSection card class="md:col-span-2 xl:col-span-1">
           <ClearLeaderboard
             :clears-by-person="clearSummary.clearsByPerson ?? {}"
+            :legacy-clears="clearSummary.legacyClearsByPerson ?? {}"
           />
         </StatSection>
         <StatSection card class="md:col-span-2 xl:col-span-3">

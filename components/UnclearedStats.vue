@@ -97,6 +97,7 @@
         <StatSection card>
           <ClearLeaderboard
             :clears-by-person="clearSummary.clearsByPerson ?? {}"
+            :legacy-clears="clearSummary.legacyClearsByPerson ?? {}"
           />
         </StatSection>
         <StatSection card>
@@ -244,7 +245,7 @@ onMounted(async () => {
         const restart = () => {
           window.location.hash = '';
           window.location.reload();
-        }
+        };
         if (document.hasFocus()) {
           restart();
         } else {
