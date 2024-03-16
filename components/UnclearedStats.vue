@@ -25,7 +25,7 @@
               {{ uncleared.length === 1 ? 'level' : 'levels' }} left to clear
             </h2>
             <span>
-              before the servers shutdown for good on
+              before the servers shut down for good on
               {{ formatDate(SHUTDOWN_DATE) }}.
             </span>
             <NuxtLink to="/levels">
