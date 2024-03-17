@@ -16,6 +16,9 @@ const BUCKET_ID = 'is-smm-beaten-yet-public-data';
 const CLEARS_SPREADSHEET_ID = '1PMNsDoZqYd4261FRmEZSo3SkcnqcvfbKDTQMAJaw6ws';
 const UNCLEARED_SHEET_ID = '11dV6SHOIBzHjIqacQyG8Hsnynydg3h7MBLsFoDwA5KA';
 
+const UNCLEARED_LEVEL_COUNT_API =
+  'https://mite-natural-silkworm.ngrok-free.app/mm1/uncleared_count';
+
 function getSheetDownloadUrl(sheetId, sheetName) {
   return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(
     sheetName,
@@ -351,6 +354,16 @@ exports.handler = async (event) => {
     clearedFinal[Math.round((clearedFinal.length - 1) / 2)],
     clearedFinal[clearedFinal.length - 1],
   );
+
+  if (unclearedFinal.length === 0) {
+    const trueUnclearedCountRes = await axios.get(UNCLEARED_LEVEL_COUNT_API);
+    const trueUnclearedCount = trueUnclearedCountRes.data[0].UnclearedCourses;
+    if (trueUnclearedCount !== 0) {
+      throw new Error(
+        `TheCryptan's API response does not match the spreadsheet. Delaying 0% celebrations! Expected to find ${unclearedFinal.length} uncleared levels in the DB but got ${trueUnclearedCount}.`,
+      );
+    }
+  }
 
   if (!event.localrun) {
     await Promise.all([
