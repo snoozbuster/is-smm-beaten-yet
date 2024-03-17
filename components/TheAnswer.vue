@@ -148,7 +148,7 @@ import catPaw from '~/assets/img/cat_paw.png';
 import { useTheAnswer } from '~/composables/useUnclearedLevels';
 import { DateTime } from 'luxon';
 
-const { theAnswer } = useTheAnswer();
+const { theAnswer } = await useTheAnswer();
 
 const animationStarted = ref(false);
 

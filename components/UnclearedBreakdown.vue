@@ -1,5 +1,5 @@
 <template>
-  <h3 class="text-lg">Uncleared levels breakdown</h3>
+  <h3 class="text-lg">Trimming the Herbs breakdown</h3>
   <PrimeTabMenu
     class="mb-3 -mx-2 md:mx-0"
     :model="tabs"

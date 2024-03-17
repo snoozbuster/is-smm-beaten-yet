@@ -39,7 +39,7 @@ const YATTAS = {
     'Tillyke!', // "Congratulations"
   ],
   // English (US)
-  'en-US': ['We did it!', 'gg!'],
+  'en-US': ['We did it!', 'gg!', "Let's go!"],
   // English (UK)
   'en-UK': ['Good show!'],
   // Lithuanian
@@ -52,9 +52,19 @@ const YATTAS = {
     'Saya melakukannya!', // "I did it"
     'Saya sudah selesai!', // "I got the clear"
   ],
-  // Chinese
+  // Chinese (simplified)
   'zh-CN': [
+    '过了！', // "Pass"/"Yatta"
     '恭喜！', // "Congratulations"
+    '全通了！', // "All cleared"
+    '66666!', // slang for "溜": "Well played"
+  ],
+  // Chinese (traditional)
+  'zh-TW': [
+    '萬歲！', // "Long live"
+    '太好了！', // "Very good"
+    '打通了！', // "Got through"
+    '我們做到了！', // "We did it"
   ],
   // Cantonese
   'zh-HK': [
@@ -116,11 +126,15 @@ const YATTAS = {
   ],
   // Basque
   eu: [
-    'Zorionak!', // "Congratulations"
+    'Zorionak!', // "Congratulations
+    'Goazen!', // "Let's go"/"Yatta"
+    'Eginda bada!', // "It's done"
   ],
   // Spanish
   es: [
-    'Enhorabuena!', // "Congratulations"
+    '¡Enhorabuena!', // "Congratulations"
+    '¡Vamos!', // "Let's go"
+    '¡Completamos todo!', // "We cleared everything"
   ],
   // Dutch
   nl: [
@@ -145,6 +159,11 @@ const YATTAS = {
     'やった！', // "Yatta"
     'yatta!',
     'おめでとう！', // "Congratulations"
+  ],
+  // Gaelic
+  gd: [
+    'Cluiche maith!', // "Good game"/"gg"
+    'Críochnaithe!', // "Finished"
   ],
 } as Record<string, string[]>;
 
@@ -181,6 +200,8 @@ onMounted(() => {
     messageQueue.value.length - 1,
   );
 
+  messageQueue.value.splice(gbIdx, 0, ':gb:');
+
   const xGrids = Math.sqrt(messageQueue.value.length) + 1;
   const yGrids = Math.sqrt(messageQueue.value.length) - 1;
   const positions = useShuffle(
@@ -188,20 +209,40 @@ onMounted(() => {
       useRange(0, yGrids).map((j) => {
         // adjust out of the center to avoid rendering underneath text as much as possible
         const shouldRelocate =
-          (j === 3 && i >= 2 && i <= 5) || (i === 3 && j >= 2 && j <= 4);
+          (j === 3 && i >= 3 && i <= 5) ||
+          (i === 3 && j >= 2 && j <= 5) ||
+          (i === 5 && j === 4);
         const relocateX = shouldRelocate && useRandom(0, 1) === 0;
         const relocateY = shouldRelocate && !relocateX;
+        const finalX = relocateX
+          ? i < xGrids / 2
+            ? i % 2
+            : (i % 2) + xGrids - 3
+          : i;
+        const finalY = relocateY
+          ? [useRandom(0, 2), useRandom(5, yGrids)][useRandom(0, 1)]
+          : j;
+        // if (shouldRelocate) {
+        //   console.log(
+        //     'Original x,y:',
+        //     i,
+        //     j,
+        //     'final x/y:',
+        //     finalX,
+        //     finalY,
+        //     'relocated:',
+        //     relocateX ? 'x' : 'y',
+        //   );
+        // }
         return {
-          x: relocateX ? (i < xGrids / 2 ? i % 1 : (i % 2) + xGrids - 3) : i,
-          y: relocateY
-            ? [useRandom(0, 2), useRandom(4, yGrids)][useRandom(0, 1)]
-            : j,
+          x: finalX,
+          y: finalY,
         };
       }),
     ),
   );
 
-  messageQueue.value.splice(gbIdx, 0, ':gb:');
+  // console.log(xGrids, yGrids);
 
   let i = 0;
   while (positions.length < messageQueue.value.length) {
@@ -213,6 +254,27 @@ onMounted(() => {
     const xGap = 100 / xGrids;
     const yGap = 100 / (yGrids + 1);
     const message = messageQueue.value.shift()!;
+    const position = {
+      top: useRandom(pos.y * yGap, (pos.y + 1) * yGap, true),
+      left: useRandom(pos.x * xGap, (pos.x + 1) * xGap, true),
+    };
+
+    // console.log(
+    //   'x:',
+    //   pos.x,
+    //   'y:',
+    //   pos.y,
+    //   'position:',
+    //   position,
+    //   'ybounds:',
+    //   pos.y * yGap,
+    //   '-',
+    //   (pos.y + 1) * yGap,
+    //   'xbounds:',
+    //   pos.x * xGap,
+    //   '-',
+    //   (pos.x + 1) * xGap,
+    // );
     messages.value.push({
       message,
       face:
@@ -221,10 +283,7 @@ onMounted(() => {
           : (['wink', 'puzzled', 'normal', 'frustrated'] as const)[
               useRandom(0, 3)
             ],
-      position: {
-        top: useRandom(pos.y * yGap, (pos.y + 1) * yGap, true),
-        left: useRandom(pos.x * xGap, (pos.x + 1) * xGap, true),
-      },
+      position,
       gridPos: pos,
       uppercase: useRandom(0, 10) === 0,
     });

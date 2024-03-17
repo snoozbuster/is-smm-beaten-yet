@@ -6,6 +6,7 @@
       dataReady || forceStatsScroll ? 'scroll-snap' : 'overflow-hidden',
     ]"
   >
+    <PrimeToast position="bottom-center" />
     <div class="pane relative h-svh">
       <TheAnswer class="h-svh" />
       <div
@@ -95,7 +96,7 @@ useSeoMeta({
   themeColor: SMM_YELLOW,
 });
 
-const { theAnswer } = useTheAnswer();
+const { theAnswer } = await useTheAnswer();
 
 const promptText = computed(() =>
   unref(theAnswer) === 'Not yet'
