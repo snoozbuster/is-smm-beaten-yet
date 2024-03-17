@@ -28,10 +28,17 @@ const props = defineProps({
 });
 
 const { formatPercent } = useFormatters();
+const { theAnswer } = await useTheAnswer();
+
+const unclearedLevels = computed(() => {
+  return props.unclearedLevels === 0 && theAnswer.value === 'Not yet'
+    ? 1
+    : props.unclearedLevels;
+});
 
 const percentClear = computed(() => {
   const numerator = props.clearedLevels;
-  const denominator = props.clearedLevels + props.unclearedLevels;
+  const denominator = props.clearedLevels + unclearedLevels.value;
 
   const precision = numerator / denominator >= 0.991 ? 2 : 0;
 
@@ -63,9 +70,9 @@ const data = computed(() => {
     labels: ['Cleared', 'Uncleared'],
     datasets: [
       {
-        data: [props.clearedLevels, props.unclearedLevels],
+        data: [props.clearedLevels, unclearedLevels.value],
         backgroundColor: [SMM_YELLOW, COURSE_WORLD_CARD],
-        borderColor: props.unclearedLevels === 0 ? 'transparent' : undefined,
+        borderColor: unclearedLevels.value === 0 ? 'transparent' : undefined,
       },
     ],
   };

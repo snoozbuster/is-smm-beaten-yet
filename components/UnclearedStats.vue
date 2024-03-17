@@ -71,8 +71,14 @@
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
             <p class="mb-2 block md:max-xl:hidden reduced-size">
-              Come help cheer us on as we head to the garden to take on the final level: 
-              <a class="text-blue-900 hover:underline" href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5" target="_blank">Trimming the Herbs</a>!
+              Come help cheer us on as we head to the garden to take on the
+              final level:
+              <a
+                class="text-blue-900 hover:underline"
+                href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5"
+                target="_blank"
+                >Trimming the Herbs</a
+              >!
             </p>
             <SocialLinks />
           </div>
@@ -200,9 +206,29 @@ const animationStarted = ref(false);
 const showFaq = ref(false);
 const ready = ref(false);
 
-const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
+const {
+  data: clearSummary,
+  error: clearSummaryError,
+  execute: loadClears,
+} = useFetch<Partial<ClearedLevelStatSummary>>(
+  `${DATA_ROOT_URL}/clear_summary.json`,
+  {
+    key: 'clear-summary',
+    deep: false,
+    immediate: false,
+    server: false,
+    lazy: true,
+    default: () => ({}),
+  },
+);
 
-const { uncleared, load, error } = useUnclearedLevels();
+const {
+  uncleared,
+  load: loadUncleared,
+  error: unclearedError,
+} = useUnclearedLevels();
+
+const toast = useToast();
 
 function startAnimation() {
   if (unref(ready) && props.visible && !animationStarted.value) {
@@ -224,37 +250,44 @@ onMounted(async () => {
   onUnmounted(() => clearInterval(intervalId));
 
   async function refreshData() {
-    [clearSummary.value] = await Promise.all([
-      // this seems wrong but it works? what is the nuxt-y way to do this?
-      (async () =>
-        (await fetch(`${DATA_ROOT_URL}/clear_summary.json`)).json())(),
-      load(),
-    ]);
+    await Promise.all([loadClears(), loadUncleared()]);
   }
 
   await refreshData();
+
+  if (unclearedError.value || clearSummaryError.value) {
+    toast.add({
+      severity: 'error',
+      summary: 'Your princess is in another castle',
+      detail:
+        'Bowser has kidnapped the rest of the site. Try checking your internet connection and then refreshing the page.',
+    });
+    return;
+  }
 
   ready.value = true;
   emit('ready');
   startAnimation();
 
-  intervalId = setInterval(
-    () => {
-      refreshData();
-      if (!uncleared.value.length && !error.value) {
-        const restart = () => {
-          window.location.hash = '';
-          window.location.reload();
-        };
-        if (document.hasFocus()) {
-          restart();
-        } else {
-          window.onfocus = restart;
+  if (uncleared.value.length) {
+    intervalId = setInterval(
+      async () => {
+        await refreshData();
+        if (!uncleared.value.length) {
+          const restart = () => {
+            window.location.hash = '';
+            window.location.reload();
+          };
+          if (document.hasFocus()) {
+            restart();
+          } else {
+            window.onfocus = restart;
+          }
         }
-      }
-    },
-    1000 * 60 * 2,
-  );
+      },
+      1000 * 60 * 2,
+    );
+  }
 });
 
 const { formatNumber, formatDate } = useFormatters();

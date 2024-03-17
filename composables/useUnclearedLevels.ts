@@ -5,14 +5,15 @@ import type { UnclearedLevel } from '~/types/levels';
 const __DEBUG_0PERCENT_MODE__ =
   process.env.DEBUG_0PERCENT_MODE === 'true' && process.dev;
 
-export function useTheAnswer() {
-  const { data: theAnswer, pending } = useAsyncData<
+export async function useTheAnswer() {
+  const { data } = useNuxtData('the-answer'); // in essence this pattern causes this request to be server-side only. on client it will always use cached data
+  const { pending } = await useAsyncData<
     UnclearedLevel[],
     Error,
     'Yes' | 'Not yet' | 'No'
   >('the-answer', () => $fetch(`${DATA_ROOT_URL}/uncleared.json`), {
     deep: false,
-    immediate: true,
+    immediate: !data.value,
     server: true,
     lazy: true,
     transform: (levels) =>
@@ -24,7 +25,7 @@ export function useTheAnswer() {
   });
 
   return {
-    theAnswer,
+    theAnswer: data,
     pending,
   };
 }
@@ -54,22 +55,21 @@ export function useUnclearedLevel(levelId: MaybeRef<string>) {
 }
 
 export default function useUnclearedLevels() {
-  const {
-    data: uncleared,
-    pending,
-    error,
-    execute,
-  } = useFetch<UnclearedLevel[]>(`${DATA_ROOT_URL}/uncleared.json`, {
-    key: 'uncleared',
-    deep: false,
-    immediate: false,
-    server: false,
-    lazy: true,
-    default: () => [],
-  });
+  const { data } = useNuxtData('uncleared');
+  const { pending, error, execute } = useFetch<UnclearedLevel[]>(
+    `${DATA_ROOT_URL}/uncleared.json`,
+    {
+      key: 'uncleared',
+      deep: false,
+      immediate: false,
+      server: false,
+      lazy: true,
+      default: () => [],
+    },
+  );
 
   return {
-    uncleared,
+    uncleared: data,
     pending,
     error,
     load: execute,
