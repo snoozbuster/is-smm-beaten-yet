@@ -29,13 +29,13 @@
 const links = [
   {
     name: 'Team 0% Discord',
-    href: 'https://discord.com/invite/0-394519186610847754',
+    href: 'https://discord.gg/team0percent',
     icon: 'logos:discord-icon',
   },
   {
-    name: "Watch Team 0% Live",
-    href: "https://twitch.tv/directory/category/super-mario-maker",
-    icon: "logos:twitch",
+    name: 'Watch Team 0% Live',
+    href: 'https://twitch.tv/directory/category/super-mario-maker',
+    icon: 'logos:twitch',
   },
   {
     name: 'Team 0% Twitter',
