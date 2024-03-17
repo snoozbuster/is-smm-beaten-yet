@@ -17,24 +17,32 @@
           >
             On {{ formatDate('2021-03-31') }}, level uploads in Super Mario
             Maker 1 were disabled, making it finally possible to "beat" the game
-            by clearing every level. Now,
+            by clearing every level. Now, there is only
           </p>
           <div class="self-center">
             <h2 class="text-4xl md:max-xl:text-3xl font-semibold text-balance">
-              <CountdownClock /> remains
+              {{ formatNumber(uncleared.length) }}
+              {{ uncleared.length === 1 ? 'level' : 'levels' }} left to clear
             </h2>
             <span>
               before the servers shutdown for good on
               {{ formatDate(SHUTDOWN_DATE) }}.
             </span>
-            <!-- <PrimeButton
-              label="View uncleared levels"
-              class="w-full text-smm uppercase mt-5 mb-3"
-              size="large"
-              severity="warning"
-            /> -->
-
-            <p>The last level remaining is Trimming The Herbs</p>
+            <NuxtLink to="/levels">
+              <PrimeButton
+                label="View uncleared levels"
+                class="w-full text-smm uppercase mt-5 mb-3"
+                size="large"
+                severity="warning"
+              />
+            </NuxtLink>
+            <PrimeButton
+              class="text-course-world-contrast inline p-0 mb-2 hover:underline"
+              link
+              @click="showFaq = true"
+            >
+              How is this calculated? <span class="pi pi-angle-right"></span>
+            </PrimeButton>
 
             <PrimeDialog
               v-model:visible="showFaq"
@@ -63,14 +71,8 @@
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
             <p class="mb-2 block md:max-xl:hidden reduced-size">
-              Come help cheer us on as we head to the garden to take on the
-              final level:
-              <a
-                class="text-blue-900 hover:underline"
-                href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5"
-                target="_blank"
-                >Trimming the Herbs</a
-              >!
+              Come help cheer us on as we head to the garden to take on the final level: 
+              <a class="text-blue-900 hover:underline" href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5" target="_blank">Trimming the Herbs</a>!
             </p>
             <SocialLinks />
           </div>
