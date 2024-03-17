@@ -55,35 +55,11 @@
     </template>
   </template>
 
-  <PrimeDialog
+  <LevelPreviewModal
     v-if="viewing"
-    class="w-screen lg:w-3/4"
-    :header="`Preview for ${viewing?.levelId}`"
-    :visible="!!viewing"
-    :draggable="false"
-    modal
-    maximizable
-    :pt="{
-      content: {
-        class: 'flex flex-col',
-      },
-    }"
-    @update:visible="(v) => !v && (viewing = undefined)"
-  >
-    <div class="mb-3">
-      <LevelListItem
-        :level="viewing"
-        :translate-level-title="shouldShowTranslation(viewing)"
-        :show-preview="false"
-        :show-icons="false"
-      />
-    </div>
-
-    <LevelPreview
-      :level-id="viewing.levelId"
-      @not-found="viewing = undefined"
-    />
-  </PrimeDialog>
+    :level="viewing"
+    @close="viewing = undefined"
+  />
 </template>
 
 <script setup lang="ts">
@@ -107,6 +83,5 @@ const others = computed(() =>
 );
 
 const viewing = ref<ClearedLevel>();
-const { shouldShowTranslation } = useLevelBrowserSettings();
 const { formatDate } = useFormatters();
 </script>

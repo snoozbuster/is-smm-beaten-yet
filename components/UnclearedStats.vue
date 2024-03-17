@@ -11,74 +11,45 @@
             :cleared-levels="clearSummary.clearedTotal ?? 0"
           />
         </div>
-        <StatSection class="md:grid-rows-[1fr_2fr_1fr]">
-          <p
-            class="self-end mb-6 md:mb-0 text-pretty md:max-xl:hidden reduced-size"
-          >
+        <StatSection class="md:grid-rows-[1fr_2fr_1fr] reduced-size">
+          <p class="self-end mb-6 md:mb-1 text-pretty md:max-xl:hidden">
             On {{ formatDate('2021-03-31') }}, level uploads in Super Mario
             Maker 1 were disabled, making it finally possible to "beat" the game
-            by clearing every level. Now, there is only
+            by clearing every level. Now, there is only <strong>1</strong> level
+            remaining, and we have
           </p>
           <div class="self-center">
-            <h2 class="text-4xl md:max-xl:text-3xl font-semibold text-balance">
-              {{ formatNumber(uncleared.length) }}
-              {{ uncleared.length === 1 ? 'level' : 'levels' }} left to clear
-            </h2>
+            <CountdownClock class="mb-3" />
             <span>
-              before the servers shutdown for good on
+              to clear it before the servers shutdown for good on
               {{ formatDate(SHUTDOWN_DATE) }}.
             </span>
-            <NuxtLink to="/levels">
+            <div class="mt-3">
               <PrimeButton
-                label="View uncleared levels"
-                class="w-full text-smm uppercase mt-5 mb-3"
-                size="large"
+                label="View the final level"
+                class="text-smm uppercase py-2"
                 severity="warning"
+                @click="showLevel = true"
               />
-            </NuxtLink>
-            <PrimeButton
-              class="text-course-world-contrast inline p-0 mb-2 hover:underline"
-              link
-              @click="showFaq = true"
-            >
-              How is this calculated? <span class="pi pi-angle-right"></span>
-            </PrimeButton>
-
-            <PrimeDialog
-              v-model:visible="showFaq"
-              class="w-80"
-              header="FAQ"
-              modal
-            >
-              <p class="mb-4">
-                Percentages calculated out of
-                {{
-                  formatNumber(
-                    clearSummary?.clearedTotal ?? 0 + uncleared.length,
-                  )
-                }}
-                levels that were still uncleared when level upload was disabled
-                on {{ formatDate('2021-03-31') }}.
-              </p>
-              <p>
-                Levels are marked as cleared by the community by running
-                commands for a custom-made Discord bot built by TheCryptan,
-                which then pulls final clear stats for the level directly from
-                the game.
-              </p>
-            </PrimeDialog>
+              <LevelPreviewModal
+                v-if="showLevel"
+                :level="uncleared[0]"
+                @close="showLevel = false"
+              />
+            </div>
+            <a
+              class="hover:underline block my-2 text-sm"
+              href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5"
+              target="_blank"
+              >What makes this level so hard?
+              <i class="pi pi-angle-right -ml-1 text-sm"></i
+            ></a>
           </div>
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
-            <p class="mb-2 block md:max-xl:hidden reduced-size">
-              Come help cheer us on as we head to the garden to take on the
-              final level:
-              <a
-                class="text-blue-900 hover:underline"
-                href="https://youtu.be/KmikpEVCuZE?si=uNbXhV1QplXVJVh5"
-                target="_blank"
-                >Trimming the Herbs</a
-              >!
+            <p class="mb-2 block md:max-xl:hidden text-balance hidden-short">
+              Come help cheer us on as our team heads to the garden to take on
+              their final challenge: Trimming the Herbs!
             </p>
             <SocialLinks />
           </div>
@@ -131,9 +102,13 @@
   }
 }
 
-@media (max-height: 760px) {
+@media (max-height: 840px) {
   .reduced-size {
     @apply text-sm;
+  }
+
+  .hidden-short {
+    @apply hidden;
   }
 }
 </style>
@@ -203,7 +178,7 @@ const props = defineProps({
 
 const animationStarted = ref(false);
 
-const showFaq = ref(false);
+const showLevel = ref(false);
 const ready = ref(false);
 
 const {
