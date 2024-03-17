@@ -131,13 +131,13 @@ const StatSection = (
   { slots, attrs }: SetupContext,
 ) =>
   props.card
-    ? h(CourseWorldCard, attrs, slots.default?.())
+    ? h(CourseWorldCard, attrs, { default: slots.default })
     : h(
         'div',
         {
           class: ['stat-section grid place-content-center text-center'],
         },
-        slots.default?.(),
+        { default: slots.default },
       );
 StatSection.props = {
   card: {
