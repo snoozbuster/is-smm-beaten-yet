@@ -7,22 +7,41 @@ const __DEBUG_0PERCENT_MODE__ =
 
 export async function useTheAnswer() {
   const { data } = useNuxtData('the-answer'); // in essence this pattern causes this request to be server-side only. on client it will always use cached data
-  const { pending } = await useAsyncData<
+  const { pending, error } = await useAsyncData<
     UnclearedLevel[],
     Error,
     'Yes' | 'Not yet' | 'No'
-  >('the-answer', () => $fetch(`${DATA_ROOT_URL}/uncleared.json`), {
-    deep: false,
-    immediate: !data.value,
-    server: true,
-    lazy: true,
-    transform: (levels) =>
-      !levels.length || __DEBUG_0PERCENT_MODE__
-        ? 'Yes'
-        : DateTime.now() < DateTime.fromISO(SHUTDOWN_DATE)
-          ? 'Not yet'
-          : 'No',
-  });
+  >(
+    'the-answer',
+    async () => {
+      const res = await $fetch(`${DATA_ROOT_URL}/uncleared.json`);
+
+      if (!Array.isArray(res)) {
+        console.log('Got something unexpected from AWS:', res);
+        console.error('Level data is corrupt');
+        throw new Error('Level data is corrupt');
+      }
+
+      return res;
+    },
+    {
+      deep: false,
+      immediate: !data.value,
+      server: true,
+      lazy: true,
+      transform: (levels) => {
+        return !levels.length || __DEBUG_0PERCENT_MODE__
+          ? 'Yes'
+          : DateTime.now() < DateTime.fromISO(SHUTDOWN_DATE)
+            ? 'Not yet'
+            : 'No';
+      },
+    },
+  );
+
+  if (error.value) {
+    throw error.value;
+  }
 
   return {
     theAnswer: data,
