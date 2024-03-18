@@ -1,0 +1,9 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "discordWebhookUrl",
+      "environmentVariableName": "DiscordWebhookUrl"
+    }
+  ]
+}

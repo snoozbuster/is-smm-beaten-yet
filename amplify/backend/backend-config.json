@@ -1,6 +1,12 @@
 {
   "auth": {},
   "function": {
+    "DiscordErrorNotifier": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "SyncLevelsGSheets": {
       "build": true,
       "dependsOn": [],
@@ -9,6 +15,14 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_DiscordErrorNotifier_discordWebhookUrl": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "DiscordErrorNotifier"
+        }
+      ]
+    },
     "AMPLIFY_function_SyncLevelsGSheets_deploymentBucketName": {
       "usedBy": [
         {
