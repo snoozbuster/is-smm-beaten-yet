@@ -15,7 +15,23 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_DiscordErrorNotifier_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "DiscordErrorNotifier"
+        }
+      ]
+    },
     "AMPLIFY_function_DiscordErrorNotifier_discordWebhookUrl": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "DiscordErrorNotifier"
+        }
+      ]
+    },
+    "AMPLIFY_function_DiscordErrorNotifier_s3Key": {
       "usedBy": [
         {
           "category": "function",
