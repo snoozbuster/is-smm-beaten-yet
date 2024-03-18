@@ -69,7 +69,7 @@ export default function useUnclearedLevels() {
   );
 
   return {
-    uncleared: data,
+    uncleared: computed(() => data.value ?? undefined),
     pending,
     error,
     load: execute,
