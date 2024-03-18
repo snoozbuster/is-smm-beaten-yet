@@ -18,9 +18,6 @@
     },
     "discordWebhookUrl": {
       "Type": "String"
-    },
-    "queueerrorsQueueQueueARN": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -162,19 +159,6 @@
               }
             }
           ]
-        }
-      }
-    },
-    "LambdaFunctionSQSMapping": {
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "Properties": {
-        "BatchSize": 1,
-        "Enabled": true,
-        "EventSourceArn": {
-          "Ref": "queueerrorsQueueQueueARN"
-        },
-        "FunctionName": {
-          "Ref": "LambdaFunction"
         }
       }
     }

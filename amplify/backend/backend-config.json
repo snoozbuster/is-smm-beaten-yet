@@ -3,15 +3,7 @@
   "function": {
     "DiscordErrorNotifier": {
       "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "QueueARN"
-          ],
-          "category": "queue",
-          "resourceName": "errorsQueue"
-        }
-      ],
+      "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
@@ -62,12 +54,6 @@
           "resourceName": "SyncLevelsGSheets"
         }
       ]
-    }
-  },
-  "queue": {
-    "errorsQueue": {
-      "providerPlugin": "awscloudformation",
-      "service": "SQS"
     }
   },
   "storage": {}
