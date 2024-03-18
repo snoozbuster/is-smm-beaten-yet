@@ -21,6 +21,16 @@ async function sendMessage(message) {
   console.log('Response from discord:', res);
 }
 
+const ALARM_DESCRIPTIONS = {
+  UnusualTrafficDetector:
+    'Unusual site traffic patterns have been detected. Traffic may be spiking.',
+  Amplify5xxErrors:
+    'The site is experiencing server errors and (at least part of it) is probably down.',
+  DurationAlarm:
+    'The background job to sync gsheets data took longer than usual.',
+  SyncErrors: 'The background job to sync gsheets data crashed.',
+};
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
@@ -30,16 +40,19 @@ exports.handler = async (event) => {
 
   try {
     const isOk = event.alarmData.state.value === 'OK';
-    let message = `${AT_ME} \`${event.alarmData.alarmName}\` has changed state to ${event.alarmData.state.value}. `;
+    let message = `${!isOk ? AT_ME : 'The previous alarm for'} \`${
+      event.alarmData.alarmName
+    }\` has changed state to ${event.alarmData.state.value}. `;
     message += isOk
-      ? `The issue has been resolved.`
-      : `Something is going wrong.`;
-    message += `\n\nThe reason for this transition was: ${event.alarmData.state.reason}`;
+      ? `All is well; relax.`
+      : ALARM_DESCRIPTIONS[event.alarmData.alarmName] ??
+        `Something is going wrong.`;
+    message += `\n\nAdditional information:\n${event.alarmData.state.reason}`;
 
     await sendMessage(message);
   } catch (e) {
     await sendMessage(
-      `Error while parsing alarm and generating Discord message: ${e.message}`,
+      `${AT_ME} Error while parsing alarm and generating Discord message: ${e.message}`,
     );
   }
 
