@@ -46,3 +46,4 @@ amplifytools.xcconfig
 #amplify-do-not-edit-end
 
 fixtures/
+nex-keys.txt
