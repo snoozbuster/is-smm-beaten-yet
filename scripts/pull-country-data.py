@@ -171,6 +171,7 @@ async def main():
   s = settings.default()
   s.configure("9f2b4678", 30810)
 
+  num_consec_errors = 0
   async with backend.connect(s, "52.40.192.64", "59900") as be: # * Skip NNID API
     async with be.login(NEX_USERNAME, NEX_PASSWORD) as client:
       datastore_client = datastore.DataStoreClient(client)
@@ -180,11 +181,23 @@ async def main():
       i = 0
       for pid_chunk in chunks(pids, CHUNK_SIZE):
         print('Starting index: ' + str(i) + '/' + str(len(pids)) + " (chunk " + str(i // CHUNK_SIZE + 1) + "/" + str(len(pids) // CHUNK_SIZE) + ")", file=sys.stderr)
-        params = [make_param(pid) for pid in pid_chunk]
-        res = await datastore_client.get_metas_multiple_param(params)
-        for info in res.infos:
-          country_map[info.name] = COUNTRY_CODES[info.tags[0]]
-        i += len(params)
+
+        try:
+          params = [make_param(pid) for pid in pid_chunk]
+          res = await datastore_client.get_metas_multiple_param(params)
+          for info in res.infos:
+            country_map[info.name] = COUNTRY_CODES[info.tags[0]] if len(info.tags) else ''
+          i += len(params)
+          num_consec_errors = 0
+        except Exception as e:
+          print('Error in chunk:', file=sys.stderr)
+          print(e, file=sys.stderr)
+          num_consec_errors += 1
+
+        if num_consec_errors >= 3:
+          print('Failing consistently. Bailing out early.', file=sys.stderr)
+          break
+
         time.sleep(1)
 
       print(json.dumps(country_map))
