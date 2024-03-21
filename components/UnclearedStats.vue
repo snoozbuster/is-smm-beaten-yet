@@ -21,7 +21,7 @@
           <div class="self-center">
             <CountdownClock class="mb-3" />
             <span>
-              to clear it before the servers shutdown for good on
+              to clear it before the servers shut down for good on
               {{ formatDate(SHUTDOWN_DATE) }}.
             </span>
             <div class="mt-3">
