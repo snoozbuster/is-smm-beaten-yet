@@ -2,6 +2,11 @@ import colors from 'tailwindcss/colors';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  $production: {
+    experimental: {
+      inlineSSRStyles: false,
+    },
+  },
   app: {
     cdnURL: 'https://static.issmmbeatenyet.com/',
   },
