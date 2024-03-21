@@ -37,6 +37,15 @@ const props = defineProps({
 const { formatNumber } = useFormatters();
 const includeLegacy = ref(false);
 
+const leaderboard = computed(() =>
+  useOrderBy(
+    useToPairs(props.clearsByPerson),
+    ([user, clears]) =>
+      clears + (includeLegacy.value ? props.legacyClears[user] ?? 0 : 0),
+    'desc',
+  ).slice(0, 10),
+);
+
 const options = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
@@ -49,6 +58,11 @@ const options = computed(() => ({
       mode: 'index',
       filter: (item: TooltipItem<any>) => item.raw,
       callbacks: {
+        title: (items: TooltipItem<any>[]) => {
+          return `Rank ${
+            leaderboard.value.findIndex(([user]) => user === items[0].label) + 1
+          }: ${items[0].label}`;
+        },
         label: (item: TooltipItem<any>) => {
           const label =
             item.dataset.label === 'Clears' && item.label in props.legacyClears
@@ -83,12 +97,7 @@ const options = computed(() => ({
 }));
 
 const data = computed(() => {
-  const clearers = useOrderBy(
-    useToPairs(props.clearsByPerson),
-    ([user, clears]) =>
-      clears + (includeLegacy.value ? props.legacyClears[user] ?? 0 : 0),
-    'desc',
-  ).slice(0, 10);
+  const clearers = unref(leaderboard);
 
   return {
     labels: clearers.map(([user]) => user),
