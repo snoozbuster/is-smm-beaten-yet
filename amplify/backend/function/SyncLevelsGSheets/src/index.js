@@ -127,7 +127,7 @@ function parseLevelCommon(level) {
   };
 }
 
-function generateClearSummary(clearedLevels) {
+function generateClearSummary(clearedLevels, firstClearerSummaries = true) {
   const clearsByDate = _.mapValues(
     _.groupBy(clearedLevels, 'dateCleared'),
     'length',
@@ -165,11 +165,6 @@ function generateClearSummary(clearedLevels) {
 
   return {
     clearsByDate,
-    clearsByPerson,
-    winners: {
-      daily: dailyWinners,
-      weekly: weeklyWinners,
-    },
     clearedTotal: clearedLevels.length,
     mostRecentClear: _.last(
       clearedLevels.filter(({ dateCleared }) => dateCleared),
@@ -178,17 +173,29 @@ function generateClearSummary(clearedLevels) {
       clearedLevels.filter(({ dateCleared }) => dateCleared),
       10,
     ),
+    ...(firstClearerSummaries
+      ? {
+          clearsByPerson: clearsByPerson,
+          winners: {
+            daily: dailyWinners,
+            weekly: weeklyWinners,
+          },
+        }
+      : {}),
   };
 }
 
 async function uploadGroups(s3, prefix, clearedLevelGroups) {
   console.log('Uploading groups for', prefix);
+  const summaries = _.mapValues(clearedLevelGroups, generateClearSummary);
+
+  await uploadToS3(s3, [prefix, 'list.json'].join('/'), summaries);
+
   for (const [name, levels] of Object.entries(clearedLevelGroups)) {
-    const summary = generateClearSummary(levels);
-    await Promise.all([
-      uploadToS3(s3, [prefix, `${name}.json`].join('/'), levels),
-      uploadToS3(s3, [prefix, `${name}_summary.json`].join('/'), summary),
-    ]);
+    await uploadToS3(s3, [prefix, `${name}.json`].join('/'), {
+      levels,
+      summary: summaries[name],
+    });
   }
 }
 
@@ -221,11 +228,35 @@ async function buildGroupings(s3, clearedLevels) {
   );
 }
 
-async function uploadPlayerStats(s3, clearedLevels) {
+async function uploadPlayerStats(
+  s3,
+  clearedLevels,
+  legacyClears,
+  playerCountries,
+) {
   console.log('Uploading player stats');
   const byPlayer = _.groupBy(clearedLevels, 'firstClearerNnid');
+
+  const playerList = _.mapValues(byPlayer, (levels, name) => ({
+    ...generateClearSummary(levels, false),
+    legacyClears: legacyClears[name] ?? 0,
+  }));
+
+  await uploadToS3(
+    s3,
+    'players/list.json',
+    _.mapValues(playerList, (summary, name) => ({
+      countryCode: playerCountries[name],
+      ..._.omit(summary, ['clearsByDate', 'lastClears']),
+    })),
+  );
+
   for (const [name, levels] of Object.entries(byPlayer)) {
-    await uploadToS3(s3, ['players', `${name}.json`].join('/'), levels);
+    await uploadToS3(s3, ['players', `${name}.json`].join('/'), {
+      levels,
+      countryCode: playerCountries[name],
+      stats: playerList[name],
+    });
   }
 }
 
@@ -398,7 +429,7 @@ exports.handler = async (event) => {
   }
 
   // await buildGroupings(s3, clearedFinal);
-  // await uploadPlayerStats(s3, clearedFinal);
+  // await uploadPlayerStats(s3, clearedFinal, legacyClears, playerCountries);
 
   const results = {
     processedUncleareds: unclearedClean.length,
