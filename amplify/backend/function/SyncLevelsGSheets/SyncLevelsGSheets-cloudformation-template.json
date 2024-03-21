@@ -73,14 +73,11 @@
           }
         },
         "Role": {
-          "Fn::GetAtt": [
-            "LambdaExecutionRole",
-            "Arn"
-          ]
+          "Fn::GetAtt": ["LambdaExecutionRole", "Arn"]
         },
         "Runtime": "nodejs18.x",
         "Layers": [],
-        "Timeout": 600,
+        "Timeout": 120,
         "MemorySize": 512
       }
     },
@@ -111,22 +108,16 @@
             {
               "Effect": "Allow",
               "Principal": {
-                "Service": [
-                  "lambda.amazonaws.com"
-                ]
+                "Service": ["lambda.amazonaws.com"]
               },
-              "Action": [
-                "sts:AssumeRole"
-              ]
+              "Action": ["sts:AssumeRole"]
             }
           ]
         }
       }
     },
     "lambdaexecutionpolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
+      "DependsOn": ["LambdaExecutionRole"],
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyName": "lambda-execution-policy",
@@ -177,10 +168,7 @@
         "Targets": [
           {
             "Arn": {
-              "Fn::GetAtt": [
-                "LambdaFunction",
-                "Arn"
-              ]
+              "Fn::GetAtt": ["LambdaFunction", "Arn"]
             },
             "Id": {
               "Ref": "LambdaFunction"
@@ -198,10 +186,7 @@
         "Action": "lambda:InvokeFunction",
         "Principal": "events.amazonaws.com",
         "SourceArn": {
-          "Fn::GetAtt": [
-            "CloudWatchEvent",
-            "Arn"
-          ]
+          "Fn::GetAtt": ["CloudWatchEvent", "Arn"]
         }
       }
     },
@@ -213,14 +198,8 @@
           "Version": "2012-10-17",
           "Statement": [
             {
-              "Action": [
-                "s3:PutObject",
-                "s3:GetObject",
-                "s3:ListBucket"
-              ],
-              "Resource": [
-                "arn:aws:s3:::is-smm-beaten-yet-public-data/*"
-              ],
+              "Action": ["s3:PutObject", "s3:GetObject", "s3:ListBucket"],
+              "Resource": ["arn:aws:s3:::is-smm-beaten-yet-public-data/*"],
               "Effect": "Allow"
             }
           ]
@@ -242,10 +221,7 @@
     },
     "Arn": {
       "Value": {
-        "Fn::GetAtt": [
-          "LambdaFunction",
-          "Arn"
-        ]
+        "Fn::GetAtt": ["LambdaFunction", "Arn"]
       }
     },
     "Region": {
@@ -265,10 +241,7 @@
     },
     "LambdaExecutionRoleArn": {
       "Value": {
-        "Fn::GetAtt": [
-          "LambdaExecutionRole",
-          "Arn"
-        ]
+        "Fn::GetAtt": ["LambdaExecutionRole", "Arn"]
       }
     }
   }
