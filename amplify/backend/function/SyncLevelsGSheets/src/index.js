@@ -249,6 +249,10 @@ exports.handler = async (event) => {
   );
   const hackedClearPromise = getS3File(s3, 'static/hacked_clears.json');
   const legacyClearsPromise = getS3File(s3, 'static/legacy_clears.json');
+  const playerCountriesPromise = getS3File(
+    s3,
+    'static/user_country_codes.json',
+  );
 
   console.log('Downloading gsheets');
   const [unclearedLevels, clearedLevels] = await Promise.all([
@@ -276,13 +280,17 @@ exports.handler = async (event) => {
   console.log('Compiling uncleared levels');
   const translations = JSON.parse(await translationsPromise);
   const levelMeta = JSON.parse(await levelMetaPromise);
+  const playerCountries = JSON.parse(await playerCountriesPromise);
 
   const getLevelTranslation = (level) =>
     level.countryCode === 'JP' && level.levelId in translations
       ? { titleTranslation: translations[level.levelId] }
       : {};
 
-  const getLevelMeta = (level) => _.omit(levelMeta[level.levelId], 'id');
+  const getLevelMeta = (level) => ({
+    ..._.omit(levelMeta[level.levelId], 'id'),
+    countryCode: playerCountries[level.creator],
+  });
 
   const unclearedFinal = _.sortBy(
     unclearedClean.map((level) => ({
@@ -320,6 +328,7 @@ exports.handler = async (event) => {
       ...getLevelMeta(level),
       ...getClearDate(level),
       ...getLevelTranslation(level),
+      firstClearerCountryCode: playerCountries[level.firstClearerNnid],
     }))
     .map((level) => ({
       ...level,
