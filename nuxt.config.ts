@@ -10,6 +10,31 @@ export default defineNuxtConfig({
   app: {
     cdnURL: 'https://static.issmmbeatenyet.com/',
   },
+  hooks: {
+    // https://github.com/nuxt/nuxt/issues/18376#issuecomment-1515242958
+    'build:manifest': (manifest) => {
+      const NO_PREFETCH_ASSETS = ['.webp', '.jpg', '.png', '.gif'];
+      const ALLOWED_PREFETCH_PREFIXES = [
+        'cat_paw',
+        'slapp',
+        'geistbeck',
+        'first_clear',
+      ];
+
+      for (const key in manifest) {
+        const file = manifest[key];
+
+        if (file.assets) {
+          file.assets = file.assets.filter(
+            (asset: string) =>
+              ALLOWED_PREFETCH_PREFIXES.some((prefix) =>
+                asset.startsWith(prefix),
+              ) || NO_PREFETCH_ASSETS.every((ext) => !asset.endsWith(ext)),
+          );
+        }
+      }
+    },
+  },
   devtools: { enabled: true },
   css: [
     '~/assets/css/main.scss',
