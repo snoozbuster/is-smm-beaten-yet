@@ -260,6 +260,37 @@ async function uploadPlayerStats(
   }
 }
 
+async function uploadCreatorStats(s3, clearedLevels, playerCountries) {
+  console.log('Uploading creator stats');
+  const byCreator = _.groupBy(clearedLevels, 'creator');
+
+  const creatorList = _.mapValues(byCreator, (levels) =>
+    generateClearSummary(levels),
+  );
+
+  await uploadToS3(
+    s3,
+    'creators/list.json',
+    _.mapValues(creatorList, (summary, name) => ({
+      countryCode: playerCountries[name],
+      ..._.omit(summary, [
+        'clearsByDate',
+        'lastClears',
+        'clearsByPerson',
+        'winners',
+      ]),
+    })),
+  );
+
+  for (const [name, levels] of Object.entries(byCreator)) {
+    await uploadToS3(s3, ['creators', `${name}.json`].join('/'), {
+      levels,
+      countryCode: playerCountries[name],
+      stats: creatorList[name],
+    });
+  }
+}
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
@@ -430,6 +461,7 @@ exports.handler = async (event) => {
 
   // await buildGroupings(s3, clearedFinal);
   // await uploadPlayerStats(s3, clearedFinal, legacyClears, playerCountries);
+  // await uploadCreatorStats(s3, clearedFinal, playerCountries);
 
   const results = {
     processedUncleareds: unclearedClean.length,
