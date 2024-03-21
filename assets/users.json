@@ -14,6 +14,10 @@
           "type": "level",
           "levelId": "CCCC-0000-03B6-7A15"
         }
+      },
+      {
+        "name": "VIP",
+        "reason": "Moderator of the Team 0% Discord and major contributor to the project"
       }
     ]
   },
@@ -163,6 +167,10 @@
           "type": "level",
           "levelId": "3DD3-0000-03CF-209B"
         }
+      },
+      {
+        "name": "VIP",
+        "reason": "Contributor to the Team 0% Discord"
       }
     ]
   },
@@ -205,6 +213,10 @@
         "name": "Sniper",
         "awardDate": "2022-04-30",
         "reason": "Cleared the final January 2016 level (before hacked clears of other levels were discovered)"
+      },
+      {
+        "name": "VIP",
+        "reason": "Contributor to the Team 0% Discord and major contributor to the project"
       }
     ]
   },
@@ -327,6 +339,20 @@
     ]
   },
   {
+    "discord": "MBCollector672",
+    "nnid": "Epicperson456",
+    "awards": [
+      {
+        "name": "Leprechaun",
+        "awardDate": "2023-10-18",
+        "reason": {
+          "type": "level",
+          "levelId": "3304-0000-0383-EEA3"
+        }
+      }
+    ]
+  },
+  {
     "discord": "hoagie",
     "awards": [
       {
@@ -346,6 +372,57 @@
     ]
   },
   {
+    "nnid": "Norihide1204",
+    "discord": "DY (ダブルY)",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-12",
+        "reason": "Cleared the final NSMBU 2017 level"
+      }
+    ]
+  },
+  {
+    "nnid": "1220TOMATO",
+    "discord": "よたく",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-13",
+        "reason": "Cleared the final 2018 level"
+      }
+    ]
+  },
+  {
+    "nnid": "kazeihinn",
+    "discord": "Yamada (天王寺やまだ)",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-13",
+        "reason": "Cleared the final 2019 level"
+      },
+      {
+        "name": "Human TAS",
+        "reason": {
+          "type": "level",
+          "levelId": "07D6-0000-03E6-94DD"
+        }
+      }
+    ]
+  },
+  {
+    "nnid": "haribo3940",
+    "discord": "haribo39",
+    "awards": [
+      {
+        "name": "Sniper",
+        "awardDate": "2024-03-14",
+        "reason": "Cleared the final SMB1 level"
+      }
+    ]
+  },
+  {
     "discord": "DankDrew",
     "awards": [
       {
@@ -358,7 +435,77 @@
     "nnid": "snoozbuster",
     "awards": [
       {
-        "name": "Developer"
+        "name": "Developer",
+        "reason": "Author of this website"
+      }
+    ]
+  },
+  {
+    "nnid": "TheCryptan",
+    "awards": [
+      {
+        "name": "Developer",
+        "reason": "Author of the Discord bot powering all of the data collection that made this effort possible"
+      }
+    ]
+  },
+  {
+    "nnid": "l.oufnhu32",
+    "discord": "LouMarru",
+    "awards": [
+      {
+        "name": "VIP",
+        "reason": "Moderator of the Team 0% Discord and major contributor to the project"
+      }
+    ]
+  },
+  {
+    "nnid": "sol_smm",
+    "discord": "sol",
+    "awards": [
+      {
+        "name": "VIP",
+        "reason": "Contributor to the Team 0% Discord and master spreadsheet artist and statistician"
+      }
+    ]
+  },
+  {
+    "nnid": "Black60Dragon",
+    "discord": "Black60Dragon",
+    "awards": [
+      {
+        "name": "VIP",
+        "reason": "Administrator of the Team 0% Discord and early contributor to the project"
+      }
+    ]
+  },
+  {
+    "nnid": "The0dark0one",
+    "discord": "The0dark0one",
+    "awards": [
+      {
+        "name": "Developer",
+        "reason": "Creator of the original bot which gathered early uncleared level lists and spawned the concept of Team 0%"
+      }
+    ]
+  },
+  {
+    "nnid": "Ninabeery",
+    "discord": "Jeffie",
+    "awards": [
+      {
+        "name": "VIP",
+        "reason": "Administrator and creator of the Team 0% Discord"
+      }
+    ]
+  },
+  {
+    "nnid": "Poutre2Bamako",
+    "discord": "pacman256",
+    "awards": [
+      {
+        "name": "VIP",
+        "reason": "Contributor to the Team 0% Discord"
       }
     ]
   },
