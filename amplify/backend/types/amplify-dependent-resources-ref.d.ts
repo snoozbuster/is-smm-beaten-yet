@@ -15,12 +15,5 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     }
-  },
-  "queue": {
-    "errorsQueue": {
-      "QueueARN": "string",
-      "QueueName": "string",
-      "QueueURL": "string"
-    }
   }
 }
