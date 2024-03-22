@@ -39,6 +39,14 @@ exports.handler = async (event) => {
   console.log('WEBHOOK URL:', process.env.DiscordWebhookUrl);
 
   try {
+    if (
+      event.alarmData.state.value === 'INSUFFICIENT_DATA' ||
+      (event.alarmData.previousState.value === 'INSUFFICIENT_DATA' &&
+        event.alarmData.state.value === 'OK')
+    ) {
+      console.log('Ignoring insufficient data alarm event');
+      return;
+    }
     const isOk = event.alarmData.state.value === 'OK';
     let message = `${!isOk ? AT_ME : 'The previous alarm for'} \`${
       event.alarmData.alarmName
