@@ -164,7 +164,7 @@
         "ScheduleExpression": {
           "Ref": "CloudWatchRule"
         },
-        "State": "ENABLED",
+        "State": "DISABLED",
         "Targets": [
           {
             "Arn": {
