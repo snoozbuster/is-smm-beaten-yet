@@ -16,7 +16,7 @@
           <div class="self-center mb-6">
             <h2>
               <span class="text-xl"
-                >The last
+                >The final
                 <img
                   class="inline"
                   src="~/assets/img/first_clear.png"
