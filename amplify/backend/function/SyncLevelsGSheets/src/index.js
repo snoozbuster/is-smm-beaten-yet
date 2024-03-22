@@ -54,7 +54,22 @@ const CLEARED_TITLE_TO_KEY = {
 };
 
 // known hackers. no soup for you
-const BANNED_NNIDS = new Set(['Zappy7', 'BechPlayz69']);
+const BANNED_NNIDS = new Set([
+  'Zappy7',
+  'BechPlayz69',
+  'noncaringstarman',
+  'JustNull.38',
+  'SRA.DOOM',
+  'olamo67',
+  'vergo811',
+  'mrksikou0118',
+  'Unbanned1',
+  'ryanrocks462',
+  'pooody',
+  'Zormam',
+  '0thekid0',
+  'cardigacimeira',
+]);
 
 async function getS3File(s3, filename) {
   const response = await s3.send(
