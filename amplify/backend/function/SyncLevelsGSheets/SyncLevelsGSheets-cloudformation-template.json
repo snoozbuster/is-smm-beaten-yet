@@ -177,6 +177,15 @@
         ]
       }
     },
+    "LambdaFunctionUrl": {
+      "Type": "AWS::Lambda::Url",
+      "Properties": {
+        "AuthType": "NONE",
+        "TargetFunctionArn": {
+          "Fn::GetAtt": ["LambdaFunction", "Arn"]
+        }
+      }
+    },
     "PermissionForEventsToInvokeLambda": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
