@@ -85,7 +85,8 @@
           @click="$emit('refresh')"
         />
         <span class="text-xl self-center ml-5">
-          {{ formatNumber(numRows) }} {{ props.levels.length === 1 ? 'level' : 'levels' }}
+          {{ formatNumber(numRows) }}
+          {{ props.levels.length === 1 ? 'level' : 'levels' }}
           <span
             v-show="props.levels.length && numRows !== props.levels.length"
             class="font-normal"
@@ -734,9 +735,9 @@ const LevelColumn = defineComponent({
       <Fragment>
         {props.data.hacked ? (
           <PrimeTag
-            v-tooltip="
-            'This level\'s only clears are from known cheaters and still needs to be cleared legitimately'
-          "
+            v-tooltip={
+              "This level's only clear was performed using cheats. It still needs a legitimate clear to be counted as being beaten."
+            }
             class="cursor-default"
             severity="danger"
             icon="pi pi-danger"

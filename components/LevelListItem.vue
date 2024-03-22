@@ -2,7 +2,7 @@
   <PrimeTag
     v-if="level.hacked && !isClearedLevel"
     v-tooltip.focus="
-      'This level\'s only clears are from known cheaters and still needs to be cleared legitimately'
+      'This level\'s only clear was performed using cheats. It still needs a legitimate clear to be counted as being beaten.'
     "
     class="cursor-default mb-1"
     severity="danger"
@@ -12,7 +12,7 @@
   <PrimeTag
     v-else-if="level.hacked"
     v-tooltip.focus="
-      'This level was first cleared by a cheater, but has now been cleared legitimately'
+      'This level was first cleared using cheats, but was re-cleared legitimately by this player'
     "
     class="cursor-default mb-1"
     severity="info"
