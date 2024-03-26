@@ -4,7 +4,7 @@
     "awards": [
       {
         "name": "Sniper",
-        "awardDate": "",
+        "awardDate": "2023-10-29",
         "reason": "Cleared the final SMB1 2015 level"
       },
       {
@@ -404,9 +404,18 @@
       },
       {
         "name": "Human TAS",
+        "awardDate": "2024-03-14",
         "reason": {
           "type": "level",
           "levelId": "07D6-0000-03E6-94DD"
+        }
+      },
+      {
+        "name": "Choreographer",
+        "awardDate": "2024-03-15",
+        "reason": {
+          "type": "level",
+          "levelId": "3A36-0000-040D-ACDE"
         }
       }
     ]
