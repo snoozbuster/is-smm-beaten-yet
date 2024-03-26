@@ -30,6 +30,7 @@ import type { TooltipItem } from 'chart.js';
 import type { PropType } from 'vue';
 import type { ClearedLevelStatSummary } from '~/types/levels';
 import { SHUTDOWN_DATE } from '~/constants/levelData';
+import { Legend } from 'chart.js';
 
 ChartJS.register(
   LineController,
@@ -37,6 +38,7 @@ ChartJS.register(
   PointElement,
   TimeScale,
   LinearScale,
+  Legend,
 );
 
 const props = defineProps({
@@ -108,7 +110,9 @@ const options = computed(() => ({
             },
     },
     legend: {
-      display: false,
+      display: true,
+      position: 'bottom',
+      onClick: useNoop,
     },
   },
   scales: {
