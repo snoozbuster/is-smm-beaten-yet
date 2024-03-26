@@ -41,10 +41,59 @@
               {{ timeToShutdown }} remaining before the server shutdown.
               Congratulations!
             </span>
+            <PrimeButton
+              class="hover:underline text-course-world-contrast block mx-auto p-0 mt-5 text-sm font-normal"
+              link
+              @click="modalOpen = true"
+            >
+              What about Trimming the Herbs?
+              <i class="pi pi-angle-right -ml-1 text-sm"></i>
+            </PrimeButton>
+            <PrimeDialog
+              v-model:visible="modalOpen"
+              class="w-full md:w-2/3"
+              header="What about TTH?"
+              modal
+              dismissable-mask
+            >
+              <p class="mb-3">
+                After over seven years, the creator of Trimming the Herbs
+                revealed on {{ formatDate('2024-03-22') }} that the level was,
+                in fact, a convoluted sort of troll. Despite a general belief
+                both then and now that tool-assisted speedruns (TASes) were not
+                possible on the Wii U, the creator had access to a
+                hardware-based TAS prototype which was used to develop and
+                clear-check TTH. It was apparently intended to be a sort of
+                "teaser" for the feasibility of these tools, but after the
+                level's release, it remained relatively obscure even in the
+                community it was designed to troll and was eventually forgotten
+                (until Team 0% uncovered it). Since the level was not uploaded
+                legitimately, it was excluded from Team 0%'s list of uncleared
+                levels. As a result of this shocking revelation, Team 0%
+                considers Super Mario Maker 1 to have been 100% cleared on
+                {{ formatDate('2024-03-15') }}, the day that Yamada (aka
+                "kazeihinn") cleared The Last Dance.
+              </p>
+
+              <p class="mb-3">
+                This isn't quite the end of the story for these levels, though.
+                Trimming the Herbs, as well as another level involving 81
+                consecutive midair shell-jumps which was uploaded using a
+                controller macro, aren't
+                <i>impossible</i> for a human, and a handful of dedicated and
+                extremely talented players are still grinding out these levels
+                and aiming for the true first clear by a human &mdash; an
+                exceptionally prestigious feat and something of a "101%"
+                completion goal for the team. When (not if) these players
+                succeed, their achievement will certainly be marked on this site
+                in commemoration of the defeat of these secret "final bosses" of
+                levels.
+              </p>
+            </PrimeDialog>
           </div>
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
-            <p class="mb-2">
+            <p class="mb-2 hidden-short text-sm">
               We're not done yet - there's still an entire other game with
               plenty of uncleared levels. Join the Discord to help take down
               some of the oldest uncleared levels in SMM2!
@@ -89,6 +138,12 @@
 
   &.force-visible {
     opacity: 1;
+  }
+}
+
+@media (max-height: 900px) {
+  .hidden-short {
+    @apply hidden;
   }
 }
 </style>
@@ -156,6 +211,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+const modalOpen = ref(false);
 
 const animationStarted = ref(false);
 
