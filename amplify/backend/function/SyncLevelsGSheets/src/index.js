@@ -69,6 +69,7 @@ const BANNED_NNIDS = new Set([
   'Zormam',
   '0thekid0',
   'cardigacimeira',
+  'aeswokm3092',
 ]);
 
 async function getS3File(s3, filename) {
