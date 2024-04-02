@@ -1,7 +1,4 @@
-import { Course } from './Course';
-import { CourseObject } from './CourseObject';
-import { BlockObject } from './BlockObject';
-import { MonsterObject } from './MonsterObject';
+import _ from 'lodash';
 
 /**
  * @module _SmmCourseViewer
@@ -186,9 +183,13 @@ export default class SmmCourseViewer {
    * @return {String}
    */
   _rawHex2name(_rawHex, _pos, _size = 1) {
-    return new TextDecoder('ucs-2').decode(
-      new Uint8Array(_rawHex.slice(_pos, _size)),
+    const bytes = new Uint16Array(
+      _.chunk(_rawHex.slice(_pos, _size), 2)
+        .map((w) => parseInt(w.join(''), 16))
+        .filter((w) => w !== 0),
     );
+
+    return new TextDecoder('ucs-2').decode(bytes);
   }
 
   /**
