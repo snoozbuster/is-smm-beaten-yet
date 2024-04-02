@@ -31,7 +31,6 @@ await writeFile(
   outfile,
   Papa.unparse(
     (await listFiles(inputDir)).map(({ id, contents: record }) => ({
-      'Level ID': id,
       Title: record.course_name,
       'Upload Date': record.create_time,
       Stars: record.stars,
@@ -39,6 +38,7 @@ await writeFile(
       Clears: record.clears,
       Attempts: record.total_attempts,
       Creator: record.miis.creator.nnid,
+      'Level ID': id,
       'Cleared By': record.miis.first_clear.nnid,
       'Clear Date': record.world_record.created_time,
       'World Record Holder': record.miis.world_record.nnid,
