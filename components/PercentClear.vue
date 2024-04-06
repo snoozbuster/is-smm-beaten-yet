@@ -37,7 +37,7 @@
     <p class="mb-3">
       However, this isn't quite the end of the story. Trimming the Herbs isn't
       <i>impossible</i> for a human, and on
-      {{ formatDate('2024-04-05T5:15:00-07:00') }} (only a couple days before
+      {{ formatDate('2024-04-05T18:15:00-07:00') }} (only a couple days before
       the SMM1 servers shut down for good), after over 100 hours of practice and
       attempts, a player by the name of
       <a
