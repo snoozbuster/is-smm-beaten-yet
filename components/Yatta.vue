@@ -57,7 +57,7 @@ const YATTAS = {
     '过了！', // "Pass"/"Yatta"
     '恭喜！', // "Congratulations"
     '全通了！', // "All cleared"
-    '66666!', // slang for "溜": "Well played"
+    '66666666!', // slang for "溜": "Well played"
   ],
   // Chinese (traditional)
   'zh-TW': [
