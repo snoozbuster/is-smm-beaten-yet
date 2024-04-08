@@ -354,6 +354,7 @@
   },
   {
     "discord": "hoagie",
+    "nnid": "lil_drummer_boi",
     "awards": [
       {
         "name": "Sniper",
@@ -364,6 +365,7 @@
   },
   {
     "discord": "ordi",
+    "nnid": "Y2Ordi",
     "awards": [
       {
         "name": "Sniper",
@@ -433,6 +435,7 @@
   },
   {
     "discord": "DankDrew",
+    "nnid": "jaimeheiser",
     "awards": [
       {
         "name": "Sniper",
@@ -495,6 +498,16 @@
       {
         "name": "Developer",
         "reason": "Creator of the original bot which gathered early uncleared level lists and spawned the concept of Team 0%"
+      }
+    ]
+  },
+  {
+    "discord": "totallypuzzled",
+    "nnid": "ikourama",
+    "awards": [
+      {
+        "name": "VIP",
+        "reason": "Dev exit finder extraordinaire"
       }
     ]
   },
