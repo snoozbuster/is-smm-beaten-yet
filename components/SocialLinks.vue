@@ -29,7 +29,7 @@
 const links = [
   {
     name: 'Team 0% Discord',
-    href: 'https://discord.gg/team0percent',
+    href: 'https://discord.com/invite/dw7WKs8',
     icon: 'logos:discord-icon',
   },
   {

@@ -45,7 +45,7 @@
               Additionally, <b>Sanyx91SMM2</b> has
               <a
                 class="text-blue-800 hover:underline"
-                href="https://www.twitch.tv/videos/2111725420?t=04h30m12s"
+                href="https://www.youtube.com/watch?v=Owc_rwlxUlc"
                 target="_blank"
                 >cleared Trimming the Herbs</a
               >
