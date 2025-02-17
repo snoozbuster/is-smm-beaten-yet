@@ -184,7 +184,7 @@ export default class SmmCourseViewer {
    */
   _rawHex2name(_rawHex, _pos, _size = 1) {
     const bytes = new Uint16Array(
-      _.chunk(_rawHex.slice(_pos, _size), 2)
+      _.chunk(_rawHex.slice(_pos, _size + _pos), 2)
         .map((w) => parseInt(w.join(''), 16))
         .filter((w) => w !== 0),
     );
