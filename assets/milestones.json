@@ -1,0 +1,850 @@
+{
+  "majorMilestones": [
+    {
+      "year": "2015",
+      "style": "SMB3",
+      "dateCleared": "2018-07-04T20:50:54Z",
+      "levelId": "9946-0000-0153-FB4B",
+      "firstClearerNnid": "jaimeheiser",
+      "wasRecleared": true,
+      "reason": "Some time after the last 2015 level was marked cleared by TheCryptan's Discord bot, a database search for levels with hacked clears discovered the final five levels for 2015."
+    },
+    {
+      "year": "2015",
+      "style": "SMB1",
+      "dateCleared": "2018-08-08T20:19:43Z",
+      "levelId": "8D94-0000-011A-37DE",
+      "firstClearerNnid": "Fritzef",
+      "wasRecleared": true,
+      "reason": "Some time after the last 2015 level was marked cleared by TheCryptan's Discord bot, a database search for levels with hacked clears discovered the final five levels for 2015."
+    },
+    {
+      "year": "2015",
+      "levelId": "8509-0000-011C-7E41",
+      "firstClearerNnid": "lil_drummer_boi",
+      "dateCleared": "2018-08-13T04:30:51Z",
+      "wasRecleared": true,
+      "reason": "Some time after this level was cleared, it was discovered that the original bot had missed a couple of 2015 levels."
+    },
+    {
+      "year": "2015",
+      "style": "SMW",
+      "dateCleared": "2023-01-20T17:58:16Z",
+      "levelId": "BECA-0000-00CF-8588",
+      "firstClearerNnid": "SuperMaks64",
+      "wasRecleared": true,
+      "reason": "Some time after the last 2015 level was marked cleared by TheCryptan's Discord bot, a database search for levels with hacked clears discovered the final five levels for 2015."
+    },
+    {
+      "year": "2015",
+      "style": "NSMBU",
+      "dateCleared": "2023-01-22T06:36:40Z",
+      "levelId": "66A3-0000-00CE-D324",
+      "firstClearerNnid": "xeroplanes",
+      "wasRecleared": true,
+      "reason": "Some time after the last 2015 level was marked cleared by TheCryptan's Discord bot, a database search for levels with hacked clears discovered the final five levels for 2015."
+    },
+    {
+      "year": "2016",
+      "style": "SMB1",
+      "dateCleared": "2023-06-14T06:17:29Z",
+      "levelId": "53E4-0000-02AA-55DB",
+      "firstClearerNnid": "SchwozW6803",
+      "wasRecleared": true
+    },
+    {
+      "year": "2016",
+      "style": "SMB3",
+      "dateCleared": "2023-06-14T13:57:29Z",
+      "levelId": "FDB8-0000-0278-C6D8",
+      "firstClearerNnid": "SuperMaks64",
+      "wasRecleared": true
+    },
+    {
+      "year": "2021",
+      "style": "SMB3",
+      "dateCleared": "2023-09-30T23:04:01Z",
+      "levelId": "FCE3-0000-0424-908D",
+      "firstClearerNnid": "C4SSSY"
+    },
+    {
+      "year": "2020",
+      "style": "SMB1",
+      "dateCleared": "2023-10-01T22:02:06Z",
+      "levelId": "FD55-0000-0420-6B68",
+      "firstClearerNnid": "Fritzef",
+      "wasRecleared": true
+    },
+    {
+      "year": "2020",
+      "style": "SMB3",
+      "dateCleared": "2023-10-01T23:16:04Z",
+      "levelId": "C6D6-0000-041F-A3FA",
+      "firstClearerNnid": "gravityrad",
+      "wasRecleared": true
+    },
+    {
+      "year": "2021",
+      "style": "SMW",
+      "dateCleared": "2023-10-09T23:36:11Z",
+      "levelId": "FFEB-0000-0424-4D8D",
+      "firstClearerNnid": "ZPappa7",
+      "wasRecleared": true
+    },
+    {
+      "year": "2021",
+      "style": "SMB1",
+      "dateCleared": "2023-10-12T21:57:50Z",
+      "levelId": "8121-0000-0423-5365",
+      "firstClearerNnid": "gravityrad",
+      "wasRecleared": true
+    },
+    {
+      "year": "2020",
+      "style": "SMW",
+      "dateCleared": "2023-10-14T03:44:20Z",
+      "levelId": "D21B-0000-0417-7464",
+      "firstClearerNnid": "YoshiFan51",
+      "wasRecleared": true
+    },
+    {
+      "year": "2015",
+      "style": "NSMBU",
+      "dateCleared": "2023-10-29T15:51:55Z",
+      "levelId": "046D-0000-0126-53CA",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2015",
+      "style": "SMW",
+      "dateCleared": "2023-10-29T15:54:52Z",
+      "levelId": "64BE-0000-00F2-7B87",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2015",
+      "style": "SMB1",
+      "dateCleared": "2023-10-29T16:04:00Z",
+      "levelId": "4181-0000-00DB-0D9D",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2015",
+      "style": "SMB3",
+      "dateCleared": "2023-10-29T16:26:07Z",
+      "levelId": "8B51-0000-0075-1D2C",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2016",
+      "style": "SMB3",
+      "dateCleared": "2023-11-03T00:40:47Z",
+      "levelId": "EBA8-0000-0240-704F",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2020",
+      "style": "SMB3",
+      "dateCleared": "2023-11-26T18:01:37Z",
+      "levelId": "29EF-0000-041D-5701",
+      "firstClearerNnid": "C4SSSY"
+    },
+    {
+      "year": "2018",
+      "style": "SMB3",
+      "dateCleared": "2024-01-23T23:02:57Z",
+      "levelId": "17D6-0000-03C5-10C0",
+      "firstClearerNnid": "Anthonyrocks29"
+    },
+    {
+      "year": "2017",
+      "style": "SMB3",
+      "dateCleared": "2024-01-24T05:10:34Z",
+      "levelId": "E978-0000-0300-5B8B",
+      "firstClearerNnid": "Pufi36"
+    },
+    {
+      "year": "2016",
+      "style": "SMB1",
+      "dateCleared": "2024-01-28T20:46:53Z",
+      "levelId": "EA95-0000-027A-2D96",
+      "firstClearerNnid": "C4SSSY"
+    },
+    {
+      "year": "2020",
+      "style": "SMW",
+      "dateCleared": "2024-01-29T08:50:21Z",
+      "levelId": "0C75-0000-0408-4D70",
+      "firstClearerNnid": "wentou5"
+    },
+    {
+      "year": "2019",
+      "style": "SMB3",
+      "dateCleared": "2024-02-02T04:56:49Z",
+      "levelId": "7D0C-0000-03E6-C895",
+      "firstClearerNnid": "Anthonyrocks29"
+    },
+    {
+      "year": "2019",
+      "style": "SMB1",
+      "dateCleared": "2024-02-12T22:34:03Z",
+      "levelId": "5AC2-0000-03EA-FFAA",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "name": "Autoscroll",
+      "levelId": "BBCA-0000-0347-9205",
+      "firstClearerNnid": "Fritzef",
+      "dateCleared": "2024-02-14T21:02:58Z"
+    },
+    {
+      "year": "2016",
+      "style": "SMW",
+      "dateCleared": "2024-02-16T07:42:34Z",
+      "levelId": "E476-0000-02B5-D8C7",
+      "firstClearerNnid": "tatsu1236"
+    },
+    {
+      "year": "2016",
+      "style": "NSMBU",
+      "dateCleared": "2024-02-16T15:46:26Z",
+      "levelId": "73EE-0000-02D5-FE4B",
+      "firstClearerNnid": "m2o0l0i1"
+    },
+    {
+      "year": "2021",
+      "style": "NSMBU",
+      "dateCleared": "2024-02-27T06:35:00Z",
+      "levelId": "E9D4-0000-0421-7259",
+      "firstClearerNnid": "tatsu1236"
+    },
+    {
+      "year": "2019",
+      "style": "SMW",
+      "dateCleared": "2024-02-27T15:36:54Z",
+      "levelId": "26F1-0000-03EA-DA1C",
+      "firstClearerNnid": "tatsu1236"
+    },
+    {
+      "year": "2021",
+      "style": "SMB1",
+      "dateCleared": "2024-03-02T17:10:00Z",
+      "levelId": "0EB6-0000-0424-FA79",
+      "firstClearerNnid": "hallo9358"
+    },
+    {
+      "year": "2018",
+      "style": "SMW",
+      "dateCleared": "2024-03-03T02:01:27Z",
+      "levelId": "D222-0000-03BB-D57D",
+      "firstClearerNnid": "rg920qm"
+    },
+    {
+      "year": "2017",
+      "style": "SMW",
+      "dateCleared": "2024-03-04T22:21:56Z",
+      "levelId": "D3C4-0000-035C-3D61",
+      "firstClearerNnid": "Mr.Drifter_ALT"
+    },
+    {
+      "year": "2020",
+      "style": "SMB1",
+      "dateCleared": "2024-03-09T19:16:39Z",
+      "levelId": "73A8-0000-041C-3529",
+      "firstClearerNnid": "megannarwhal"
+    },
+    {
+      "year": "2021",
+      "style": "SMW",
+      "dateCleared": "2024-03-11T23:49:15Z",
+      "levelId": "9DD3-0000-0422-DB48",
+      "firstClearerNnid": "pcadee"
+    },
+    {
+      "year": "2017",
+      "style": "NSMBU",
+      "dateCleared": "2024-03-12T13:33:42Z",
+      "levelId": "87C0-0000-037F-4DA6",
+      "firstClearerNnid": "Norihide1204"
+    },
+    {
+      "year": "2018",
+      "style": "NSMBU",
+      "dateCleared": "2024-03-12T22:39:22Z",
+      "levelId": "BD21-0000-03AD-6B22",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2018",
+      "style": "SMB1",
+      "dateCleared": "2024-03-13T15:13:29Z",
+      "levelId": "AE77-0000-03A8-08D2",
+      "firstClearerNnid": "1220TOMATO"
+    },
+    {
+      "year": "2019",
+      "style": "NSMBU",
+      "dateCleared": "2024-03-14T14:37:47Z",
+      "levelId": "07D6-0000-03E6-94DD",
+      "firstClearerNnid": "kazeihinn"
+    },
+    {
+      "year": "2017",
+      "style": "SMB1",
+      "dateCleared": "2024-03-14T23:50:27Z",
+      "levelId": "FC28-0000-0377-5B81",
+      "firstClearerNnid": "haribo3940"
+    },
+    {
+      "year": "2020",
+      "style": "NSMBU",
+      "dateCleared": "2024-03-15T19:11:24Z",
+      "levelId": "3A36-0000-040D-ACDE",
+      "firstClearerNnid": "kazeihinn"
+    }
+  ],
+  "monthMilestones": [
+    {
+      "year": "2015",
+      "month": "09",
+      "dateCleared": "2018-01-26T20:30:42Z",
+      "levelId": "5815-0000-0072-1CE1",
+      "firstClearerNnid": "Y2Ordi",
+      "wasRecleared": true
+    },
+    {
+      "year": "2015",
+      "month": "12",
+      "dateCleared": "2018-08-13T04:30:51Z",
+      "levelId": "8509-0000-011C-7E41",
+      "firstClearerNnid": "lil_drummer_boi",
+      "wasRecleared": true
+    },
+    {
+      "year": "2015",
+      "month": "10",
+      "dateCleared": "2021-06-08T05:50:08Z",
+      "levelId": "C2DA-0000-0088-61BF",
+      "firstClearerNnid": "qingshou"
+    },
+    {
+      "year": "2016",
+      "month": "01",
+      "levelId": "07FA-0000-01A7-70F5",
+      "firstClearerNnid": "tatiaus",
+      "dateCleared": "2022-05-01T01:06:04Z",
+      "wasRecleared": true,
+      "reason": "Some time after this level was cleared, it was discovered that the original bot had missed a couple of levels."
+    },
+    {
+      "year": "2015",
+      "month": "11",
+      "dateCleared": "2023-01-22T06:36:40Z",
+      "levelId": "66A3-0000-00CE-D324",
+      "firstClearerNnid": "xeroplanes",
+      "wasRecleared": true
+    },
+    {
+      "year": "2016",
+      "month": "01",
+      "dateCleared": "2023-01-22T06:53:52Z",
+      "levelId": "D7AA-0000-01A7-AF7D",
+      "firstClearerNnid": "xeroplanes",
+      "wasRecleared": true
+    },
+    {
+      "year": "2021",
+      "month": "01",
+      "dateCleared": "2023-10-15T15:41:51Z",
+      "levelId": "0C96-0000-0422-4030",
+      "firstClearerNnid": "Fritzef",
+      "wasRecleared": true
+    },
+    {
+      "year": "2015",
+      "month": "12",
+      "dateCleared": "2023-10-29T15:51:55Z",
+      "levelId": "046D-0000-0126-53CA",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2015",
+      "month": "11",
+      "dateCleared": "2023-10-29T16:04:00Z",
+      "levelId": "4181-0000-00DB-0D9D",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2015",
+      "month": "09",
+      "dateCleared": "2023-10-29T16:26:07Z",
+      "levelId": "8B51-0000-0075-1D2C",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2016",
+      "month": "01",
+      "dateCleared": "2023-10-30T19:48:23Z",
+      "levelId": "1AA1-0000-01AD-41E3",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2021",
+      "month": "02",
+      "dateCleared": "2023-11-12T12:55:48Z",
+      "levelId": "CBD3-0000-0423-9DE6",
+      "firstClearerNnid": "1916-8",
+      "wasRecleared": true
+    },
+    {
+      "year": "2016",
+      "month": "02",
+      "dateCleared": "2023-11-18T16:18:09Z",
+      "levelId": "674D-0000-01CD-26DB",
+      "firstClearerNnid": "C4SSSY",
+      "wasRecleared": true
+    },
+    {
+      "year": "2016",
+      "month": "03",
+      "dateCleared": "2023-12-03T17:17:19Z",
+      "levelId": "E6C1-0000-0210-062F",
+      "firstClearerNnid": "wowawalikesslot"
+    },
+    {
+      "year": "2016",
+      "month": "02",
+      "dateCleared": "2023-12-04T00:09:56Z",
+      "levelId": "75F3-0000-01DC-F2B3",
+      "firstClearerNnid": "Pufi36"
+    },
+    {
+      "year": "2016",
+      "month": "04",
+      "dateCleared": "2024-01-02T04:23:36Z",
+      "levelId": "C7ED-0000-021A-7261",
+      "firstClearerNnid": "Ark69420"
+    },
+    {
+      "year": "2016",
+      "month": "05",
+      "dateCleared": "2024-01-20T22:46:59Z",
+      "levelId": "C399-0000-0248-197E",
+      "firstClearerNnid": "gravityrad"
+    },
+    {
+      "year": "2019",
+      "month": "10",
+      "dateCleared": "2024-01-27T21:05:27Z",
+      "levelId": "E5BD-0000-0401-CC55",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2016",
+      "month": "06",
+      "dateCleared": "2024-01-29T01:29:12Z",
+      "levelId": "D25C-0000-025D-82EA",
+      "firstClearerNnid": "rg920qm"
+    },
+    {
+      "year": "2016",
+      "month": "07",
+      "dateCleared": "2024-02-02T18:55:34Z",
+      "levelId": "C5C1-0000-026E-1015",
+      "firstClearerNnid": "SomeMiiID"
+    },
+    {
+      "year": "2016",
+      "month": "09",
+      "dateCleared": "2024-02-13T06:11:58Z",
+      "levelId": "9859-0000-0297-5C4B",
+      "firstClearerNnid": "xxITZY"
+    },
+    {
+      "year": "2016",
+      "month": "08",
+      "dateCleared": "2024-02-15T16:02:48Z",
+      "levelId": "A618-0000-028A-563B",
+      "firstClearerNnid": "xxITZY"
+    },
+    {
+      "year": "2016",
+      "month": "11",
+      "dateCleared": "2024-02-16T07:42:34Z",
+      "levelId": "E476-0000-02B5-D8C7",
+      "firstClearerNnid": "tatsu1236"
+    },
+    {
+      "year": "2016",
+      "month": "10",
+      "dateCleared": "2024-02-16T10:01:50Z",
+      "levelId": "239C-0000-02B1-CAB7",
+      "firstClearerNnid": "A2003t"
+    },
+    {
+      "year": "2016",
+      "month": "12",
+      "dateCleared": "2024-02-16T15:46:26Z",
+      "levelId": "73EE-0000-02D5-FE4B",
+      "firstClearerNnid": "m2o0l0i1"
+    },
+    {
+      "year": "2020",
+      "month": "08",
+      "dateCleared": "2024-02-19T10:45:44Z",
+      "levelId": "D5A2-0000-041A-1C6B",
+      "firstClearerNnid": "LeLe521"
+    },
+    {
+      "year": "2020",
+      "month": "02",
+      "dateCleared": "2024-02-23T12:09:31Z",
+      "levelId": "2A8E-0000-040A-7280",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2020",
+      "month": "07",
+      "dateCleared": "2024-02-23T12:54:47Z",
+      "levelId": "1443-0000-0418-DBEB",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2020",
+      "month": "12",
+      "dateCleared": "2024-02-23T22:27:40Z",
+      "levelId": "1377-0000-0420-379D",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2017",
+      "month": "01",
+      "dateCleared": "2024-02-25T02:42:35Z",
+      "levelId": "53A1-0000-02E7-C6D0",
+      "firstClearerNnid": "Thabeast721",
+      "wasRecleared": true
+    },
+    {
+      "year": "2021",
+      "month": "01",
+      "dateCleared": "2024-02-27T06:35:00Z",
+      "levelId": "E9D4-0000-0421-7259",
+      "firstClearerNnid": "tatsu1236"
+    },
+    {
+      "year": "2020",
+      "month": "11",
+      "dateCleared": "2024-02-27T16:46:44Z",
+      "levelId": "5CE3-0000-041E-BCC9",
+      "firstClearerNnid": "wiiu802"
+    },
+    {
+      "year": "2017",
+      "month": "03",
+      "dateCleared": "2024-02-29T01:23:43Z",
+      "levelId": "B290-0000-030D-70B5",
+      "firstClearerNnid": "YoshiKart14"
+    },
+    {
+      "year": "2017",
+      "month": "07",
+      "dateCleared": "2024-02-29T15:34:51Z",
+      "levelId": "810C-0000-0347-E531",
+      "firstClearerNnid": "rayson213"
+    },
+    {
+      "year": "2017",
+      "month": "02",
+      "dateCleared": "2024-03-01T14:44:23Z",
+      "levelId": "1E75-0000-0303-7E44",
+      "firstClearerNnid": "HyperNES"
+    },
+    {
+      "year": "2017",
+      "month": "05",
+      "dateCleared": "2024-03-01T21:18:40Z",
+      "levelId": "839B-0000-032C-8CEB",
+      "firstClearerNnid": "A2003t"
+    },
+    {
+      "year": "2017",
+      "month": "06",
+      "dateCleared": "2024-03-01T21:55:49Z",
+      "levelId": "BD73-0000-033F-0A00",
+      "firstClearerNnid": "65535.jp"
+    },
+    {
+      "year": "2020",
+      "month": "10",
+      "dateCleared": "2024-03-01T22:15:46Z",
+      "levelId": "F790-0000-041E-2F31",
+      "firstClearerNnid": "kanato0209"
+    },
+    {
+      "year": "2021",
+      "month": "03",
+      "dateCleared": "2024-03-02T17:10:00Z",
+      "levelId": "0EB6-0000-0424-FA79",
+      "firstClearerNnid": "hallo9358"
+    },
+    {
+      "year": "2017",
+      "month": "04",
+      "dateCleared": "2024-03-03T00:33:01Z",
+      "levelId": "99FF-0000-0327-95B1",
+      "firstClearerNnid": "Ryfitz"
+    },
+    {
+      "year": "2019",
+      "month": "12",
+      "dateCleared": "2024-03-03T22:54:38Z",
+      "levelId": "9189-0000-0405-D20E",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2020",
+      "month": "04",
+      "dateCleared": "2024-03-04T14:53:29Z",
+      "levelId": "F5E3-0000-040F-A9CF",
+      "firstClearerNnid": "oomorikanata"
+    },
+    {
+      "year": "2017",
+      "month": "01",
+      "dateCleared": "2024-03-05T02:58:23Z",
+      "levelId": "F549-0000-02E4-93FE",
+      "firstClearerNnid": "gravityrad"
+    },
+    {
+      "year": "2017",
+      "month": "10",
+      "dateCleared": "2024-03-06T17:23:00Z",
+      "levelId": "1AF3-0000-0366-32AF",
+      "firstClearerNnid": "kazeihinn"
+    },
+    {
+      "year": "2017",
+      "month": "08",
+      "dateCleared": "2024-03-07T21:50:11Z",
+      "levelId": "CF5D-0000-034F-3F4E",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2020",
+      "month": "01",
+      "dateCleared": "2024-03-08T09:00:05Z",
+      "levelId": "2DD2-0000-0407-E601",
+      "firstClearerNnid": "kanato0209"
+    },
+    {
+      "year": "2018",
+      "month": "11",
+      "dateCleared": "2024-03-08T17:22:06Z",
+      "levelId": "A39E-0000-03C6-E934",
+      "firstClearerNnid": "doronube43"
+    },
+    {
+      "year": "2018",
+      "month": "04",
+      "dateCleared": "2024-03-08T19:32:04Z",
+      "levelId": "A78A-0000-039A-B0B4",
+      "firstClearerNnid": "C4SSSY"
+    },
+    {
+      "year": "2018",
+      "month": "12",
+      "dateCleared": "2024-03-09T16:51:36Z",
+      "levelId": "F20F-0000-03CA-353F",
+      "firstClearerNnid": "8144-77ta-Gul"
+    },
+    {
+      "year": "2017",
+      "month": "09",
+      "dateCleared": "2024-03-09T17:19:46Z",
+      "levelId": "7552-0000-035F-CC7D",
+      "firstClearerNnid": "Thabeast721"
+    },
+    {
+      "year": "2020",
+      "month": "09",
+      "dateCleared": "2024-03-10T01:51:21Z",
+      "levelId": "BAE7-0000-041C-26D3",
+      "firstClearerNnid": "tatsu1236"
+    },
+    {
+      "year": "2018",
+      "month": "02",
+      "dateCleared": "2024-03-10T01:59:11Z",
+      "levelId": "FF7C-0000-038C-BC26",
+      "firstClearerNnid": "Thabeast721"
+    },
+    {
+      "year": "2019",
+      "month": "06",
+      "dateCleared": "2024-03-10T04:20:17Z",
+      "levelId": "D78E-0000-03EC-C49C",
+      "firstClearerNnid": "2815-0"
+    },
+    {
+      "year": "2020",
+      "month": "06",
+      "dateCleared": "2024-03-10T22:56:52Z",
+      "levelId": "9AC7-0000-0416-D09F",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2018",
+      "month": "03",
+      "dateCleared": "2024-03-11T02:09:17Z",
+      "levelId": "7438-0000-0394-58F7",
+      "firstClearerNnid": "Effelly"
+    },
+    {
+      "year": "2019",
+      "month": "08",
+      "dateCleared": "2024-03-11T06:33:52Z",
+      "levelId": "A354-0000-03FC-5F11",
+      "firstClearerNnid": "SirStone3"
+    },
+    {
+      "year": "2019",
+      "month": "07",
+      "dateCleared": "2024-03-11T09:48:37Z",
+      "levelId": "7B37-0000-03F2-E894",
+      "firstClearerNnid": "Aurateur"
+    },
+    {
+      "year": "2019",
+      "month": "01",
+      "dateCleared": "2024-03-11T15:23:03Z",
+      "levelId": "B38B-0000-03D3-9331",
+      "firstClearerNnid": "C4SSSY"
+    },
+    {
+      "year": "2018",
+      "month": "10",
+      "dateCleared": "2024-03-11T17:22:45Z",
+      "levelId": "D7B0-0000-03BF-6851",
+      "firstClearerNnid": "Beaslyboy"
+    },
+    {
+      "year": "2019",
+      "month": "02",
+      "dateCleared": "2024-03-11T18:08:21Z",
+      "levelId": "0F60-0000-03DA-69F8",
+      "firstClearerNnid": "Thabeast721"
+    },
+    {
+      "year": "2018",
+      "month": "09",
+      "dateCleared": "2024-03-11T20:47:46Z",
+      "levelId": "9615-0000-03BB-E93B",
+      "firstClearerNnid": "Beaslyboy"
+    },
+    {
+      "year": "2021",
+      "month": "02",
+      "dateCleared": "2024-03-11T23:49:15Z",
+      "levelId": "9DD3-0000-0422-DB48",
+      "firstClearerNnid": "pcadee"
+    },
+    {
+      "year": "2017",
+      "month": "11",
+      "dateCleared": "2024-03-12T01:19:23Z",
+      "levelId": "8A63-0000-036E-A073",
+      "firstClearerNnid": "myemailsjay"
+    },
+    {
+      "year": "2018",
+      "month": "05",
+      "dateCleared": "2024-03-12T04:30:45Z",
+      "levelId": "FFE5-0000-03A4-54C4",
+      "firstClearerNnid": "A2003t"
+    },
+    {
+      "year": "2019",
+      "month": "11",
+      "dateCleared": "2024-03-12T07:47:53Z",
+      "levelId": "6905-0000-0403-3200",
+      "firstClearerNnid": "kazeihinn"
+    },
+    {
+      "year": "2018",
+      "month": "01",
+      "dateCleared": "2024-03-12T11:23:10Z",
+      "levelId": "E575-0000-0380-AB03",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2019",
+      "month": "03",
+      "dateCleared": "2024-03-12T13:08:34Z",
+      "levelId": "79F0-0000-03DD-6E31",
+      "firstClearerNnid": "Aurateur"
+    },
+    {
+      "year": "2020",
+      "month": "05",
+      "dateCleared": "2024-03-12T15:36:10Z",
+      "levelId": "4C96-0000-0412-7725",
+      "firstClearerNnid": "kazeihinn"
+    },
+    {
+      "year": "2018",
+      "month": "08",
+      "dateCleared": "2024-03-12T19:06:01Z",
+      "levelId": "3DBF-0000-03B5-7309",
+      "firstClearerNnid": "ruerwasi"
+    },
+    {
+      "year": "2018",
+      "month": "07",
+      "dateCleared": "2024-03-12T22:39:22Z",
+      "levelId": "BD21-0000-03AD-6B22",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2019",
+      "month": "09",
+      "dateCleared": "2024-03-13T02:00:13Z",
+      "levelId": "9A3D-0000-03FE-A3B9",
+      "firstClearerNnid": "tatsu1236"
+    },
+    {
+      "year": "2018",
+      "month": "06",
+      "dateCleared": "2024-03-13T15:13:29Z",
+      "levelId": "AE77-0000-03A8-08D2",
+      "firstClearerNnid": "1220TOMATO"
+    },
+    {
+      "year": "2019",
+      "month": "04",
+      "dateCleared": "2024-03-13T18:09:55Z",
+      "levelId": "48E1-0000-03E5-680D",
+      "firstClearerNnid": "Fritzef"
+    },
+    {
+      "year": "2019",
+      "month": "05",
+      "dateCleared": "2024-03-14T14:37:47Z",
+      "levelId": "07D6-0000-03E6-94DD",
+      "firstClearerNnid": "kazeihinn"
+    },
+    {
+      "year": "2017",
+      "month": "12",
+      "dateCleared": "2024-03-14T23:50:27Z",
+      "levelId": "FC28-0000-0377-5B81",
+      "firstClearerNnid": "haribo3940"
+    },
+    {
+      "year": "2020",
+      "month": "03",
+      "dateCleared": "2024-03-15T19:11:24Z",
+      "levelId": "3A36-0000-040D-ACDE",
+      "firstClearerNnid": "kazeihinn"
+    }
+  ]
+}
