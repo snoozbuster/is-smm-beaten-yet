@@ -1,7 +1,6 @@
 // Compiles level JSON files outputted by download-level-meta.py into a CSV
 import { readdir, readFile, writeFile } from 'fs/promises';
 import path from 'path';
-import _ from 'lodash';
 import Papa from 'papaparse';
 import { Duration } from 'luxon';
 
