@@ -23,6 +23,7 @@ import {
   PointElement,
   TimeScale,
   LinearScale,
+  Legend,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 import { DateTime } from 'luxon';
@@ -30,7 +31,6 @@ import type { TooltipItem } from 'chart.js';
 import type { PropType } from 'vue';
 import type { ClearedLevelStatSummary } from '~/types/levels';
 import { SHUTDOWN_DATE } from '~/constants/levelData';
-import { Legend } from 'chart.js';
 
 ChartJS.register(
   LineController,
@@ -180,17 +180,11 @@ const data = computed(() => {
       ? props.clearsByDate
       : computeWeeklyData(props.clearsByDate);
   const leftEdge =
-    unref(tab) === 'daily'
-      ? (props.allTime
-          ? DateTime.fromISO('2023-02-06')!
-          : DateTime.now().minus({ month: 2 })
-        ).toISODate()
-      : /* there is a huge spike of 6k the week before this which dwarfs the
-         * rest of the chart
-         */
-        DateTime.fromISO('2023-02-06').toISOWeekDate()!;
+    unref(tab) === 'daily' && !props.allTime
+      ? DateTime.now().minus({ month: 2 }).toISODate()
+      : undefined;
   const days = useSortBy(Object.keys(datapoints)).filter(
-    (dateCleared) => dateCleared >= leftEdge,
+    (dateCleared) => !leftEdge || dateCleared >= leftEdge,
   );
 
   const remainingDatapoints =
