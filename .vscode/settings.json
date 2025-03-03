@@ -7,7 +7,9 @@
   },
   "eslint.options": {
     "overrideConfig": {
-      "prettier/prettier": "off"
+      "rules": {
+        "prettier/prettier": "off"
+      }
     }
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
