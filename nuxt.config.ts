@@ -3,8 +3,8 @@ import colors from 'tailwindcss/colors';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   $production: {
-    experimental: {
-      inlineSSRStyles: false,
+    features: {
+      inlineStyles: false,
     },
   },
   app: {
@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/tailwindcss',
-    'nuxt-icon',
+    '@nuxt/icon',
     'nuxt-lodash',
     'nuxt-primevue',
   ],

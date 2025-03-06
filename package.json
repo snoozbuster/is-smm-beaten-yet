@@ -19,6 +19,7 @@
   "devDependencies": {
     "@aws-amplify/cli": "^12.10.1",
     "@nuxt/devtools": "latest",
+    "@nuxt/icon": "^1.10.3",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/tailwindcss": "^6.11.3",
     "@types/accept-language-parser": "^1.5.6",
@@ -31,8 +32,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "lodash": "^4.17.21",
     "luxon": "^3.4.4",
-    "nuxt": "^3.8.2",
-    "nuxt-icon": "^0.6.7",
+    "nuxt": "^3.15.4",
     "nuxt-lodash": "^2.5.3",
     "nuxt-primevue": "^0.2.2",
     "papaparse": "^5.3.14",
@@ -40,7 +40,7 @@
     "prettier": "^3.1.1",
     "sass": "^1.69.5",
     "typescript": "^5.3.3",
-    "vue": "^3.3.12",
+    "vue": "^3.5.13",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.2.5"
   },
