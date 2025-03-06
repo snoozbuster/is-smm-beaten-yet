@@ -1,20 +1,24 @@
 <template>
-  <h3 class="text-lg">Trimming the Herbs breakdown</h3>
+  <h3 class="text-xl">Clear breakdown</h3>
   <PrimeTabMenu
     class="mb-3 -mx-2 md:mx-0"
     :model="tabs"
-    :pt="{ action: { class: 'uppercase px-2 py-2' } }"
+    :pt="{ action: { class: 'uppercase px-3 py-3' } }"
   />
-  <UnclearedByDate v-if="isDateTab" :uncleared-levels="uncleared" :unit="tab" />
-  <StylePieChart v-else :uncleared-levels="uncleared" :style="tab" />
+  <ClearedByDate
+    v-if="tab === 'year' || tab === 'month'"
+    :cleared-levels="cleared"
+    :unit="tab"
+  />
+  <StylePieChart v-else :cleared-levels="cleared" :style="tab" />
 </template>
 
 <script setup lang="ts">
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 
-const props = defineProps({
-  uncleared: {
-    type: Array as PropType<UnclearedLevel[]>,
+defineProps({
+  cleared: {
+    type: Array as PropType<ClearedLevel[]>,
     default: () => [],
   },
 });
@@ -28,6 +32,4 @@ const tabs = [
   { label: 'Year', command: () => (tab.value = 'year') },
   { label: 'Month', command: () => (tab.value = 'month') },
 ];
-
-const isDateTab = computed(() => tab.value === 'year' || tab.value === 'month');
 </script>

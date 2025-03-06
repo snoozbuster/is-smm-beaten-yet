@@ -13,13 +13,13 @@ import {
   TimeScale,
   LinearScale,
 } from 'chart.js';
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 
 ChartJS.register(BarController, BarElement, TimeScale, LinearScale);
 
 const props = defineProps({
-  unclearedLevels: {
-    type: Object as PropType<UnclearedLevel[]>,
+  clearedLevels: {
+    type: Object as PropType<ClearedLevel[]>,
     required: true,
   },
   unit: {
@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 const tooltipCallbacks = useUnclearedTooltipFormatter(
-  toRef(props, 'unclearedLevels'),
+  toRef(props, 'clearedLevels'),
 );
 
 const options = computed(() => {
@@ -73,7 +73,7 @@ const options = computed(() => {
 const data = computed(() => {
   const levelCountByYear = useMapValues(
     useGroupBy(
-      props.unclearedLevels.filter(({ uploadDate }) => uploadDate),
+      props.clearedLevels.filter(({ uploadDate }) => uploadDate),
       ({ uploadDate }) =>
         uploadDate.substring(0, props.unit === 'year' ? 4 : 7),
     ),
@@ -83,7 +83,7 @@ const data = computed(() => {
   return {
     datasets: [
       {
-        label: 'remaining',
+        label: 'cleared',
         data: years.map((date) => ({
           x: date,
           y: levelCountByYear[date],
