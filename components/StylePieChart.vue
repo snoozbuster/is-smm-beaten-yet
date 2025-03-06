@@ -12,14 +12,14 @@ import {
   COURSE_WORLD_TEXT,
   SMM_YELLOW,
 } from '~/constants/colors';
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 import { COUNTRIES } from '~/constants/levelData';
 
 ChartJS.register(PieController, ArcElement, Legend);
 
 const props = defineProps({
-  unclearedLevels: {
-    type: Object as PropType<UnclearedLevel[]>,
+  clearedLevels: {
+    type: Object as PropType<ClearedLevel[]>,
     required: true,
   },
   style: {
@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 const tooltipCallbacks = useUnclearedTooltipFormatter(
-  toRef(props, 'unclearedLevels'),
+  toRef(props, 'clearedLevels'),
 );
 
 const options = computed(() => ({
@@ -38,7 +38,10 @@ const options = computed(() => ({
   plugins: {
     legend: {
       display: true,
-      position: 'bottom',
+      position: 'right',
+      labels: {
+        boxWidth: 13,
+      },
     },
     tooltip: {
       enabled: true,
@@ -59,7 +62,7 @@ const labelMaps = {
 };
 
 const styleData = computed(() => {
-  const styles = useToPairs(useGroupBy(props.unclearedLevels, props.style));
+  const styles = useToPairs(useGroupBy(props.clearedLevels, props.style));
 
   const styleLabelKey = labelMaps[props.style];
 
@@ -69,7 +72,7 @@ const styleData = computed(() => {
     ),
     datasets: [
       {
-        label: 'remaining',
+        label: 'cleared',
         data: styles.map(([_, levels]) => levels.length),
         backgroundColor: [
           '#6c43a1',
