@@ -117,13 +117,11 @@ import {
   type ChartType,
   type TooltipPositionerFunction,
 } from 'chart.js';
-import type { SetupContext } from 'vue';
+import { DateTime } from 'luxon';
 import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
 import type { ClearedLevelStatSummary } from '~/types/levels';
-import { DATA_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
-import CourseWorldCard from '~/components/CourseWorldCard';
+import { LEVELS_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
 import { PrimeSkeleton } from '#components';
-import { DateTime } from 'luxon';
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
@@ -141,26 +139,6 @@ Tooltip.positioners.mouse = function (_elements, eventPosition) {
   return eventPosition;
 } as TooltipPositionerFunction<ChartType>;
 ChartJS.defaults.plugins.tooltip.position = 'mouse';
-
-const StatSection = (
-  props: { card?: boolean },
-  { slots, attrs }: SetupContext,
-) =>
-  props.card
-    ? h(CourseWorldCard, attrs, { default: slots.default })
-    : h(
-        'div',
-        {
-          class: ['stat-section grid place-content-center text-center'],
-        },
-        { default: slots.default },
-      );
-StatSection.props = {
-  card: {
-    type: Boolean,
-    default: false,
-  },
-};
 
 const emit = defineEmits({
   ready: () => true,

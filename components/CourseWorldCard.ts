@@ -1,9 +1,9 @@
-import type { SetupContext } from 'vue';
+import type { FunctionalComponent } from 'vue';
 
-export default function CourseWorldCard(
-  props: { grid: boolean },
-  { slots }: SetupContext,
-) {
+const CourseWorldCard: FunctionalComponent<{ grid?: boolean }> = (
+  props,
+  { slots },
+) => {
   return h(
     'div',
     {
@@ -14,10 +14,12 @@ export default function CourseWorldCard(
     },
     { default: slots.default },
   );
-}
+};
 CourseWorldCard.props = {
   grid: {
     type: Boolean,
     default: true,
   },
 };
+
+export default CourseWorldCard;
