@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
 import useLevelBrowserSettings from '~/composables/useLevelBrowserSettings';
-import { DATA_ROOT_URL } from '~/constants/levelData';
+import { LEVELS_ROOT_URL } from '~/constants/levelData';
 
 const route = useRoute();
 const levelId = computed(
@@ -59,7 +59,7 @@ const levelName = computed(
 );
 
 const thumbnailUrl = computed(
-  () => `${DATA_ROOT_URL}/course-data/${unref(levelId)}/thumbnail0.jpg`,
+  () => `${LEVELS_ROOT_URL}/course-data/${unref(levelId)}/thumbnail0.jpg`,
 );
 
 useSeoMeta({
