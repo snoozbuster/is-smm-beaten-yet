@@ -18,7 +18,7 @@
           <span class="text-2xl pi pi-question-circle" />
         </button>
       </h1>
-      <ResponsiveLevelList :levels="uncleared" />
+      <ResponsiveLevelList :levels />
     </div>
     <NuxtPage />
   </div>
@@ -26,6 +26,7 @@
 
 <script setup lang="ts">
 import { COURSE_WORLD_GREEN } from '~/constants/colors';
+import type { ClearedLevel } from '~/types/levels';
 
 useSeoMeta({
   title: 'SMM1 Uncleared Level Browser',
@@ -33,7 +34,5 @@ useSeoMeta({
   themeColor: COURSE_WORLD_GREEN,
 });
 
-const { uncleared, load } = useUnclearedLevels();
-
-onMounted(load);
+const levels: ClearedLevel[] = [];
 </script>

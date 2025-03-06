@@ -27,11 +27,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { ClearedLevel, UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 
 defineProps({
   level: {
-    type: Object as PropType<UnclearedLevel | ClearedLevel>,
+    type: Object as PropType<ClearedLevel>,
     required: true,
   },
 });

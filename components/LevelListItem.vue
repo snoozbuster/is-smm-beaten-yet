@@ -145,11 +145,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ClearedLevel, UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 
 const props = defineProps({
   level: {
-    type: Object as PropType<UnclearedLevel | ClearedLevel>,
+    type: Object as PropType<ClearedLevel>,
     required: true,
   },
   translateLevelTitle: {
