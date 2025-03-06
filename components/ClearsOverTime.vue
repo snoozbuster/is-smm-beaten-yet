@@ -26,7 +26,7 @@ import {
   Legend,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 import type { TooltipItem } from 'chart.js';
 import type { PropType } from 'vue';
 import type { ClearedLevelStatSummary } from '~/types/levels';
@@ -44,7 +44,7 @@ ChartJS.register(
 const props = defineProps({
   unclearedLevelCount: {
     type: Number,
-    required: true,
+    default: undefined,
   },
   clearsByDate: {
     type: Object as PropType<Record<string, number>>,
@@ -52,7 +52,7 @@ const props = defineProps({
   },
   winners: {
     type: Object as PropType<ClearedLevelStatSummary['winners']>,
-    required: true,
+    default: () => {},
   },
   allTime: {
     type: Boolean,
@@ -71,7 +71,11 @@ const { formatNumber } = useFormatters();
 
 const topClearerTooltipCallback = (items: TooltipItem<any>[]) => {
   const day = (items[0].raw as { x: string; y: number }).x;
-  const winner = props.winners[unref(tab)][day];
+  const winner = props.winners?.[unref(tab)]?.[day];
+
+  if (!winner) {
+    return '';
+  }
 
   const creators = useCompact([
     winner.creators[0],
@@ -89,6 +93,15 @@ const options = computed(() => ({
   interaction: {
     mode: 'index',
     intersect: false,
+  },
+  elements: {
+    point: {
+      pointRadius: 1,
+      pointHitRadius: 5,
+    },
+    line: {
+      spanGaps: false,
+    },
   },
   plugins: {
     tooltip: {
@@ -142,18 +155,26 @@ const options = computed(() => ({
   },
 }));
 
-const orderedDays = computed(() =>
-  useSortBy(Object.keys(props.clearsByDate)).filter(
+const orderedDays = computed(() => {
+  const daysWithData = useSortBy(Object.keys(props.clearsByDate)).filter(
     (d) => DateTime.fromISO(d).isValid,
-  ),
-);
+  );
+  const leftEdge = useFirst(daysWithData)!;
+  const rightEdge = useLast(daysWithData)!;
+  return Interval.fromDateTimes(
+    DateTime.fromISO(leftEdge),
+    DateTime.fromISO(rightEdge),
+  )
+    .splitBy({ days: 1 })
+    .map((d) => d.start?.toISODate()!);
+});
 
 const remainingLevelsByDate = computed(() => {
   const remainingByDate: Record<string, number> = {};
   const dates = [...unref(orderedDays)];
   let lastDay = dates.pop()!;
   remainingByDate[lastDay] =
-    props.clearsByDate[lastDay] + props.unclearedLevelCount;
+    props.clearsByDate[lastDay] + (props.unclearedLevelCount ?? 0);
   while (dates.length) {
     const currentDay = dates.pop()!;
     remainingByDate[currentDay] =
@@ -183,9 +204,9 @@ const data = computed(() => {
     unref(tab) === 'daily' && !props.allTime
       ? DateTime.now().minus({ month: 2 }).toISODate()
       : undefined;
-  const days = useSortBy(Object.keys(datapoints)).filter(
-    (dateCleared) => !leftEdge || dateCleared >= leftEdge,
-  );
+  const days = useSortBy(
+    unref(tab) === 'daily' ? unref(orderedDays) : Object.keys(datapoints),
+  ).filter((dateCleared) => !leftEdge || dateCleared >= leftEdge);
 
   const remainingDatapoints =
     unref(tab) === 'daily'
@@ -203,18 +224,25 @@ const data = computed(() => {
       );
     },
   );
+
+  const clearsDataset = {
+    label: 'Clears',
+    data: days.map((d) => ({
+      x: d,
+      y: datapoints[d],
+    })),
+    yAxisID: 'yClears',
+  };
+
+  if (isNil(props.unclearedLevelCount)) {
+    return {
+      datasets: [clearsDataset],
+    };
+  }
+
   return {
     datasets: [
-      {
-        label: 'Clears',
-        data: days.map((d) => ({
-          x: d,
-          y: datapoints[d],
-        })),
-        pointRadius: 0,
-        pointHitRadius: 5,
-        yAxisID: 'yClears',
-      },
+      clearsDataset,
       {
         label: `${useCapitalize(unref(tab))} clear target`,
         data: days.map((d) => ({
@@ -225,7 +253,6 @@ const data = computed(() => {
         borderColor: '#6c43a1',
         backgroundColor: '#6c43a1',
         pointRadius: 0,
-        pointHitRadius: 5,
         yAxisID: 'yClears',
       },
       {
@@ -237,7 +264,6 @@ const data = computed(() => {
         borderColor: '#8f2532aa',
         backgroundColor: '#8f2532aa',
         pointRadius: 0,
-        pointHitRadius: 5,
         yAxisID: 'yRemaining',
       },
     ],
