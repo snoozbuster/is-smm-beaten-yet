@@ -220,6 +220,8 @@ function startAnimation() {
   }
 }
 
+const showGenericError = useUnknownErrorToast();
+
 onMounted(async () => {
   let intervalId: NodeJS.Timeout;
   onUnmounted(() => clearInterval(intervalId));
@@ -231,12 +233,7 @@ onMounted(async () => {
   await refreshData();
 
   if (unclearedError.value || clearSummaryError.value) {
-    toast.add({
-      severity: 'error',
-      summary: 'Your princess is in another castle',
-      detail:
-        'Bowser has kidnapped the rest of the site. Try checking your internet connection and then refreshing the page.',
-    });
+    showGenericError();
     return;
   }
 
