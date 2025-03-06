@@ -1,5 +1,5 @@
 import { useStorage } from '@vueuse/core';
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel, UnclearedLevel } from '~/types/levels';
 
 export const LEVEL_BROWSER_COLUMNS = {
   title: 'Level name',
@@ -57,7 +57,7 @@ export default function useLevelBrowserSettings() {
       ),
   });
 
-  function shouldShowTranslation(level: UnclearedLevel) {
+  function shouldShowTranslation(level: UnclearedLevel | ClearedLevel) {
     return Boolean(
       unref(levelBrowserSettings).enableTranslation &&
         (level.countryCode === 'JP' || level.hacked) &&

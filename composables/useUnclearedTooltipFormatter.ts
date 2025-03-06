@@ -1,8 +1,8 @@
 import type { TooltipItem } from 'chart.js';
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 
 export default function useUnclearedTooltipFormatter(
-  unclearedLevels: Ref<UnclearedLevel[]>,
+  unclearedLevels: Ref<ClearedLevel[]>,
 ) {
   const { formatPercent, formatNumber } = useFormatters();
 

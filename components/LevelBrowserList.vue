@@ -1,8 +1,10 @@
 <template>
   <div class="text-left h-full flex flex-col">
     <span class="text-xl mb-3 text-course-world-contrast">
-      {{ formatNumber(levels.length) }} {{ levels.length === 1 ? 'level' : 'levels' }} from
-      {{ formatNumber(creators.length) }} {{ creators.length === 1 ? 'creator' : 'creators' }}
+      {{ formatNumber(levels.length) }}
+      {{ levels.length === 1 ? 'level' : 'levels' }} from
+      {{ formatNumber(creators.length) }}
+      {{ creators.length === 1 ? 'creator' : 'creators' }}
     </span>
 
     <div
@@ -40,11 +42,11 @@
 
 <script setup lang="ts">
 import useLevelBrowserSettings from '~/composables/useLevelBrowserSettings';
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 
 const props = defineProps({
   levels: {
-    type: Array as PropType<UnclearedLevel[]>,
+    type: Array as PropType<ClearedLevel[]>,
     default: () => [],
   },
 });

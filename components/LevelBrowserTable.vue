@@ -248,7 +248,7 @@ import { DateTime } from 'luxon';
 import { useToast } from 'primevue/usetoast';
 import { Fragment } from 'vue/jsx-runtime';
 import type { Component } from 'vue';
-import type { UnclearedLevel } from '~/types/levels';
+import type { ClearedLevel } from '~/types/levels';
 import { COUNTRIES } from '~/constants/levelData';
 import useLevelBrowserSettings, {
   DEFAULT_COLUMN_ORDER,
@@ -269,7 +269,7 @@ import {
 
 const props = defineProps({
   levels: {
-    type: Array as PropType<UnclearedLevel[]>,
+    type: Array as PropType<ClearedLevel[]>,
     default: () => [],
   },
 });
@@ -279,7 +279,7 @@ defineEmits(['refresh']);
 const keyHack = ref(0);
 const sortField = ref('uploadDate');
 const sortOrder = ref(1);
-const currentTableView = ref<UnclearedLevel[]>([]);
+const currentTableView = ref<ClearedLevel[]>([]);
 
 watch(
   toRef(props, 'levels'),
@@ -378,7 +378,7 @@ initColumns();
 
 // #region template computed data
 
-function translateLevels(levels: UnclearedLevel[]) {
+function translateLevels(levels: ClearedLevel[]) {
   if (!unref(levelBrowserSettings).enableTranslation) {
     return levels;
   }
@@ -464,7 +464,7 @@ FilterService.filters.month = (value: Date, filter: Date) => {
 
 function applyDisabledOptions<TOption extends { value: string | number }>(
   options: TOption[],
-  levelProp: keyof UnclearedLevel,
+  levelProp: keyof ClearedLevel,
 ) {
   return useOrderBy(
     options.map((o) => {
@@ -606,11 +606,11 @@ resetFilters();
 // #region random level generation
 
 const toast = useToast();
-const selected = ref<UnclearedLevel>();
+const selected = ref<ClearedLevel>();
 const isRandomizing = ref(false);
 const randomProgress = ref<number>(0);
 
-function getRowClass(level: UnclearedLevel) {
+function getRowClass(level: ClearedLevel) {
   if (level.levelId === selected.value?.levelId) {
     return 'p-highlight';
   }
@@ -722,7 +722,7 @@ function selectRandomLevel() {
 
 const { themeImages, styleImages } = useLevelAssets();
 
-type DataTableLevel = UnclearedLevel &
+type DataTableLevel = ClearedLevel &
   ({ translated: true; originalTitle: string } | { translated: false }) & {
     hasSubworld: boolean;
   };
