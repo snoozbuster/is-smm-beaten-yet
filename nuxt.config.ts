@@ -7,9 +7,11 @@ export default defineNuxtConfig({
       inlineStyles: false,
     },
   },
+
   app: {
     cdnURL: 'https://static.issmmbeatenyet.com/',
   },
+
   hooks: {
     // https://github.com/nuxt/nuxt/issues/18376#issuecomment-1515242958
     'build:manifest': (manifest) => {
@@ -35,11 +37,14 @@ export default defineNuxtConfig({
       }
     },
   },
+
   devtools: { enabled: true },
+
   css: [
     '~/assets/css/main.scss',
     'primevue/resources/themes/mdc-light-indigo/theme.css',
   ],
+
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/tailwindcss',
@@ -47,6 +52,7 @@ export default defineNuxtConfig({
     'nuxt-lodash',
     'nuxt-primevue',
   ],
+
   primevue: {
     cssLayerOrder:
       'tailwind-base, primevue, primevue-overrides, tailwind-utilities',
@@ -98,6 +104,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
     exposeConfig: true,
@@ -115,4 +122,6 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  compatibilityDate: '2024-04-20',
 });
