@@ -1,5 +1,7 @@
 export const LEVELS_ROOT_URL = 'https://static.issmmbeatenyet.com/levels';
+export const PLAYERS_ROOT_URL = 'https://static.issmmbeatenyet.com/players';
 
+// FIXME: have this just be country code and use Intl to get names
 export const COUNTRIES = [
   { value: 'JP', name: 'Japan' },
   { value: 'US', name: 'United States' },
