@@ -48,10 +48,7 @@ export default function useLevelBrowserSettings() {
           enableTranslation: true,
           disableRouletteAnimation: false,
           columnOrder: DEFAULT_COLUMN_ORDER,
-          visibleColumns: useMapValues(
-            LEVEL_BROWSER_COLUMNS,
-            (_, columnId) => columnId !== 'autoscroll',
-          ),
+          visibleColumns: useMapValues(LEVEL_BROWSER_COLUMNS, useStubTrue),
         },
         unref(legacyLevelBrowserSettings),
       ),

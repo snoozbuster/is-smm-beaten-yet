@@ -76,14 +76,6 @@
           :disabled="isRandomizing || currentTableView.length < 2"
           @click="selectRandomLevel()"
         />
-        <PrimeButton
-          v-tooltip.bottom="`Check for updates`"
-          type="button"
-          icon="pi pi-refresh"
-          outlined
-          size="small"
-          @click="$emit('refresh')"
-        />
         <span class="text-xl self-center ml-5">
           {{ formatNumber(numRows) }}
           {{ props.levels.length === 1 ? 'level' : 'levels' }}
@@ -274,8 +266,6 @@ const props = defineProps({
   },
 });
 
-defineEmits(['refresh']);
-
 const keyHack = ref(0);
 const sortField = ref('uploadDate');
 const sortOrder = ref(1);
@@ -342,7 +332,7 @@ const settingsMenuItems = computed(() => [
   {
     label: 'Columns',
     items: useMap(LEVEL_BROWSER_COLUMNS, (title, field) => ({
-      label: field === 'autoscroll' ? `${title} (All clear!)` : title,
+      label: title,
       field,
       disabled: field === 'title',
     })),
