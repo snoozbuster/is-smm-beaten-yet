@@ -3,27 +3,24 @@
     :class="[
       'inline',
       'border',
-      countryCode !== 'JP' ? 'border-transparent' : 'border-black/25',
+      'border-black/25',
+      'h-[19px]',
+      'align-text-bottom',
     ]"
-    :src="images[countryCode.toLowerCase()]"
-    width="24"
-    height="16"
-    alt="flag"
+    :src="`https://flagcdn.com/h20/${countryCode.toLowerCase()}.png`"
+    :srcset="`
+      https://flagcdn.com/h40/${countryCode.toLowerCase()}.png 2x,
+      https://flagcdn.com/h60/${countryCode.toLowerCase()}.png 3x
+    `"
+    alt="Ukraine"
   />
 </template>
 
 <script setup lang="ts">
-import { filename } from 'pathe/utils';
-
 defineProps({
   countryCode: {
     type: String,
     required: true,
   },
 });
-
-const glob = import.meta.glob('~/assets/img/flags/*.gif', { eager: true });
-const images = Object.fromEntries(
-  Object.entries(glob).map(([key, value]) => [filename(key), value.default]),
-);
 </script>
