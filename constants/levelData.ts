@@ -1,4 +1,4 @@
-export const DATA_ROOT_URL = 'https://static.issmmbeatenyet.com/levels';
+export const LEVELS_ROOT_URL = 'https://static.issmmbeatenyet.com/levels';
 
 export const COUNTRIES = [
   { value: 'JP', name: 'Japan' },

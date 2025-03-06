@@ -161,7 +161,7 @@
 import { filename } from 'pathe/utils';
 import CourseViewer from '~/viewer/SmmCourseViewer';
 import { Draw as DrawCourse } from '~/viewer/Draw';
-import { DATA_ROOT_URL } from '~/constants/levelData';
+import { LEVELS_ROOT_URL } from '~/constants/levelData';
 import type { Course } from '~/viewer/Course';
 import type { CourseObject } from '~/viewer/CourseObject';
 import { MonsterObject } from '~/viewer/MonsterObject';
@@ -193,7 +193,7 @@ const filterMenuImages = Object.fromEntries([
 ]);
 
 const levelUrl = computed(
-  () => `${DATA_ROOT_URL}/course-data/${props.levelId}`,
+  () => `${LEVELS_ROOT_URL}/course-data/${props.levelId}`,
 );
 
 interface LoadedCourseData {
@@ -902,7 +902,7 @@ function blinkObj(obj: CourseObject, { rotation }: { rotation?: number } = {}) {
 const objectHandlers = {
   Door: {
     onClick: (obj: MonsterObject, objects: CourseObject[]) => {
-      const otherDoor = objects.find(
+      const otherDoor = objects.filter(
         (o) =>
           o !== obj &&
           o.name === 'Door' &&
@@ -910,8 +910,10 @@ const objectHandlers = {
           o.doorType === obj.doorType,
       );
 
-      if (otherDoor) {
-        blinkObj(otherDoor);
+      console.log(otherDoor);
+
+      if (otherDoor[0]) {
+        blinkObj(otherDoor[0]);
       }
     },
   },
@@ -978,6 +980,8 @@ function handleClick(event: MouseEvent) {
       obj.name in objectHandlers &&
       (objectHandlers[obj.name].hasInteraction?.(obj) ?? true),
   );
+
+  console.log(target, intersections);
 
   if (target) {
     objectHandlers[target.name].onClick(target, worldData[unref(tab)]?.objects);

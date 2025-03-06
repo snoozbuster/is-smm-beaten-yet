@@ -124,7 +124,7 @@ import {
 import type { SetupContext } from 'vue';
 import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
 import type { ClearedLevelStatSummary } from '~/types/levels';
-import { DATA_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
+import { LEVELS_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
 import CourseWorldCard from '~/components/CourseWorldCard';
 import { PrimeSkeleton } from '#components';
 
@@ -186,7 +186,7 @@ const {
   error: clearSummaryError,
   execute: loadClears,
 } = useFetch<Partial<ClearedLevelStatSummary>>(
-  `${DATA_ROOT_URL}/clear_summary.json`,
+  `${LEVELS_ROOT_URL}/clear_summary.json`,
   {
     key: 'clear-summary',
     deep: false,

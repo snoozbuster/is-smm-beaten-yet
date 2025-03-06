@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DATA_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
+import { LEVELS_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
 import type { UnclearedLevel } from '~/types/levels';
 
 const __DEBUG_0PERCENT_MODE__ =
@@ -14,7 +14,7 @@ export async function useTheAnswer() {
   >(
     'the-answer',
     async () => {
-      const res = await $fetch(`${DATA_ROOT_URL}/uncleared.json`);
+      const res = await $fetch(`${LEVELS_ROOT_URL}/uncleared.json`);
 
       if (!Array.isArray(res)) {
         console.log('Got something unexpected from AWS:', res);
@@ -56,7 +56,7 @@ export function useUnclearedLevel(levelId: MaybeRef<string>) {
     UnclearedLevel | undefined
   >(
     `uncleared-${unref(levelId)}`,
-    () => $fetch(`${DATA_ROOT_URL}/uncleared.json`),
+    () => $fetch(`${LEVELS_ROOT_URL}/uncleared.json`),
     {
       deep: false,
       immediate: true,
@@ -76,7 +76,7 @@ export function useUnclearedLevel(levelId: MaybeRef<string>) {
 export default function useUnclearedLevels() {
   const { data } = useNuxtData('uncleared');
   const { pending, error, execute } = useFetch<UnclearedLevel[]>(
-    `${DATA_ROOT_URL}/uncleared.json`,
+    `${LEVELS_ROOT_URL}/uncleared.json`,
     {
       key: 'uncleared',
       deep: false,
