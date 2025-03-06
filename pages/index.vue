@@ -25,14 +25,6 @@
       </div>
     </div>
     <ClearedStats
-      v-if="theAnswer === 'Yes'"
-      id="stats"
-      class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh"
-      :visible="scrolled"
-      @ready="promptScroll"
-    />
-    <UnclearedStats
-      v-else
       id="stats"
       class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh"
       :visible="scrolled"
@@ -96,13 +88,7 @@ useSeoMeta({
   themeColor: SMM_YELLOW,
 });
 
-const { theAnswer } = await useTheAnswer();
-
-const promptText = computed(() =>
-  unref(theAnswer) === 'Not yet'
-    ? "See how we're doing"
-    : 'Check out the journey',
-);
+const promptText = computed(() => 'Check out the journey');
 
 const route = useRoute();
 const dataReady = ref(false);

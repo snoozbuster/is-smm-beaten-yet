@@ -145,10 +145,9 @@
 import SplitType from 'split-type';
 import gsap from 'gsap';
 import catPaw from '~/assets/img/cat_paw.png';
-import { useTheAnswer } from '~/composables/useUnclearedLevels';
 import { DateTime } from 'luxon';
 
-const { theAnswer } = await useTheAnswer();
+const theAnswer = 'Yes';
 
 const animationStarted = ref(false);
 
