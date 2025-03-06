@@ -1,4 +1,8 @@
 import _ from 'lodash';
+import { Course } from './Course';
+import { CourseObject } from './CourseObject';
+import { BlockObject } from './BlockObject';
+import { MonsterObject } from './MonsterObject';
 
 /**
  * @module _SmmCourseViewer
