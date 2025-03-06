@@ -54,7 +54,7 @@ watch(error, (e) => {
       summary: 'No player found',
       detail: `No profile for ${unref(
         nnid,
-      )} was not found. This website only tracks players that contributed to the Team 0% SMM1 project.`,
+      )} was found. This website only tracks players that contributed to the Team 0% SMM1 project.`,
     });
   } else {
     showGenericError();
