@@ -18,7 +18,7 @@
           <span class="text-2xl pi pi-question-circle" />
         </button>
       </h1>
-      <ResponsiveLevelList :levels />
+      <ResponsiveLevelList :levels="levels" />
     </div>
     <NuxtPage />
   </div>
