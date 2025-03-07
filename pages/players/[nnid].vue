@@ -43,7 +43,6 @@ const toast = useToast();
 const showGenericError = useUnknownErrorToast();
 
 watch(error, (e) => {
-  debugger;
   if (!e) {
     return;
   }
