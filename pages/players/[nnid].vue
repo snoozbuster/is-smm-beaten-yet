@@ -8,6 +8,14 @@
           :country-code="player.countryCode"
         />
         {{ nnid }}
+        <div v-if="player?.awards?.length" class="ml-2 inline-flex gap-2">
+          <PlayerAward
+            v-for="award in player.awards"
+            :key="award.name"
+            :award="award"
+            :size="24"
+          />
+        </div>
       </h1>
 
       <div class="grid grid-cols-3 min-h-[400px] gap-5 mb-5">

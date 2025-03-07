@@ -1,4 +1,4 @@
-import { UnclearedLevel } from '~/types/levels';
+import type { UnclearedLevel } from '~/types/levels';
 
 export function useUnclearedLevel(levelId: MaybeRef<string>) {
   return {
