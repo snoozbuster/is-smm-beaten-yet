@@ -35,6 +35,15 @@
     :alt="award.name"
     v-tooltip.hover.bottom="tooltipText"
   />
+  <img
+    v-else-if="award.name === 'Herb Trimmer'"
+    class="inline"
+    src="~/assets/img/badges/tth.png"
+    :height="size"
+    :width="size"
+    :alt="award.name"
+    v-tooltip.hover.bottom="tooltipText"
+  />
   <Icon
     v-else-if="award.name in ICON_MAP"
     :name="ICON_MAP[award.name]"
@@ -94,6 +103,7 @@ const tooltipText = computed(() => {
         'Human TAS': 'clearing a brutally precise level',
         Leprechaun: 'winning the Lucky Draw lottery',
         Choreographer: 'clearing the final uncleared level',
+        'Herb Trimmer': 'trimming the herbs',
       };
       return [
         'Awarded on',

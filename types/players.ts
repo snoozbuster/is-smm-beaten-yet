@@ -11,7 +11,8 @@ interface BasePlayerAward {
     | 'Developer'
     | 'Edgelord'
     | '1000 Clears'
-    | '2500 Clears';
+    | '2500 Clears'
+    | 'Herb Trimmer';
   awardDate?: string;
   reason?: string | { type: 'level'; levelId: string };
 }
@@ -23,7 +24,7 @@ interface SniperAward extends BasePlayerAward {
 }
 
 interface LevelClearAward extends BasePlayerAward {
-  name: 'Human TAS' | 'Choreographer';
+  name: 'Human TAS' | 'Choreographer' | 'Herb Trimmer';
   awardDate: string;
   reason: { type: 'level'; levelId: string };
 }
