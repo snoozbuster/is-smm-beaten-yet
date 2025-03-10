@@ -7,6 +7,11 @@ const { DateTime } = require('luxon');
 const { initS3Client, uploadToS3 } = require('./s3.js');
 const { buildClearedLevels } = require('./buildClearedLevels.js');
 
+const LEGACY_DATE = '2023-01-28T00:00:00Z';
+function isLegacy({ dateCleared }) {
+  return dateCleared <= LEGACY_DATE;
+}
+
 function generateClearSummary(clearedLevels, firstClearerSummaries = true) {
   const groupedByDate = _.groupBy(clearedLevels, ({ dateCleared }) =>
     DateTime.fromISO(dateCleared).startOf('day').toISODate(),
@@ -182,11 +187,7 @@ exports.handler = async (event) => {
   console.log('Creating master clear summary data');
 
   // TODO: how to model legacy clears?
-  const LEGACY_DATE = '2023-01-28T00:00:00Z';
-  const [legacyClears, botClears] = _.partition(
-    clearedLevels,
-    ({ dateCleared }) => dateCleared <= LEGACY_DATE,
-  );
+  const [legacyClears, botClears] = _.partition(clearedLevels, isLegacy);
   const clearStats = {
     ...generateClearSummary(botClears),
     legacyClearsByPerson: _.mapValues(
