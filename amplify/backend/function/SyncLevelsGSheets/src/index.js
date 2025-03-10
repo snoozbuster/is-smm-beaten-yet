@@ -162,6 +162,170 @@ async function buildGroupings(clearedLevels) {
   ]);
 }
 
+async function buildLeaderboardPlacements(clearedLevels) {
+  console.log('Building leaderboards');
+  const {
+    byYear,
+    byMonth,
+    byTheme,
+    byStyle,
+    byCountry,
+    byTimer,
+    autoscroll,
+    trueClear,
+    legacyClears,
+  } = generateAllPivots(clearedLevels);
+
+  const NUM_CLEAR_THRESHOLD = 5;
+  const NUM_PLACES_MINIMUM = 3;
+
+  const trimLeaderboard = (leaderboard) =>
+    _.takeWhile(
+      leaderboard,
+      ({ total }, i, list) =>
+        // always take top N
+        i < NUM_PLACES_MINIMUM ||
+        // until no longer above threshold
+        total >= NUM_CLEAR_THRESHOLD ||
+        // unless tied with Nth place
+        total === list[NUM_PLACES_MINIMUM - 1]?.total,
+    );
+
+  const buildClearCountLeaderboard = (levels) => {
+    return trimLeaderboard(
+      _.orderBy(
+        _.map(
+          _.groupBy(levels, 'firstClearerNnid'),
+          (playerClears, firstClearerNnid) => {
+            const legacyClears = _.filter(playerClears, isLegacy).length;
+            return {
+              nnid: firstClearerNnid,
+              total: playerClears.length,
+              legacy: legacyClears,
+            };
+          },
+        ),
+        'total',
+        'desc',
+      ),
+    );
+  };
+
+  const groupedLeaderboards = {
+    year: byYear,
+    month: byMonth,
+    theme: byTheme,
+    style: byStyle,
+    country: byCountry,
+    timer: byTimer,
+  };
+  const flatLeaderboards = {
+    total: clearedLevels,
+    autoscroll,
+    hacked: trueClear,
+    legacyClears,
+  };
+
+  const leaderboards = {
+    ..._.mapValues(groupedLeaderboards, (group) =>
+      _.mapValues(group, buildClearCountLeaderboard),
+    ),
+    ..._.mapValues(flatLeaderboards, buildClearCountLeaderboard),
+  };
+  leaderboards.legacyClears = leaderboards.legacyClears.map(
+    ({ legacy, ...rest }) => rest,
+  );
+
+  const { winners } = generateClearSummary(clearedLevels);
+  const invertWinners = (winnersByDate) => {
+    const byPlayer = {};
+    _.forEach(winnersByDate, ({ creators, levels }, date) => {
+      _.forEach(creators, (creator) => {
+        if (!(creator in byPlayer)) {
+          byPlayer[creator] = {};
+        }
+        byPlayer[creator][date] = levels;
+      });
+    });
+    return byPlayer;
+  };
+  const buildWinnerTimesLeaderboard = (winnersByDate) =>
+    _.orderBy(
+      _.map(invertWinners(winnersByDate), (dates, nnid) => ({
+        nnid,
+        total: _.keys(dates).length,
+      })),
+      'total',
+      'desc',
+    );
+  const buildWinnerStreakLeaderboard = (winnersByDate) => {
+    const streakByPlayer = {};
+    let lastDate;
+    _.forEach(winnersByDate, ({ creators }) => {
+      _.forEach(creators, (creator) => {
+        if (!(creator in streakByPlayer)) {
+          streakByPlayer[creator] = { current: 0, best: 0 };
+        }
+        streakByPlayer[creator].current++;
+      });
+
+      if (!lastDate) {
+        lastDate = creators;
+        return;
+      }
+
+      const endStreak = _.difference(lastDate, creators);
+      _.forEach(endStreak, (creator) => {
+        streakByPlayer[creator].best = Math.max(
+          streakByPlayer[creator].current,
+          streakByPlayer[creator].best,
+        );
+        streakByPlayer[creator].current = 0;
+      });
+
+      lastDate = creators;
+    });
+
+    return _.orderBy(
+      _.map(streakByPlayer, ({ best, current }, nnid) => ({
+        nnid,
+        total: Math.max(best, current),
+      })),
+      'total',
+      'desc',
+    );
+  };
+  const buildBiggestWinnersLeaderboard = (winnersByDate) => {
+    return _.uniqBy(
+      _.orderBy(
+        _.map(invertWinners(winnersByDate), (dates, nnid) => ({
+          nnid,
+          total: _.max(_.values(dates)),
+        })),
+        'total',
+        'desc',
+      ),
+      'nnid',
+    );
+  };
+
+  const buildWinnerLeaderboards = (winnersByDate) =>
+    _.mapValues(
+      {
+        times: buildWinnerTimesLeaderboard,
+        streak: buildWinnerStreakLeaderboard,
+        biggest: buildBiggestWinnersLeaderboard,
+      },
+      (fn) => trimLeaderboard(fn(winnersByDate)),
+    );
+
+  const winnerLeaderboards = _.mapValues(winners, buildWinnerLeaderboards);
+
+  await uploadToS3('leaderboards/list.json', {
+    clearCounts: leaderboards,
+    winners: winnerLeaderboards,
+  });
+}
 
 async function uploadPlayerStats(clearedLevels) {
   console.log('Uploading player stats');
@@ -248,6 +412,7 @@ exports.handler = async (event) => {
   ]);
 
   await buildGroupings(clearedLevels);
+  await buildLeaderboardPlacements(clearedLevels);
   await uploadPlayerStats(clearedLevels);
   // await uploadCreatorStats(clearedFinal, playerCountries);
 
