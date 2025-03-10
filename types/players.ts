@@ -65,10 +65,10 @@ export type PlayerAward =
 export interface BasePlayer {
   levels: ClearedLevel[];
   countryCode: string;
-  stats: Pick<
-    ClearedLevelStatSummary,
-    'clearsByDate' | 'clearedTotal' | 'mostRecentClear' | 'lastClears'
-  >;
+  stats: Pick<ClearedLevelStatSummary, 'clearsByDate'> & {
+    legacyClears: number;
+    clearedTotal: number;
+  };
 }
 
 export interface Player extends BasePlayer {
