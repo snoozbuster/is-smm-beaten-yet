@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const { downloadCsv, getSheetDownloadUrl } = require('./gsheets.js');
 const { getS3Json } = require('./s3.js');
+const retry = require('async-retry');
 
 const CLEARS_SPREADSHEET_ID = '1D7C_Qj7HbbnF7CiEABcr1VUPu2peQfkPfJPRr1Vuwag';
 
@@ -99,6 +100,12 @@ async function getClearedLevelSheet() {
     CLEARED_TITLE_TO_KEY,
   );
 
+  if (clearedLevels.length < 80000) {
+    // sometimes the download endpoint just doesn't return anything,
+    // do a basic sanity check. the full dataset is about 85000 levels
+    throw new Error('CSV only has', clearedLevels.length, 'levels');
+  }
+
   console.log('Downloaded cleared levels CSV');
 
   return cleanList(clearedLevels, Object.values(CLEARED_TITLE_TO_KEY));
@@ -107,16 +114,14 @@ async function getClearedLevelSheet() {
 async function buildClearedLevels() {
   console.log('Downloading input files');
   const [clearedLevels, levelMeta, playerCountries] = await Promise.all([
-    getClearedLevelSheet(),
+    retry(getClearedLevelSheet, {
+      retries: 3,
+      onRetry: (e) =>
+        console.log('Retrying cleared level CSV download:', e.message),
+    }),
     getStaticLevelData(),
     getPlayerCountryCodes(),
   ]);
-
-  if (clearedLevels.length < 80000) {
-    // sometimes the download endpoint just doesn't return anything,
-    // do a basic sanity check. the full dataset is about 85000 levels
-    throw new Error('Failed to download CSV');
-  }
 
   const getLevelMeta = (level) => ({
     ..._.omit(levelMeta[level.levelId], 'id'),
