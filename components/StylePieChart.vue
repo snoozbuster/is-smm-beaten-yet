@@ -13,7 +13,6 @@ import {
   SMM_YELLOW,
 } from '~/constants/colors';
 import type { ClearedLevel } from '~/types/levels';
-import { COUNTRIES } from '~/constants/levelData';
 
 ChartJS.register(PieController, ArcElement, Legend);
 
@@ -50,25 +49,33 @@ const options = computed(() => ({
   },
 }));
 
+const { formatCountryName } = useFormatters();
+
 const labelMaps = {
-  style: {
-    SMB1: 'Super Mario Bros.',
-    SMW: 'Super Mario World',
-    SMB3: 'Super Mario Bros. 3',
-    NSMBU: 'New Super Mario Bros. U',
-  } as Record<string, string>,
-  countryCode: useMapValues(useKeyBy(COUNTRIES, 'value'), 'name'),
+  style: (style: string) =>
+    ({
+      SMB1: 'Super Mario Bros.',
+      SMW: 'Super Mario World',
+      SMB3: 'Super Mario Bros. 3',
+      NSMBU: 'New Super Mario Bros. U',
+    })[style],
+  countryCode: (countryCode: string) => formatCountryName(countryCode),
   theme: undefined,
 };
 
 const styleData = computed(() => {
-  const styles = useToPairs(useGroupBy(props.clearedLevels, props.style));
+  const styles = useToPairs(
+    useOmit(useGroupBy(props.clearedLevels, props.style), [
+      'null',
+      'undefined',
+    ]),
+  );
 
-  const styleLabelKey = labelMaps[props.style];
+  const styleLabelFn = labelMaps[props.style];
 
   return {
     labels: styles.map(([style]) =>
-      styleLabelKey ? styleLabelKey[style] : style,
+      styleLabelFn ? styleLabelFn(style) : style,
     ),
     datasets: [
       {

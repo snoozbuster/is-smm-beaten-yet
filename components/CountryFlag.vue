@@ -19,10 +19,6 @@ const props = defineProps({
   },
 });
 
-const regionNames = new Intl.DisplayNames(navigator.languages, {
-  type: 'region',
-});
-const countryName = computed(() =>
-  regionNames.of(props.countryCode.toUpperCase()),
-);
+const { formatCountryName } = useFormatters();
+const countryName = computed(() => formatCountryName(props.countryCode));
 </script>

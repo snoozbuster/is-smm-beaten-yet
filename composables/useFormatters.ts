@@ -9,12 +9,26 @@ function getNavigatorLangs() {
   }
 }
 
-export default function useFormatters() {
+function useEnvironmentAgnosticLangs() {
   const { 'accept-language': langPref } = useRequestHeaders([
     'Accept-Language',
   ]);
 
+  return langPref
+    ? parse(langPref).map(({ code }) => code)
+    : getNavigatorLangs();
+}
+
+export default function useFormatters() {
+  const langs = useEnvironmentAgnosticLangs();
+
   return {
+    formatCountryName: (countryCode: string) => {
+      const regionNames = new Intl.DisplayNames(langs, {
+        type: 'region',
+      });
+      return regionNames.of(countryCode.toUpperCase()) || countryCode;
+    },
     formatPercent: (
       numerator: number,
       denominator: number,
@@ -24,16 +38,11 @@ export default function useFormatters() {
         return '';
       }
 
-      return new Intl.NumberFormat(
-        langPref
-          ? parse(langPref).map(({ code }) => code)
-          : getNavigatorLangs(),
-        {
-          style: 'percent',
-          maximumFractionDigits: precision,
-          roundingMode: rounding,
-        } as any,
-      ).format(numerator / denominator);
+      return new Intl.NumberFormat(langs, {
+        style: 'percent',
+        maximumFractionDigits: precision,
+        roundingMode: rounding,
+      } as any).format(numerator / denominator);
     },
     formatNumber: (n: number) => new Intl.NumberFormat().format(n),
     formatDate: (d: string, short: boolean = false) =>

@@ -241,7 +241,6 @@ import { useToast } from 'primevue/usetoast';
 import { Fragment } from 'vue/jsx-runtime';
 import type { Component } from 'vue';
 import type { ClearedLevel } from '~/types/levels';
-import { COUNTRIES } from '~/constants/levelData';
 import useLevelBrowserSettings, {
   DEFAULT_COLUMN_ORDER,
   LEVEL_BROWSER_COLUMNS,
@@ -470,8 +469,18 @@ function applyDisabledOptions<TOption extends { value: string | number }>(
   );
 }
 
+const { formatCountryName } = useFormatters();
+
 const countries = computed(() =>
-  applyDisabledOptions(COUNTRIES, 'countryCode'),
+  applyDisabledOptions(
+    useUniq(useCompact(useMap(props.levels, 'countryCode'))).map(
+      (countryCode) => ({
+        value: countryCode,
+        name: formatCountryName(countryCode),
+      }),
+    ),
+    'countryCode',
+  ),
 );
 
 const themes = computed(() =>
