@@ -18,7 +18,7 @@
         </div>
       </h1>
 
-      <div class="grid grid-cols-3 min-h-[400px] gap-5 mb-5">
+      <div class="grid grid-cols-3 h-[400px] gap-5 mb-5">
         <template v-if="player && !pending">
           <StatSection card>
             <ClearsOverTime
@@ -28,6 +28,9 @@
           </StatSection>
           <StatSection card>
             <ClearedBreakdown :cleared="player.levels" />
+          </StatSection>
+          <StatSection card class="overflow-auto">
+            <PlayerAchievements :nnid="nnid" />
           </StatSection>
         </template>
         <template v-else>

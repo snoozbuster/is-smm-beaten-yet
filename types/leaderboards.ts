@@ -30,7 +30,7 @@ export type ClearCountLeaderboard =
   | SubGroupedClearCountLeaderboard
   | UngroupedClearCountLeaderboard;
 
-type ValidLeaderboardGroups = {
+export type ValidLeaderboardGroups = {
   year: '2016' | '2017' | '2018' | '2019' | '2020' | '2021';
   month: string; // YYYY-MM
   theme: NonNullable<ClearedLevel['theme']>;
@@ -69,7 +69,7 @@ export interface MvpLeaderboards {
 }
 
 export interface AllLeaderboards {
-  clearCounts: ClearCountLeaderboard;
+  clearCounts: ClearCountLeaderboards;
   winners: {
     daily: MvpLeaderboards;
     weekly: MvpLeaderboards;
