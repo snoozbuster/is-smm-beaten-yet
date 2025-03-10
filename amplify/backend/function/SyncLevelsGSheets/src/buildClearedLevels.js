@@ -103,7 +103,9 @@ async function getClearedLevelSheet() {
   if (clearedLevels.length < 80000) {
     // sometimes the download endpoint just doesn't return anything,
     // do a basic sanity check. the full dataset is about 85000 levels
-    throw new Error('CSV only has', clearedLevels.length, 'levels');
+    throw new Error(
+      `CSV only has ${clearedLevels.length} level(s), expected at least 80,000`,
+    );
   }
 
   console.log('Downloaded cleared levels CSV');
