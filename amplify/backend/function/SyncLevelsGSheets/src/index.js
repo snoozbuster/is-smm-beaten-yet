@@ -162,7 +162,7 @@ async function buildGroupings(clearedLevels) {
   ]);
 }
 
-async function buildLeaderboardPlacements(clearedLevels) {
+async function buildLeaderboards(clearedLevels) {
   console.log('Building leaderboards');
   const {
     byYear,
@@ -410,7 +410,7 @@ exports.handler = async (event) => {
   ]);
 
   await buildGroupings(clearedLevels);
-  await buildLeaderboardPlacements(clearedLevels);
+  await buildLeaderboards(clearedLevels);
   await uploadPlayerStats(clearedLevels);
   // await uploadCreatorStats(clearedFinal, playerCountries);
 
