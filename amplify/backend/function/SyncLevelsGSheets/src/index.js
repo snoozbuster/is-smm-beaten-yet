@@ -223,7 +223,7 @@ async function buildLeaderboardPlacements(clearedLevels) {
     total: clearedLevels,
     autoscroll,
     hacked: trueClear,
-    legacyClears,
+    legacy: legacyClears,
   };
 
   const leaderboards = {
@@ -232,9 +232,7 @@ async function buildLeaderboardPlacements(clearedLevels) {
     ),
     ..._.mapValues(flatLeaderboards, buildClearCountLeaderboard),
   };
-  leaderboards.legacyClears = leaderboards.legacyClears.map(
-    ({ legacy, ...rest }) => rest,
-  );
+  leaderboards.legacy = leaderboards.legacy.map(({ legacy, ...rest }) => rest);
 
   const { winners } = generateClearSummary(clearedLevels);
   const invertWinners = (winnersByDate) => {
