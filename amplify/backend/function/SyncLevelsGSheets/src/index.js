@@ -67,25 +67,28 @@ function generateClearSummary(clearedLevels, firstClearerSummaries = true) {
   };
 }
 
-async function uploadGroups(s3, prefix, clearedLevelGroups) {
+async function uploadGroups(prefix, clearedLevelGroups) {
   console.log('Uploading groups for', prefix);
   const summaries = _.mapValues(clearedLevelGroups, generateClearSummary);
 
-  await uploadToS3(s3, [prefix, 'list.json'].join('/'), summaries);
+  await uploadToS3([prefix, 'list.json'].join('/'), summaries);
 
   for (const [name, levels] of Object.entries(clearedLevelGroups)) {
-    await uploadToS3(s3, [prefix, `${name}.json`].join('/'), {
+    await uploadToS3([prefix, `${name}.json`].join('/'), {
       levels,
       summary: summaries[name],
     });
   }
 }
 
-async function buildGroupings(s3, clearedLevels) {
-  console.log('Building groupings');
+function generateAllPivots(clearedLevels) {
   const byYear = _.groupBy(
-    clearedLevels,
+    clearedLevels.filter(({ uploadDate }) => uploadDate),
     ({ uploadDate }) => DateTime.fromISO(uploadDate).year,
+  );
+  const byMonth = _.groupBy(
+    clearedLevels.filter(({ uploadDate }) => uploadDate),
+    ({ uploadDate }) => uploadDate.slice(0, 7),
   );
   const byTheme = _.omit(_.groupBy(clearedLevels, 'theme'), [
     'undefined',
@@ -99,50 +102,94 @@ async function buildGroupings(s3, clearedLevels) {
     'undefined',
     'null',
   ]);
+  const byTimer = _.omit(_.groupBy(clearedLevels, 'timer'), [
+    'undefined',
+    'null',
+  ]);
+  const byCheckpointCount = _.omit(_.groupBy(clearedLevels, 'checkpoints'), [
+    'undefined',
+    'null',
+  ]);
+  const autoscroll = _.filter(clearedLevels, 'autoscroll');
+  const trueClear = _.filter(clearedLevels, 'hacked');
+  const [legacyClears, botClears] = _.partition(clearedLevels, isLegacy);
+
+  return {
+    byYear,
+    byMonth,
+    byTheme,
+    byStyle,
+    byCountry,
+    byTimer,
+    byCheckpointCount,
+    autoscroll,
+    trueClear,
+    legacyClears,
+    botClears,
+  };
+}
+
+async function buildGroupings(clearedLevels) {
+  console.log('Building groupings');
+  const {
+    byYear,
+    byMonth,
+    byTheme,
+    byStyle,
+    byCountry,
+    byTimer,
+    autoscroll,
+    trueClear,
+    legacyClears,
+    botClears,
+  } = generateAllPivots(clearedLevels);
 
   await Promise.all(
     [
       ['levels/year', byYear],
+      ['levels/month', byMonth],
       ['levels/style', byStyle],
       ['levels/country', byCountry],
       ['levels/theme', byTheme],
-    ].map(([prefix, levels]) => uploadGroups(s3, prefix, levels)),
+      ['levels/timer', byTimer],
+    ].map(([prefix, levels]) => uploadGroups(prefix, levels)),
   );
+  await Promise.all([
+    uploadToS3('levels/autoscroll.json', autoscroll),
+    uploadToS3('levels/hacked.json', trueClear),
+    uploadToS3('levels/legacy.json', legacyClears),
+    uploadToS3('levels/botClears.json', botClears),
+  ]);
 }
 
-async function uploadPlayerStats(
-  s3,
-  clearedLevels,
-  legacyClears,
-  playerCountries,
-) {
+
+async function uploadPlayerStats(clearedLevels) {
   console.log('Uploading player stats');
   const byPlayer = _.groupBy(clearedLevels, 'firstClearerNnid');
 
   const playerList = _.mapValues(byPlayer, (levels, name) => ({
-    ...generateClearSummary(levels, false),
-    legacyClears: legacyClears[name] ?? 0,
+    clearedTotal: levels.length,
+    countryCode: levels[0]?.countryCode,
+    legacyClears: levels?.filter(isLegacy).length,
   }));
 
-  await uploadToS3(
-    s3,
-    'players/list.json',
-    _.mapValues(playerList, (summary, name) => ({
-      countryCode: playerCountries[name],
-      ..._.omit(summary, ['clearsByDate', 'lastClears']),
-    })),
-  );
+  await uploadToS3('players/list.json', playerList);
 
   for (const [name, levels] of Object.entries(byPlayer)) {
-    await uploadToS3(s3, ['players', `${name}.json`].join('/'), {
+    await uploadToS3(['players', `${name}.json`].join('/'), {
       levels,
-      countryCode: playerCountries[name],
-      stats: playerList[name],
+      countryCode: playerList[name].countryCode,
+      stats: {
+        ..._.omit(playerList[name], 'countryCode'),
+        ..._.pick(generateClearSummary(byPlayer[name], false), [
+          'clearsByDate',
+        ]),
+      },
     });
   }
 }
 
-async function uploadCreatorStats(s3, clearedLevels, playerCountries) {
+async function uploadCreatorStats(clearedLevels, playerCountries) {
   console.log('Uploading creator stats');
   const byCreator = _.groupBy(clearedLevels, 'creator');
 
@@ -151,7 +198,6 @@ async function uploadCreatorStats(s3, clearedLevels, playerCountries) {
   );
 
   await uploadToS3(
-    s3,
     'creators/list.json',
     _.mapValues(creatorList, (summary, name) => ({
       countryCode: playerCountries[name],
@@ -165,7 +211,7 @@ async function uploadCreatorStats(s3, clearedLevels, playerCountries) {
   );
 
   for (const [name, levels] of Object.entries(byCreator)) {
-    await uploadToS3(s3, ['creators', `${name}.json`].join('/'), {
+    await uploadToS3(['creators', `${name}.json`].join('/'), {
       levels,
       countryCode: playerCountries[name],
       stats: creatorList[name],
@@ -201,9 +247,9 @@ exports.handler = async (event) => {
     uploadToS3('levels/clear_summary.json', clearStats),
   ]);
 
-  // await buildGroupings(s3, clearedFinal);
-  // await uploadPlayerStats(s3, clearedFinal, legacyClears, playerCountries);
-  // await uploadCreatorStats(s3, clearedFinal, playerCountries);
+  await buildGroupings(clearedLevels);
+  await uploadPlayerStats(clearedLevels);
+  // await uploadCreatorStats(clearedFinal, playerCountries);
 
   const results = {
     totalCleared: clearedLevels.length,
