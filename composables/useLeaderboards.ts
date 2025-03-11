@@ -91,7 +91,7 @@ export function useLeaderboardNames() {
   };
 }
 
-function getRankedLeaderboard<TLegacy extends boolean>(
+export function getRankedLeaderboard<TLegacy extends boolean>(
   leaderboard: Leaderboard<TLegacy>,
   includeLegacy?: TLegacy extends true ? boolean : undefined,
 ): RankedLeaderboard<TLegacy> {
@@ -110,7 +110,7 @@ function getRankedLeaderboard<TLegacy extends boolean>(
   return useOrderBy(
     leaderboard?.map((entry, i) => {
       const score = getScore(entry);
-      const rank = lastScore === score ? lastRank : i;
+      const rank = lastScore === score ? lastRank : i + 1;
       if (rank !== lastRank) {
         // not pure. too bad!
         lastRank = rank;
@@ -123,7 +123,7 @@ function getRankedLeaderboard<TLegacy extends boolean>(
       };
     }),
     'rank',
-    'desc',
+    'asc',
   ) as any;
 }
 
