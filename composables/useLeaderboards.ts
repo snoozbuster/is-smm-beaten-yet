@@ -95,7 +95,7 @@ function getRankedLeaderboard<TLegacy extends boolean>(
   leaderboard: Leaderboard<TLegacy>,
   includeLegacy?: TLegacy extends true ? boolean : undefined,
 ): RankedLeaderboard<TLegacy> {
-  const deductLegacy = !unref(includeLegacy);
+  const deductLegacy = unref(includeLegacy) === false;
   const getScore = (
     entry: LeaderboardEntry | LegacySupportedLeaderboardEntry,
   ) => {
