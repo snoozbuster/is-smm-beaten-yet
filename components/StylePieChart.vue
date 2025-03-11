@@ -64,11 +64,15 @@ const labelMaps = {
 };
 
 const styleData = computed(() => {
-  const styles = useToPairs(
-    useOmit(useGroupBy(props.clearedLevels, props.style), [
-      'null',
-      'undefined',
-    ]),
+  const styles = useOrderBy(
+    useToPairs(
+      useOmit(useGroupBy(props.clearedLevels, props.style), [
+        'null',
+        'undefined',
+      ]),
+    ),
+    '1',
+    'desc',
   );
 
   const styleLabelFn = labelMaps[props.style];
