@@ -7,6 +7,9 @@ const { DateTime } = require('luxon');
 const { initS3Client, uploadToS3 } = require('./s3.js');
 const { buildClearedLevels } = require('./buildClearedLevels.js');
 
+const LEADERBOARD_NUM_CLEAR_THRESHOLD = 5;
+const LEADERBOARD_NUM_PLACES_MINIMUM = 3;
+
 const LEGACY_DATE = '2023-01-28T00:00:00Z';
 function isLegacy({ dateCleared }) {
   return dateCleared <= LEGACY_DATE;
@@ -67,9 +70,20 @@ function generateClearSummary(clearedLevels, firstClearerSummaries = true) {
   };
 }
 
-async function uploadGroups(prefix, clearedLevelGroups) {
+async function uploadGroups(prefix, clearedLevelGroups, leaderboards) {
   console.log('Uploading groups for', prefix);
-  const summaries = _.mapValues(clearedLevelGroups, generateClearSummary);
+  const summaries = _.mapValues(clearedLevelGroups, (levels, key) => {
+    return {
+      clearedTotal: levels.length,
+      leaderboardPreview: _.takeWhile(
+        leaderboards[key],
+        (entry, i) =>
+          i < LEADERBOARD_NUM_PLACES_MINIMUM ||
+          entry.total ===
+            leaderboards[key][LEADERBOARD_NUM_PLACES_MINIMUM - 1].total,
+      ),
+    };
+  });
 
   await uploadToS3([prefix, 'list.json'].join('/'), summaries);
 
@@ -129,7 +143,7 @@ function generateAllPivots(clearedLevels) {
   };
 }
 
-async function buildGroupings(clearedLevels) {
+async function buildGroupings(clearedLevels, clearLeaderboards) {
   console.log('Building groupings');
   const {
     byYear,
@@ -146,13 +160,15 @@ async function buildGroupings(clearedLevels) {
 
   await Promise.all(
     [
-      ['levels/year', byYear],
-      ['levels/month', byMonth],
-      ['levels/style', byStyle],
-      ['levels/country', byCountry],
-      ['levels/theme', byTheme],
-      ['levels/timer', byTimer],
-    ].map(([prefix, levels]) => uploadGroups(prefix, levels)),
+      ['levels/year', byYear, clearLeaderboards.year],
+      ['levels/month', byMonth, clearLeaderboards.month],
+      ['levels/style', byStyle, clearLeaderboards.style],
+      ['levels/country', byCountry, clearLeaderboards.country],
+      ['levels/theme', byTheme, clearLeaderboards.theme],
+      ['levels/timer', byTimer, clearLeaderboards.timer],
+    ].map(([prefix, levels, leaderboard]) =>
+      uploadGroups(prefix, levels, leaderboard),
+    ),
   );
   await Promise.all([
     uploadToS3('levels/autoscroll.json', autoscroll),
@@ -176,19 +192,16 @@ async function buildLeaderboards(clearedLevels) {
     legacyClears,
   } = generateAllPivots(clearedLevels);
 
-  const NUM_CLEAR_THRESHOLD = 5;
-  const NUM_PLACES_MINIMUM = 3;
-
   const trimLeaderboard = (leaderboard) =>
     _.takeWhile(
       leaderboard,
       ({ total }, i, list) =>
         // always take top N
-        i < NUM_PLACES_MINIMUM ||
+        i < LEADERBOARD_NUM_PLACES_MINIMUM ||
         // until no longer above threshold
-        total >= NUM_CLEAR_THRESHOLD ||
+        total >= LEADERBOARD_NUM_CLEAR_THRESHOLD ||
         // unless tied with Nth place
-        total === list[NUM_PLACES_MINIMUM - 1]?.total,
+        total === list[LEADERBOARD_NUM_PLACES_MINIMUM - 1]?.total,
     );
 
   const buildClearCountLeaderboard = (levels) => {
@@ -319,10 +332,14 @@ async function buildLeaderboards(clearedLevels) {
 
   const winnerLeaderboards = _.mapValues(winners, buildWinnerLeaderboards);
 
-  await uploadToS3('leaderboards/list.json', {
+  const finalLeaderboards = {
     clearCounts: leaderboards,
     winners: winnerLeaderboards,
-  });
+  };
+
+  await uploadToS3('leaderboards/list.json', finalLeaderboards);
+
+  return finalLeaderboards;
 }
 
 async function uploadPlayerStats(clearedLevels) {
@@ -409,8 +426,9 @@ exports.handler = async (event) => {
     uploadToS3('levels/clear_summary.json', clearStats),
   ]);
 
-  await buildGroupings(clearedLevels);
-  await buildLeaderboards(clearedLevels);
+  const { clearCounts: clearCountLeaderboards } =
+    await buildLeaderboards(clearedLevels);
+  await buildGroupings(clearedLevels, clearCountLeaderboards);
   await uploadPlayerStats(clearedLevels);
   // await uploadCreatorStats(clearedFinal, playerCountries);
 
