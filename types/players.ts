@@ -71,8 +71,10 @@ export interface BasePlayer {
   };
 }
 
-export interface Player extends BasePlayer {
+export interface DecoratedPlayer {
   discordName?: string;
   awards?: PlayerAward[];
   milestones: Milestone[];
 }
+
+export type Player = BasePlayer & DecoratedPlayer;

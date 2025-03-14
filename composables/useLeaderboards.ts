@@ -1,5 +1,4 @@
 import type { NuxtError } from '#app';
-import type { BooleanLiteral } from 'typescript';
 import { LEADERBOARDS_ROOT_URL } from '~/constants/levelData';
 import {
   type AllLeaderboards,
@@ -35,6 +34,58 @@ export function useAllLeaderboards() {
   };
 }
 
+type LeaderboardMapper<T> = (
+  leaderboard: Leaderboard<boolean>,
+  group: ClearCountLeaderboard,
+  subgroup?: ValidLeaderboardGroups[keyof ValidLeaderboardGroups],
+) => T;
+const mapLeaderboard = <T>(
+  leaderboards: AllLeaderboards,
+  fn: LeaderboardMapper<T>,
+) => {
+  return useFlatMap(leaderboards?.clearCounts, (leaderboard, group) => {
+    if (Array.isArray(leaderboard)) {
+      return fn(leaderboard, group as UngroupedClearCountLeaderboard);
+    }
+
+    return useValues(
+      useMapValues(leaderboard, (leaderboard, subgroup) => {
+        return fn(
+          leaderboard,
+          group as SubGroupedClearCountLeaderboard,
+          subgroup,
+        );
+      }),
+    );
+  });
+};
+
+export function useRankedLeaderboards(includeLegacy: MaybeRef<boolean> = true) {
+  const { leaderboards, pending, error } = useAllLeaderboards();
+
+  const getLeaderboardName = useLeaderboardNames();
+
+  const rankedLeaderboards = computed(() => {
+    const _includeLegacy = unref(includeLegacy);
+    return mapLeaderboard(
+      unref(leaderboards)!,
+      (leaderboard, group, subgroup) => {
+        const name = getLeaderboardName(group, subgroup);
+        return {
+          name,
+          rankings: getRankedLeaderboard(leaderboard, _includeLegacy),
+        };
+      },
+    );
+  });
+
+  return {
+    rankedLeaderboards,
+    pending,
+    error,
+  };
+}
+
 const isSubgroupedLeaderboard = (
   leaderboardName: ClearCountLeaderboard,
 ): leaderboardName is SubGroupedClearCountLeaderboard =>
@@ -42,7 +93,7 @@ const isSubgroupedLeaderboard = (
     leaderboardName,
   );
 
-type RankedLeaderboard<SupportsLegacy extends boolean> =
+export type RankedLeaderboard<SupportsLegacy extends boolean> =
   ((SupportsLegacy extends true
     ? LegacySupportedLeaderboardEntry
     : LeaderboardEntry) & { rank: number; score: number })[];
@@ -170,48 +221,24 @@ export function usePlayerLeaderboardRanks(
   nnid: MaybeRef<string>,
   includeLegacy: MaybeRef<boolean> = true,
 ) {
-  const { leaderboards, pending } = useAllLeaderboards();
-  const getLeaderboardName = useLeaderboardNames();
+  const { rankedLeaderboards, pending } = useRankedLeaderboards(includeLegacy);
 
-  const extractPlayerRank = (leaderboard: Leaderboard<any>) => {
-    const rankedLeaderboard = getRankedLeaderboard(
-      leaderboard,
-      unref(includeLegacy),
-    );
-    return useFind(rankedLeaderboard, { nnid: unref(nnid) });
+  const extractPlayerRank = (leaderboard: RankedLeaderboard<any>) => {
+    return useFind(leaderboard, { nnid: unref(nnid) });
   };
 
   const ranks = computed(() =>
     useOrderBy(
       useOrderBy(
         useCompact(
-          useFlatMap(unref(leaderboards)?.clearCounts, (leaderboard, group) => {
-            if (Array.isArray(leaderboard)) {
-              const rank = extractPlayerRank(leaderboard);
-              return rank
-                ? {
-                    ...rank,
-                    name: getLeaderboardName(
-                      group as UngroupedClearCountLeaderboard,
-                    ),
-                  }
-                : undefined;
-            }
-
-            return useValues(
-              useMapValues(leaderboard, (leaderboard, subgroup) => {
-                const rank = extractPlayerRank(leaderboard);
-                return rank
-                  ? {
-                      ...rank,
-                      name: getLeaderboardName(
-                        group as SubGroupedClearCountLeaderboard,
-                        subgroup,
-                      ),
-                    }
-                  : undefined;
-              }),
-            );
+          unref(rankedLeaderboards).map(({ name, rankings }) => {
+            const rank = extractPlayerRank(rankings);
+            return rank
+              ? {
+                  ...rank,
+                  name,
+                }
+              : undefined;
           }),
         ),
         'score',
