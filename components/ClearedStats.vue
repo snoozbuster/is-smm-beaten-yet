@@ -42,7 +42,9 @@
               Congratulations!
             </span>
             <div class="mt-5 text-balance">
-              Additionally, <b>Sanyx91SMM2</b> has
+              Additionally,
+              <NuxtLink to="/players/Sanyx91"><b>Sanyx91SMM2</b></NuxtLink>
+              has
               <a
                 class="text-blue-800 hover:underline"
                 href="https://www.youtube.com/watch?v=Owc_rwlxUlc"
@@ -133,16 +135,13 @@ const ready = ref(false);
 
 const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
 
-const timeToShutdown = computed(
-  () =>
-    DateTime.fromISO(SHUTDOWN_DATE)
-      .toRelative({
-        base: DateTime.fromISO(
-          clearSummary.value.mostRecentClear?.dateCleared!,
-        ),
-        unit: ['days', 'hours', 'minutes'],
-      })
-      ?.replace(/^in /, ''),
+const timeToShutdown = computed(() =>
+  DateTime.fromISO(SHUTDOWN_DATE)
+    .toRelative({
+      base: DateTime.fromISO(clearSummary.value.mostRecentClear?.dateCleared!),
+      unit: ['days', 'hours', 'minutes'],
+    })
+    ?.replace(/^in /, ''),
 );
 
 function startAnimation() {
