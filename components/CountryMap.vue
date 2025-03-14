@@ -5,6 +5,7 @@
 <script lang="ts" setup>
 import Highcharts, { type HTMLDOMElement } from 'highcharts/highmaps';
 import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
+import { LEADERBOARD_RANK_MEDALS } from '~/constants/leaderboards';
 
 const mapEl = ref<HTMLElement>();
 
@@ -68,16 +69,11 @@ onMounted(async () => {
         const leaderboard = getRankedLeaderboard(
           unref(seriesData)[this.index].leaderboard,
         );
-        const medals = {
-          1: '🥇',
-          2: '🥈',
-          3: '🥉',
-        } as Record<number, string>;
         const leadersTooltip = leaderboard
           .map(
             (entry) =>
               `<tr>
-                  <td>${medals[entry.rank] ?? `#${entry.rank}:`}</td>
+                  <td>${LEADERBOARD_RANK_MEDALS[entry.rank] ?? `#${entry.rank}:`}</td>
                   <td class="px-1"><b>${entry.nnid}</b></td>
                   <td class="px-1">${entry.total} level${entry.total !== 1 ? 's' : ''}</td>
                 </tr>`,
