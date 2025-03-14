@@ -1,7 +1,8 @@
 <template>
   <img
     v-tooltip.hover="countryName"
-    :class="['inline', 'border', 'border-black/25', 'h-[19px]', 'align-middle']"
+    :class="['inline', 'border', 'border-black/25', 'align-middle']"
+    :style="`height: ${size}px`"
     :src="`https://flagcdn.com/h20/${countryCode.toLowerCase()}.png`"
     :srcset="`
       https://flagcdn.com/h40/${countryCode.toLowerCase()}.png 2x,
@@ -16,6 +17,10 @@ const props = defineProps({
   countryCode: {
     type: String,
     required: true,
+  },
+  size: {
+    type: Number,
+    default: 20,
   },
 });
 
