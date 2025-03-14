@@ -348,7 +348,7 @@ async function uploadPlayerStats(clearedLevels) {
 
   const playerList = _.mapValues(byPlayer, (levels, name) => ({
     clearedTotal: levels.length,
-    countryCode: levels[0]?.countryCode,
+    countryCode: levels[0]?.firstClearerCountryCode,
     legacyClears: levels?.filter(isLegacy).length,
   }));
 
