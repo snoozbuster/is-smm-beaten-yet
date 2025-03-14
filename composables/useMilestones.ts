@@ -14,7 +14,7 @@ export function useMilestones() {
   );
 
   const yearMilestones = useKeyBy(
-    useUniqBy(majorMilestones.toReversed(), 'year'),
+    useUniqBy([...majorMilestones].reverse(), 'year'),
     'year',
   );
 
