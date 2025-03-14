@@ -2,20 +2,8 @@
   <div class="bg-course-world min-h-dvh h-0">
     <PrimeToast position="bottom-center" />
     <div class="h-full max-w-[1800px] mt-auto mx-auto flex flex-col p-5">
-      <h1 class="text-4xl text-course-world-contrast mb-6">
-        <CountryFlag
-          v-if="player?.countryCode"
-          :country-code="player.countryCode"
-        />
-        {{ nnid }}
-        <div v-if="player?.awards?.length" class="ml-2 inline-flex gap-2">
-          <PlayerAward
-            v-for="award in player.awards"
-            :key="award.name"
-            :award="award"
-            :size="24"
-          />
-        </div>
+      <h1 class="text-4xl text-course-world-contrast mb-6 flex items-center">
+        <PlayerNnid :nnid="nnid" :player="player" :size="24" />
       </h1>
 
       <div class="grid grid-cols-3 h-[400px] gap-5 mb-5">
