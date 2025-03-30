@@ -30,19 +30,6 @@
       :visible="scrolled"
       @ready="promptScroll"
     />
-    <div
-      class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh bg-course-world text-course-world-contrast"
-    >
-      <div
-        class="grid p-7 grid-flow-row grid-rows-1 md:grid-rows-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full h-full gap-7 overflow-hidden"
-      >
-        <ClientOnly>
-          <StatSection card class="col-span-2">
-            <CountryMap />
-          </StatSection>
-        </ClientOnly>
-      </div>
-    </div>
   </main>
 </template>
 
