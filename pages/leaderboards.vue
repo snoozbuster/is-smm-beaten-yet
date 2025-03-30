@@ -6,14 +6,16 @@
       </h1>
 
       <LeaderboardPodium
-        class="mx-auto mb-5"
+        class="mx-auto w-fit mb-5"
         :title="getLeaderboardName('total')"
         :leaderboards="[
           { name: getLeaderboardName('total'), rankings: overallLeaderboard },
         ]"
       />
 
-      <div class="flex mb-3 justify-evenly flex-wrap md:flex-nowrap gap-5">
+      <div
+        class="grid mb-3 place-content-center items-center md:grid-flow-col gap-5"
+      >
         <LeaderboardPodium title="Style" :leaderboards="styleLeaderboard">
           <template #option-icon="{ option }">
             <StyleIcon class="mr-2" :style="option" />
