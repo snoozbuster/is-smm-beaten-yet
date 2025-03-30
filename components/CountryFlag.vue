@@ -2,11 +2,11 @@
   <img
     v-tooltip.hover="countryName"
     :class="['inline', 'border', 'border-black/25', 'align-middle']"
-    :style="`height: ${size}px`"
-    :src="`https://flagcdn.com/h20/${countryCode.toLowerCase()}.png`"
+    :style="`width: ${size}px`"
+    :src="`https://flagcdn.com/w20/${countryCode.toLowerCase()}.png`"
     :srcset="`
-      https://flagcdn.com/h40/${countryCode.toLowerCase()}.png 2x,
-      https://flagcdn.com/h60/${countryCode.toLowerCase()}.png 3x
+      https://flagcdn.com/w40/${countryCode.toLowerCase()}.png 2x,
+      https://flagcdn.com/w60/${countryCode.toLowerCase()}.png 3x
     `"
     :alt="countryName"
   />

@@ -2,7 +2,7 @@
   <CountryFlag
     v-if="player?.countryCode"
     :country-code="player.countryCode"
-    :size="size - 4"
+    :size="size + 4"
   />
   <BaseNnid
     :class="[player?.countryCode && 'ml-2', player?.awards?.length && 'mr-2']"
