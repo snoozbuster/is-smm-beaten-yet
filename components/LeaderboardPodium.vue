@@ -30,7 +30,7 @@
         </PrimeDropdown>
       </div>
     </h3>
-    <div class="flex flex-row-reverse flex-wrap justify-center mb-8 gap-4">
+    <div class="flex flex-row-reverse flex-wrap justify-center mb-8">
       <svg
         width="200"
         height="150"
@@ -109,7 +109,7 @@
           {{ formatNumber(third?.score) }}
         </text>
       </svg>
-      <div class="text-left self-center">
+      <div class="text-left self-center mt-4">
         <div
           v-for="i in 3"
           :key="leaderboard[i - 1]?.nnid"
