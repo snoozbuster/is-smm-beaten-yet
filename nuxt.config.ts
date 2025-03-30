@@ -118,6 +118,8 @@ export default defineNuxtConfig({
           'course-world-contrast': '#91f2e1',
           'course-world-card': '#fdffbe',
           'course-world-card-contrast': '#7f8143',
+          'makers-purple': 'rgb(108, 67, 161)',
+          '100-mario-red': 'rgb(145, 39, 53)',
         },
       },
     },
