@@ -257,6 +257,8 @@ import {
   PrimeMultiSelect,
   PrimeTriStateCheckbox,
 } from '#components';
+import StyleIcon from './StyleIcon.vue';
+import ThemeIcon from './ThemeIcon.vue';
 
 const props = defineProps({
   levels: {
@@ -719,8 +721,6 @@ function selectRandomLevel() {
 
 // #region column rendering
 
-const { themeImages, styleImages } = useLevelAssets();
-
 type DataTableLevel = ClearedLevel &
   ({ translated: true; originalTitle: string } | { translated: false }) & {
     hasSubworld: boolean;
@@ -1009,12 +1009,7 @@ const COLUMN_MAP: Record<
     body: (props: { data: DataTableLevel }) => (
       <Fragment>
         {props.data.style ? (
-          <img
-            class="inline mr-2"
-            src={styleImages[props.data.style.toLowerCase()]}
-            width="16"
-            height="16"
-          />
+          <StyleIcon class="mr-2" style={props.data.style} />
         ) : undefined}
         {props.data.style}
       </Fragment>
@@ -1035,12 +1030,7 @@ const COLUMN_MAP: Record<
       >
         {{
           option: makeMultiselectOption('name', ({ option }) => (
-            <img
-              class="inline mr-2"
-              src={styleImages[props.data.style.toLowerCase()]}
-              width="16"
-              height="16"
-            />
+            <StyleIcon class="mr-2" style={props.data.style} />
           )),
         }}
       </PrimeMultiSelect>
@@ -1053,12 +1043,7 @@ const COLUMN_MAP: Record<
     body: (props: { data: DataTableLevel }) => (
       <Fragment>
         {props.data.theme ? (
-          <img
-            class="inline mr-2"
-            src={themeImages[props.data.theme.toLowerCase().replace(' ', '_')]}
-            width="20"
-            height="20"
-          />
+          <ThemeIcon class="mr-2" theme={props.data.theme} />
         ) : undefined}
         {props.data.theme}
       </Fragment>
@@ -1079,14 +1064,7 @@ const COLUMN_MAP: Record<
       >
         {{
           option: makeMultiselectOption('value', ({ option }) => (
-            <img
-              class="inline mr-2"
-              src={
-                themeImages[props.data.theme.toLowerCase().replace(' ', '_')]
-              }
-              width="20"
-              height="20"
-            />
+            <ThemeIcon class="mr-2" theme={props.data.theme} />
           )),
         }}
       </PrimeMultiSelect>
