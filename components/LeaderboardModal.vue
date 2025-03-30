@@ -1,7 +1,7 @@
 <template>
   <PrimeDialog
     class="w-screen lg:w-3/4"
-    :header="name"
+    :header="`Clear rankings: ${name}`"
     :draggable="false"
     modal
     maximizable

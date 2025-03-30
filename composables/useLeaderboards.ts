@@ -1,4 +1,5 @@
 import type { NuxtError } from '#app';
+import { DateTime } from 'luxon';
 import { LEADERBOARDS_ROOT_URL } from '~/constants/levelData';
 import {
   type AllLeaderboards,
@@ -111,8 +112,9 @@ export function useLeaderboardNames() {
   ): string => {
     switch (leaderboardName) {
       case 'year':
+        return `Uploaded in ${DateTime.fromISO(grouping as string).toLocaleString({ year: 'numeric' })}`;
       case 'month': {
-        return `Uploaded in ${formatDate(grouping as string)}`;
+        return `Uploaded in ${DateTime.fromISO(grouping as string).toLocaleString({ year: 'numeric', month: 'long' })}`;
       }
       case 'country': {
         return formatCountryName(grouping as string);
