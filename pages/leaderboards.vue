@@ -13,15 +13,21 @@
         ]"
       />
 
-      <div
-        class="grid mb-3 place-content-center items-center md:grid-flow-col gap-5"
-      >
-        <LeaderboardPodium title="Style" :leaderboards="styleLeaderboard">
+      <div class="flex mb-3 justify-evenly flex-wrap md:flex-nowrap gap-5">
+        <LeaderboardPodium
+          class="w-[535px]"
+          title="Style"
+          :leaderboards="styleLeaderboard"
+        >
           <template #option-icon="{ option }">
             <StyleIcon class="mr-2" :style="option" />
           </template>
         </LeaderboardPodium>
-        <LeaderboardPodium title="Theme" :leaderboards="themeLeaderboard">
+        <LeaderboardPodium
+          class="w-[535px]"
+          title="Theme"
+          :leaderboards="themeLeaderboard"
+        >
           <template #option-icon="{ option }">
             <ThemeIcon class="mr-2" :theme="option" />
           </template>
