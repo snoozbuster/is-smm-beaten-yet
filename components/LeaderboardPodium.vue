@@ -1,11 +1,41 @@
 <template>
-  <CourseWorldCard class="w-fit" :grid="false">
-    <h3 class="text-xl">{{ name }}</h3>
+  <CourseWorldCard class="w-fit px-6" :grid="false">
+    <h3 class="text-xl font-semibold flex justify-center items-center">
+      <span class="mx-auto">{{ title }}</span>
+      <div
+        v-if="leaderboards.length > 1"
+        :class="['min-w-[170px]', 'text-right']"
+      >
+        <PrimeDropdown
+          :model-value="leaderboards[selectedLeaderboardIndex]?.name"
+          option-label="label"
+          option-value="label"
+          :options="tabs"
+          :pt="{ input: { class: 'py-0 pr-0' }, item: { class: 'p-2' } }"
+          @update:model-value="
+            (name) =>
+              (selectedLeaderboardIndex = props.leaderboards.findIndex(
+                (l) => l.name === name,
+              ))
+          "
+        >
+          <template #value="{ value }">
+            <slot v-if="value" name="option-icon" :option="value" />
+            <span class="align-middle">{{ value }}</span>
+          </template>
+          <template #option="{ option }">
+            <slot v-if="option" name="option-icon" :option="option.label" />
+            <span class="align-middle">{{ option.label }}</span>
+          </template>
+        </PrimeDropdown>
+      </div>
+    </h3>
     <div class="flex flex-row-reverse flex-wrap justify-center mb-8 gap-4">
       <svg
         width="200"
         height="150"
         viewBox="0 0 200 150"
+        preserve-aspect-ratio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
       >
         <text
@@ -79,7 +109,7 @@
           {{ formatNumber(third?.score) }}
         </text>
       </svg>
-      <div class="text-left self-center sm:mb-0">
+      <div class="text-left self-center">
         <div
           v-for="i in 3"
           :key="leaderboard[i - 1]?.nnid"
@@ -99,7 +129,7 @@
 
       <LeaderboardModal
         v-if="viewing"
-        :name="name"
+        :name="leaderboards[selectedLeaderboardIndex].name"
         :leaderboard="leaderboard"
         @close="viewing = false"
       />
@@ -112,19 +142,33 @@ import type { PropType } from 'vue';
 import { LEADERBOARD_RANK_MEDALS } from '~/constants/leaderboards';
 
 const props = defineProps({
-  name: {
+  title: {
     type: String,
     required: true,
   },
-  leaderboard: {
-    type: Array as PropType<RankedLeaderboard<boolean>>,
+  leaderboards: {
+    type: Array as PropType<
+      { name: string; rankings: RankedLeaderboard<boolean> }[]
+    >,
     default: () => [],
   },
 });
 
-const first = computed(() => props.leaderboard[0]);
-const second = computed(() => props.leaderboard[1]);
-const third = computed(() => props.leaderboard[2]);
+const selectedLeaderboardIndex = ref(0);
+const leaderboard = computed(
+  () => props.leaderboards[unref(selectedLeaderboardIndex)]?.rankings ?? [],
+);
+
+const tabs = computed(() =>
+  props.leaderboards.map(({ name }, index) => ({
+    label: name,
+    command: () => (selectedLeaderboardIndex.value = index),
+  })),
+);
+
+const first = computed(() => unref(leaderboard)[0]);
+const second = computed(() => unref(leaderboard)[1]);
+const third = computed(() => unref(leaderboard)[2]);
 
 const viewing = ref(false);
 

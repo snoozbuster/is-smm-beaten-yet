@@ -6,10 +6,25 @@
       </h1>
 
       <LeaderboardPodium
-        class="mx-auto mb-3"
-        :name="getLeaderboardName('total')"
-        :leaderboard="overallLeaderboard"
+        class="mx-auto mb-5"
+        :title="getLeaderboardName('total')"
+        :leaderboards="[
+          { name: getLeaderboardName('total'), rankings: overallLeaderboard },
+        ]"
       />
+
+      <div class="flex mb-3 justify-evenly flex-wrap md:flex-nowrap gap-5">
+        <LeaderboardPodium title="Style" :leaderboards="styleLeaderboard">
+          <template #option-icon="{ option }">
+            <StyleIcon class="mr-2" :style="option" />
+          </template>
+        </LeaderboardPodium>
+        <LeaderboardPodium title="Theme" :leaderboards="themeLeaderboard">
+          <template #option-icon="{ option }">
+            <ThemeIcon class="mr-2" :theme="option" />
+          </template>
+        </LeaderboardPodium>
+      </div>
 
       <h3 id="country" class="text-2xl text-smm">Country</h3>
       <ClientOnly>
@@ -61,25 +76,30 @@ const overallLeaderboard = computed(() =>
   getRankedLeaderboard(unref(leaderboards)?.clearCounts.total),
 );
 
+const STYLE_ORDER = ['SMB1', 'SMB3', 'SMW', 'NSMBU'] as const;
+
 const styleLeaderboard = computed(() =>
-  useMapValues(
-    unref(leaderboards)?.clearCounts.style,
-    (leaderboard, style) => ({
-      style,
-      name: getLeaderboardName('style', style),
-      rankings: getRankedLeaderboard(leaderboard),
-    }),
-  ),
+  useMap(STYLE_ORDER, (style) => ({
+    style,
+    name: getLeaderboardName('style', style),
+    rankings: getRankedLeaderboard(
+      unref(leaderboards)?.clearCounts.style[style],
+    ),
+  })),
 );
 
 const themeLeaderboard = computed(() =>
-  useMapValues(
-    unref(leaderboards)?.clearCounts.theme,
-    (leaderboard, theme) => ({
-      theme,
-      name: getLeaderboardName('theme', theme),
-      rankings: getRankedLeaderboard(leaderboard),
-    }),
+  useOrderBy(
+    useMapValues(
+      unref(leaderboards)?.clearCounts.theme,
+      (leaderboard, theme) => ({
+        theme,
+        name: getLeaderboardName('theme', theme),
+        rankings: getRankedLeaderboard(leaderboard),
+      }),
+    ),
+    ({ name }) => (name === 'Ground' ? 0 : 1),
+    'asc',
   ),
 );
 
