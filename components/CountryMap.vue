@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import Highcharts, { type HTMLDOMElement } from 'highcharts/highmaps';
-import { CHART_MAIN_COLOR, COURSE_WORLD_CARD_TEXT } from '~/constants/colors';
+import { COURSE_WORLD_CARD_TEXT, HUNDRED_MARIO_RED } from '~/constants/colors';
 import { LEADERBOARD_RANK_MEDALS } from '~/constants/leaderboards';
 
 const mapEl = ref<HTMLElement>();
@@ -53,7 +53,7 @@ onMounted(async () => {
       type: 'logarithmic',
       min: 1,
       max: 50000,
-      maxColor: CHART_MAIN_COLOR,
+      maxColor: HUNDRED_MARIO_RED,
       endOnTick: false,
       gridLineWidth: 2,
       gridLineColor: 'white',
