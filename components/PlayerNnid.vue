@@ -8,7 +8,10 @@
     :class="[player?.countryCode && 'ml-2', player?.awards?.length && 'mr-2']"
     :nnid="nnid"
   />
-  <div v-if="player?.awards?.length" class="inline-flex gap-2 align-bottom">
+  <div
+    v-if="player?.awards?.length && awards"
+    class="inline-flex gap-2 align-bottom"
+  >
     <PlayerAward
       v-for="award in player.awards"
       :key="award.name"
@@ -27,6 +30,10 @@ const props = defineProps({
   size: {
     type: Number,
     default: 24,
+  },
+  awards: {
+    type: Boolean,
+    default: true,
   },
 });
 
