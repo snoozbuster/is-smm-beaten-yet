@@ -5,7 +5,10 @@
     :size="size + 4"
   />
   <BaseNnid
-    :class="[player?.countryCode && 'ml-2', player?.awards?.length && 'mr-2']"
+    :class="[
+      player?.countryCode && 'ml-2',
+      player?.awards?.length && awards && 'mr-2',
+    ]"
     :nnid="nnid"
   />
   <div

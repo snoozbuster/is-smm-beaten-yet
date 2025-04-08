@@ -34,16 +34,26 @@
             </h2>
             <span class="text-balance">
               Achieved by
-              <span class="font-semibold">
-                {{ clearSummary.mostRecentClear?.firstClearerNnid }}
-              </span>
+              <div
+                class="font-semibold inline-flex items-center align-middle mx-1"
+              >
+                <PlayerNnid
+                  :nnid="clearSummary.mostRecentClear?.firstClearerNnid"
+                  :size="16"
+                  :awards="false"
+                />
+              </div>
               with
               {{ timeToShutdown }} remaining before the server shutdown.
               Congratulations!
             </span>
             <div class="mt-5 text-balance">
               Additionally,
-              <NuxtLink to="/players/Sanyx91"><b>Sanyx91SMM2</b></NuxtLink>
+              <div
+                class="font-semibold inline-flex items-center align-middle mx-1"
+              >
+                <PlayerNnid nnid="Sanyx91" :size="16" :awards="false" />
+              </div>
               has
               <a
                 class="text-blue-800 hover:underline"
@@ -51,8 +61,16 @@
                 target="_blank"
                 >cleared Trimming the Herbs</a
               >
-              and achieved 101% completion for the team!
+              and achieved
+              <button
+                class="font-semibold hover:underline"
+                @click="modalOpen = true"
+              >
+                101%
+              </button>
+              completion for the team!
             </div>
+            <TthHistoryModal v-model:visible="modalOpen" />
           </div>
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
@@ -134,6 +152,8 @@ const animationStarted = ref(false);
 const ready = ref(false);
 
 const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
+
+const modalOpen = ref(false);
 
 const timeToShutdown = computed(() =>
   DateTime.fromISO(SHUTDOWN_DATE)
