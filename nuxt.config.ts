@@ -59,6 +59,8 @@ export default defineNuxtConfig({
     components: {
       prefix: 'Prime',
       include: [
+        'InputGroup',
+        'InputGroupAddon',
         'TabMenu',
         'InputText',
         'VirtualScroller',
