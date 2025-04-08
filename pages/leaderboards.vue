@@ -1,6 +1,6 @@
 <template>
   <div class="bg-black min-h-dvh text-smm-yellow pt-5 pb-10">
-    <div class="md:container mx-auto px-5">
+    <div class="mx-auto max-w-screen-lg px-5">
       <h1 class="text-4xl text-center mb-5 font-medium uppercase text-smm">
         Hall of Fame
       </h1>
@@ -13,7 +13,7 @@
         ]"
       />
 
-      <div class="flex mb-3 justify-evenly flex-wrap md:flex-nowrap gap-5">
+      <div class="flex mb-3 justify-evenly flex-wrap md:flex-nowrap gap-3">
         <LeaderboardPodium
           class="w-[535px]"
           title="Style"

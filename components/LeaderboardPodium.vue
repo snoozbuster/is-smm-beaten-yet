@@ -30,7 +30,9 @@
         </PrimeDropdown>
       </div>
     </h3>
-    <div class="flex flex-row-reverse flex-wrap justify-center mb-8">
+    <div
+      class="flex flex-row-reverse flex-wrap lg:flex-nowrap justify-center mb-8"
+    >
       <svg
         width="200"
         height="150"
@@ -118,7 +120,7 @@
           <span class="text-xl mr-1">
             {{ LEADERBOARD_RANK_MEDALS[i] }}
           </span>
-          <PlayerNnid :nnid="leaderboard[i - 1]?.nnid" :size="20" />
+          <PlayerNnid :nnid="leaderboard[i - 1]?.nnid" :size="22" />
         </div>
       </div>
     </div>

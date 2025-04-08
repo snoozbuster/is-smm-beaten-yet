@@ -10,7 +10,7 @@
   />
   <div
     v-if="player?.awards?.length && awards"
-    class="inline-flex gap-2 align-bottom"
+    class="inline-flex gap-2 align-bottom shrink-0"
   >
     <PlayerAward
       v-for="award in player.awards"

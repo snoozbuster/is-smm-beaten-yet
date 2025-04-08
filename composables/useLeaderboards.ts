@@ -23,8 +23,6 @@ export function useAllLeaderboards() {
     {
       deep: false,
       immediate: true,
-      server: false,
-      lazy: true,
     },
   );
 
