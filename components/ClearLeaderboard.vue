@@ -1,5 +1,5 @@
 <template>
-  <h3 class="text-xl mb-3">Most clears leaderboard</h3>
+  <h3 class="text-xl mb-3">Most clears</h3>
   <label class="ml-auto">
     Include legacy clears
     <PrimeCheckbox v-model="includeLegacy" class="align-text-bottom" binary />
@@ -7,7 +7,9 @@
   <ChartContainer>
     <Bar :data="data" :options="options" />
   </ChartContainer>
-  <span class="text-sm"> Full leaderboards coming soon! </span>
+  <NuxtLink class="hover:underline block mt-2" to="/leaderboards">
+    View all leaderboards <Icon name="mdi:chevron-right" />
+  </NuxtLink>
 </template>
 
 <script lang="ts" setup>
@@ -35,13 +37,13 @@ const props = defineProps({
 });
 
 const { formatNumber } = useFormatters();
-const includeLegacy = ref(false);
+const includeLegacy = ref(true);
 
 const leaderboard = computed(() =>
   useOrderBy(
     useToPairs(props.clearsByPerson),
     ([user, clears]) =>
-      clears + (includeLegacy.value ? props.legacyClears[user] ?? 0 : 0),
+      clears + (includeLegacy.value ? (props.legacyClears[user] ?? 0) : 0),
     'desc',
   ).slice(0, 10),
 );
