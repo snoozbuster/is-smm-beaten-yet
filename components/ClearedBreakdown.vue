@@ -3,7 +3,12 @@
   <PrimeTabMenu
     class="mb-3 -mx-2 md:mx-0"
     :model="tabs"
-    :pt="{ action: { class: 'uppercase px-3 py-3' } }"
+    :pt="{
+      action: {
+        class:
+          'uppercase xl:p-3 lg:p-1.5 p-3 xl:text-base xl:line-height-1 lg:text-sm',
+      },
+    }"
   />
   <ClearedByDate
     v-if="tab === 'year' || tab === 'month'"

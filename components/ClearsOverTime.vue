@@ -8,7 +8,16 @@
       <span class="pi pi-question-circle"></span>
     </button>
   </h3>
-  <PrimeTabMenu class="mb-3" :model="tabs" />
+  <PrimeTabMenu
+    class="mb-3"
+    :model="tabs"
+    :pt="{
+      action: {
+        class:
+          'uppercase xl:p-3 lg:p-1.5 p-3 xl:text-base xl:line-height-1 lg:text-sm',
+      },
+    }"
+  />
   <ChartContainer>
     <Line :data="data" :options="options" />
   </ChartContainer>
@@ -229,7 +238,7 @@ const data = computed(() => {
     label: 'Clears',
     data: days.map((d) => ({
       x: d,
-      y: datapoints[d],
+      y: datapoints[d] ?? 0,
     })),
     yAxisID: 'yClears',
   };
