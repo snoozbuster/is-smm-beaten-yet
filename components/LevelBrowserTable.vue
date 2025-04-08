@@ -56,8 +56,10 @@
           size="small"
           @click="resetFilters()"
         />
-        <span class="p-input-icon-left">
-          <i class="pi pi-search ml-2" />
+        <PrimeInputGroup class="w-fit">
+          <PrimeInputGroupAddon class="p-2">
+            <i class="pi pi-search" />
+          </PrimeInputGroupAddon>
           <PrimeInputText
             v-model="filters['global'].value"
             v-tooltip.bottom="
@@ -66,7 +68,7 @@
             placeholder="Find any level..."
             size="small"
           />
-        </span>
+        </PrimeInputGroup>
         <PrimeButton
           type="button"
           icon="pi pi-question"
@@ -268,8 +270,8 @@ const props = defineProps({
 });
 
 const keyHack = ref(0);
-const sortField = ref('uploadDate');
-const sortOrder = ref(1);
+const sortField = ref('dateCleared');
+const sortOrder = ref(-1);
 const currentTableView = ref<ClearedLevel[]>([]);
 
 watch(
@@ -410,7 +412,12 @@ const preparedLevels = computed(() => {
       ...level,
       hasSubworld: Boolean(level.subworld),
       subWorldLength: level.subworld?.worldLength,
-      filterDate: new Date(
+      clearDateFilter: new Date(
+        DateTime.fromISO(level.dateCleared)
+          .setZone(localZone, { keepLocalTime: true })
+          .toString(),
+      ),
+      uploadDateFilter: new Date(
         DateTime.fromISO(level.uploadDate)
           .setZone(localZone, { keepLocalTime: true })
           .toString(),
@@ -568,7 +575,8 @@ function resetFilters() {
   filters.value = {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     title: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    filterDate: { value: null, matchMode: FilterMatchMode.DATE_IS },
+    uploadDateFilter: { value: null, matchMode: FilterMatchMode.DATE_IS },
+    clearDateFilter: { value: null, matchMode: FilterMatchMode.DATE_IS },
     stars: { value: null, matchMode: FilterMatchMode.EQUALS },
     players: { value: null, matchMode: FilterMatchMode.EQUALS },
     attempts: { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -836,9 +844,71 @@ const COLUMN_MAP: Record<
       />
     ),
   },
+  dateCleared: {
+    columnProps: {
+      filterField: 'clearDateFilter',
+      class: 'text-nowrap',
+      filterMatchModeOptions: [
+        ...config.filterMatchModeOptions.date.map((key: string) => {
+          return {
+            // @ts-expect-error
+            label: config.locale[key],
+            value: key,
+          };
+        }),
+        { label: 'By year', value: 'year' },
+        { label: 'By month', value: 'month' },
+      ],
+      dataType: 'date',
+      style: 'min-width: 200px',
+    },
+    body: (props: { data: DataTableLevel }) =>
+      props.data.dateCleared ? formatDate(props.data.dateCleared) : '',
+    filter: (props) => {
+      const dateFormat =
+        props.filterModel.matchMode === 'year'
+          ? 'yy'
+          : props.filterModel.matchMode === 'month'
+            ? 'mm/yy'
+            : 'mm/dd/yy';
+      return (
+        <PrimeCalendar
+          key={props.filterModel.matchMode}
+          v-model={props.filterModel.value}
+          class="p-column-filter min-w-24"
+          view={
+            props.filterModel.matchMode === 'year'
+              ? 'year'
+              : props.filterModel.matchMode === 'month'
+                ? 'month'
+                : 'date'
+          }
+          date-format={dateFormat}
+          placeholder={dateFormat}
+          min-date={new Date('2016-06-01')}
+          max-date={new Date('2021-04-01')}
+          onDate-select={props.filterCallback}
+        >
+          {{
+            date: ({ date }) =>
+              date.selectable &&
+              !unref(datesWithLevels).has(
+                `${date.year}-${(date.month + 1)
+                  .toString()
+                  .padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`,
+              ) ? (
+                <strong class="line-through bg-green">{date.day}</strong>
+              ) : (
+                date.day
+              ),
+          }}
+        </PrimeCalendar>
+      );
+    },
+  },
   uploadDate: {
     columnProps: {
-      filterField: 'filterDate',
+      filterField: 'uploadDateFilter',
       class: 'text-nowrap',
       filterMatchModeOptions: [
         ...config.filterMatchModeOptions.date.map((key: string) => {

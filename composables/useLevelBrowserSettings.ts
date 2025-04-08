@@ -3,6 +3,7 @@ import type { ClearedLevel } from '~/types/levels';
 
 export const LEVEL_BROWSER_COLUMNS = {
   title: 'Level name',
+  dateCleared: 'Clear date',
   uploadDate: 'Upload date',
   stars: 'Stars',
   players: 'Players',
@@ -21,6 +22,7 @@ export const LEVEL_BROWSER_COLUMNS = {
 
 export const DEFAULT_COLUMN_ORDER = [
   'title',
+  'dateCleared',
   'uploadDate',
   'stars',
   'players',

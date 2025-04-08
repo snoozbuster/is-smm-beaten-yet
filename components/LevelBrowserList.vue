@@ -8,12 +8,14 @@
     </span>
 
     <div
-      class="bg-course-world-card text-course-world-card-contrast rounded-lg h-full border shadow-xl"
+      class="bg-course-world-card text-course-world-card-contrast rounded-lg h-full min-h-0 border shadow-xl flex flex-col"
     >
       <div v-if="!levels.length" class="p-3">Loading levels...</div>
       <div v-else>
-        <span class="p-input-icon-left w-full p-2">
-          <i class="pi pi-search" />
+        <PrimeInputGroup class="w-full p-2">
+          <PrimeInputGroupAddon class="p-2">
+            <i class="pi pi-search" />
+          </PrimeInputGroupAddon>
           <PrimeInputText
             v-model="globalFilter"
             placeholder="Search by level ID, title, creator, and more"
@@ -24,7 +26,7 @@
               },
             }"
           />
-        </span>
+        </PrimeInputGroup>
       </div>
       <PrimeVirtualScroller :items="filteredLevels" :item-size="125">
         <template #item="{ item: data }">

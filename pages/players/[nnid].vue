@@ -1,14 +1,14 @@
 <template>
-  <div class="bg-course-world min-h-dvh h-0">
+  <div class="bg-course-world min-h-dvh lg:h-0">
     <PrimeToast position="bottom-center" />
     <div class="h-full max-w-[1800px] mt-auto mx-auto flex flex-col p-5">
       <h1 class="text-4xl text-course-world-contrast mb-6 flex items-center">
         <PlayerNnid :nnid="nnid" :player="player" :size="24" />
       </h1>
 
-      <div class="grid grid-cols-3 h-[400px] gap-5 mb-5">
+      <div class="grid lg:grid-cols-3 lg:h-[400px] gap-5 mb-5">
         <template v-if="player && !pending">
-          <StatSection card>
+          <StatSection card class="min-h-[350px]">
             <ClearsOverTime
               :clears-by-date="player.stats.clearsByDate ?? {}"
               all-time
@@ -17,15 +17,21 @@
           <StatSection card>
             <ClearedBreakdown :cleared="player.levels" />
           </StatSection>
-          <StatSection card class="overflow-auto">
-            <PlayerAchievements :nnid="nnid" />
+          <StatSection card class="max-h-[400px]">
+            <h3 class="text-xl mb-3">Leaderboard placements</h3>
+            <div class="overflow-auto">
+              <PlayerAchievements :nnid="nnid" />
+            </div>
           </StatSection>
         </template>
         <template v-else>
           <!-- skeletons-->
         </template>
       </div>
-      <ResponsiveLevelList :levels="player?.levels" />
+      <ResponsiveLevelList
+        :levels="player?.levels"
+        class="h-[50dvh] lg:h-full"
+      />
     </div>
   </div>
 </template>
