@@ -8,6 +8,10 @@
         Hall of Fame
       </h1>
 
+      <PlayerSearch
+        class="md:w-fit md:absolute md:mr-3 right-0 top-0 mb-3 mx-auto"
+      />
+
       <LeaderboardPodium
         class="mx-auto w-fit mb-5"
         :title="getLeaderboardName('total')"
