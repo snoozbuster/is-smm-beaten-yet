@@ -2,9 +2,13 @@
   <div class="bg-course-world min-h-dvh lg:h-0">
     <PrimeToast position="bottom-center" />
     <div class="h-full max-w-[1800px] mt-auto mx-auto flex flex-col p-5">
-      <h1 class="text-4xl text-course-world-contrast mb-6 flex items-center">
-        <PlayerNnid :nnid="nnid" :player="player" :size="24" />
-      </h1>
+      <div class="flex items-center mb-6">
+        <h1 class="text-4xl text-course-world-contrast flex items-center">
+          <PlayerNnid :nnid="nnid" :player="player" :size="24" />
+        </h1>
+
+        <PlayerSearch class="ml-auto w-fit" />
+      </div>
 
       <div class="grid lg:grid-cols-3 lg:h-[400px] gap-5 mb-5">
         <template v-if="player && !pending">
