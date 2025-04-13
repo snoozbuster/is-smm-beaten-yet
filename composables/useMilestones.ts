@@ -23,8 +23,13 @@ export function useMilestones() {
     (milestone) => `${milestone.year}-${milestone.month}`,
   );
 
+  const autoscrollMilestone = useFind(milestones.majorMilestones, {
+    name: 'Autoscroll',
+  });
+
   return {
     yearMilestones,
     monthMilestones,
+    autoscrollMilestone,
   };
 }

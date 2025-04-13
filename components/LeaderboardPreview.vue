@@ -44,7 +44,7 @@
               >
             </div>
           </div>
-          <div class="-mt-2">
+          <div :class="milestone && '-mt-2'">
             <div class="flex items-center mb-1">
               <span class="text-3xl leading-none">{{
                 LEADERBOARD_RANK_MEDALS[leaderboard[1]?.rank]

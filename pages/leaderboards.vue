@@ -41,39 +41,124 @@
         </StatSection>
       </ClientOnly>
 
-      <h3 id="year" class="text-2xl text-smm">Year</h3>
-      <LeaderboardPreview
-        v-for="leaderboard of yearLeaderboards"
+      <PrimeTabMenu
         class="mb-3"
-        :milestone="leaderboard.milestone"
-        :leaderboard="leaderboard.rankings"
-        :key="leaderboard.year"
-        :name="leaderboard.name"
-      >
-        <template #icon>
-          <LeaderboardCalendarIcon :year="leaderboard.year" />
-        </template>
-      </LeaderboardPreview>
+        :model="tabs"
+        :pt="{
+          action: {
+            class: 'text-2xl text-smm text-smm-yellow',
+          },
+          menuitem: {
+            class: 'highlight-yellow',
+          },
+          inkbar: {
+            class: 'bg-smm-yellow',
+          },
+        }"
+      />
+      <template v-if="activeLeaderboardTab === 'year'">
+        <LeaderboardPreview
+          v-for="leaderboard of yearLeaderboards"
+          class="mb-3"
+          :milestone="leaderboard.milestone"
+          :leaderboard="leaderboard.rankings"
+          :key="leaderboard.year"
+          :name="leaderboard.name"
+        >
+          <template #icon>
+            <LeaderboardCalendarIcon :year="leaderboard.year" />
+          </template>
+        </LeaderboardPreview>
+      </template>
 
-      <h3 id="month" class="text-2xl text-smm">Month</h3>
-      <LeaderboardPreview
-        v-for="leaderboard of monthLeaderboards"
-        class="mb-5"
-        :milestone="leaderboard.milestone"
-        :leaderboard="leaderboard.rankings"
-        :key="leaderboard.key"
-        :name="leaderboard.name"
-      >
-        <template #icon>
-          <LeaderboardCalendarIcon
-            :year="leaderboard.year"
-            :month="leaderboard.month"
-          />
-        </template>
-      </LeaderboardPreview>
+      <template v-else-if="activeLeaderboardTab === 'month'">
+        <LeaderboardPreview
+          v-for="leaderboard of monthLeaderboards"
+          class="mb-5"
+          :milestone="leaderboard.milestone"
+          :leaderboard="leaderboard.rankings"
+          :key="leaderboard.key"
+          :name="leaderboard.name"
+        >
+          <template #icon>
+            <LeaderboardCalendarIcon
+              :year="leaderboard.year"
+              :month="leaderboard.month"
+            />
+          </template>
+        </LeaderboardPreview>
+      </template>
+      <template v-else-if="activeLeaderboardTab === 'timer'">
+        <LeaderboardPreview
+          v-for="leaderboard of timerLeaderboards"
+          class="mb-5"
+          :leaderboard="leaderboard.rankings"
+          :key="leaderboard.timer"
+          :name="leaderboard.name"
+        >
+          <template #icon>
+            <LeaderboardTimerIcon :timer="leaderboard.timer" />
+          </template>
+        </LeaderboardPreview>
+      </template>
+      <template v-else>
+        <LeaderboardPreview
+          class="mb-5"
+          :leaderboard="autoscrollLeaderboard.rankings"
+          :milestone="autoscrollLeaderboard.milestone"
+          :name="autoscrollLeaderboard.name"
+        >
+          <template #icon>
+            <div class="w-[75px]">
+              <Icon
+                class="text-5xl font-semibold"
+                name="fluent:fast-forward-20-regular"
+              />
+              <div class="text-sm">Autoscroll</div>
+            </div>
+          </template>
+        </LeaderboardPreview>
+        <LeaderboardPreview
+          class="mb-5"
+          :leaderboard="hackedClearLeaderboard.rankings"
+          :name="hackedClearLeaderboard.name"
+        >
+          <template #icon>
+            <div class="w-[75px]">
+              <Icon class="text-5xl font-semibold" name="mdi:check-all" />
+              <div class="text-sm">True clear</div>
+            </div>
+          </template>
+        </LeaderboardPreview>
+        <LeaderboardPreview
+          class="mb-5"
+          :leaderboard="legacyClearLeaderboard.rankings"
+          :name="legacyClearLeaderboard.name"
+        >
+          <template #icon>
+            <div class="w-[75px]">
+              <Icon
+                class="text-5xl font-semibold"
+                name="material-symbols:history-rounded"
+              />
+              <div class="text-sm">Legacy clears</div>
+            </div>
+          </template>
+        </LeaderboardPreview>
+      </template>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+:deep() {
+  .p-highlight.highlight-yellow {
+    .p-menuitem-link {
+      border-bottom-color: #fbcd0e;
+    }
+  }
+}
+</style>
 
 <script lang="ts" setup>
 import type { ValidLeaderboardGroups } from '~/types/leaderboards';
@@ -113,13 +198,35 @@ const themeLeaderboard = computed(() =>
 
 const getLeaderboardName = useLeaderboardNames();
 
-const { yearMilestones, monthMilestones } = useMilestones();
+const activeLeaderboardTab = ref<'year' | 'month' | 'timer' | 'other'>('year');
+const tabs = [
+  {
+    label: 'Year',
+    command: () => (activeLeaderboardTab.value = 'year'),
+  },
+  {
+    label: 'Month',
+    command: () => (activeLeaderboardTab.value = 'month'),
+  },
+  {
+    label: 'Timer',
+    command: () => (activeLeaderboardTab.value = 'timer'),
+  },
+  {
+    label: 'Other',
+    command: () => (activeLeaderboardTab.value = 'other'),
+  },
+];
+
+const { yearMilestones, monthMilestones, autoscrollMilestone } =
+  useMilestones();
 
 const yearLeaderboards = computed(() =>
   useMap(
     unref(leaderboards)?.clearCounts.year,
     (leaderboard, year: ValidLeaderboardGroups['year']) => ({
       year,
+      key: year,
       milestone: unref(yearMilestones)[year],
       name: getLeaderboardName('year', year),
       rankings: getRankedLeaderboard(leaderboard),
@@ -141,4 +248,30 @@ const monthLeaderboards = computed(() =>
     'asc',
   ),
 );
+
+const timerLeaderboards = computed(() =>
+  useMap(unref(leaderboards)?.clearCounts.timer, (leaderboard, timer) => ({
+    timer,
+    name: getLeaderboardName('timer', timer),
+    rankings: getRankedLeaderboard(leaderboard),
+  })),
+);
+
+const autoscrollLeaderboard = computed(() => ({
+  name: getLeaderboardName('autoscroll'),
+  rankings: getRankedLeaderboard(
+    unref(leaderboards)?.clearCounts.autoscroll ?? [],
+  ),
+  milestone: autoscrollMilestone,
+}));
+
+const hackedClearLeaderboard = computed(() => ({
+  name: getLeaderboardName('hacked'),
+  rankings: getRankedLeaderboard(unref(leaderboards)?.clearCounts.hacked ?? []),
+}));
+
+const legacyClearLeaderboard = computed(() => ({
+  name: getLeaderboardName('legacy'),
+  rankings: getRankedLeaderboard(unref(leaderboards)?.clearCounts.legacy ?? []),
+}));
 </script>
