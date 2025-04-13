@@ -1,6 +1,9 @@
 <template>
   <div class="bg-black min-h-dvh text-smm-yellow pt-5 pb-10">
-    <div class="mx-auto max-w-screen-lg px-5">
+    <div class="mx-auto max-w-screen-lg relative px-5">
+      <NuxtLink class="text-sm absolute mt-2 text-smm" to="/">
+        <Icon name="mdi:chevron-left" class="align-middle" /> Home
+      </NuxtLink>
       <h1 class="text-4xl text-center mb-5 font-medium uppercase text-smm">
         Hall of Fame
       </h1>
@@ -34,7 +37,7 @@
         </LeaderboardPodium>
       </div>
 
-      <h3 id="country" class="text-2xl text-smm">Country</h3>
+      <h3 id="country" class="text-2xl text-smm mb-2">Country</h3>
       <ClientOnly>
         <StatSection card class="col-span-2 mb-5 country-section">
           <CountryMap />
