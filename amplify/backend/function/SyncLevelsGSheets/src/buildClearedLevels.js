@@ -16,7 +16,7 @@ const CLEARED_TITLE_TO_KEY = {
   'Level Name': 'title',
   'First Clearer NNID': 'firstClearerNnid',
   'Date Cleared': 'dateCleared',
-  'True Clear?': 'hacked',
+  'True clear?': 'hacked',
 };
 
 function cleanList(levels, allowedProps) {
@@ -43,6 +43,7 @@ function parseLevelProperties(level) {
       : undefined,
     uploadDate: hasValue(level.uploadDate) ? level.uploadDate : undefined,
     dateCleared: level.dateCleared,
+    hacked: Boolean(level.hacked),
   };
 }
 
