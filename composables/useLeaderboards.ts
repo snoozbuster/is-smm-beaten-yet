@@ -1,6 +1,6 @@
 import type { NuxtError } from '#app';
 import { DateTime } from 'luxon';
-import { LEADERBOARDS_ROOT_URL } from '~/constants/levelData';
+import { LEADERBOARDS_ROOT_URL, LEGACY_DATE } from '~/constants/levelData';
 import {
   type AllLeaderboards,
   type ClearCountLeaderboard,
@@ -128,13 +128,13 @@ export function useLeaderboardNames() {
         return 'Overall';
       }
       case 'hacked': {
-        return 'Hacked Clears';
+        return 'True Clears';
       }
       case 'autoscroll': {
         return 'Autoscroll';
       }
       case 'legacy': {
-        return 'Legacy Clears';
+        return `Legacy Clears (clears prior to ${formatDate(LEGACY_DATE)})`;
       }
       default:
         throw new Error(`No name for ${leaderboardName}`);

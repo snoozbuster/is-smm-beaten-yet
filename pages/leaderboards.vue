@@ -36,7 +36,7 @@
 
       <h3 id="country" class="text-2xl text-smm">Country</h3>
       <ClientOnly>
-        <StatSection card class="col-span-2 mb-5">
+        <StatSection card class="col-span-2 mb-5 country-section">
           <CountryMap />
         </StatSection>
       </ClientOnly>
@@ -157,11 +157,19 @@
       border-bottom-color: #fbcd0e;
     }
   }
+
+  .leaderboard-card,
+  .country-section,
+  .leaderboard-podium {
+    opacity: 0;
+    transform: translateY(100%);
+  }
 }
 </style>
 
 <script lang="ts" setup>
 import type { ValidLeaderboardGroups } from '~/types/leaderboards';
+import gsap from 'gsap';
 
 const { leaderboards } = useAllLeaderboards();
 
@@ -198,23 +206,74 @@ const themeLeaderboard = computed(() =>
 
 const getLeaderboardName = useLeaderboardNames();
 
+const initialAnimation = ref(false);
+const doFirstAnim = () => {
+  initialAnimation.value = true;
+  nextTick(() => {
+    const tl = gsap.timeline();
+    const params = {
+      y: 0,
+      opacity: 1,
+      stagger: 0.1,
+      duration: 0.1,
+    };
+    tl.to('.leaderboard-podium', params)
+      .to('.country-section', params)
+      .to('.leaderboard-card', params);
+  });
+};
+const animateLeaderboardCards = () => {
+  nextTick(() => {
+    gsap.to('.leaderboard-card', {
+      y: 0,
+      opacity: 1,
+      stagger: 0.1,
+      duration: 0.1,
+    });
+  });
+};
+
+watch(
+  leaderboards,
+  () => {
+    if (!unref(initialAnimation) && !isEmpty(unref(leaderboards))) {
+      nextTick(() => {
+        doFirstAnim();
+      });
+    }
+  },
+  { immediate: true },
+);
+
 const activeLeaderboardTab = ref<'year' | 'month' | 'timer' | 'other'>('year');
 const tabs = [
   {
     label: 'Year',
-    command: () => (activeLeaderboardTab.value = 'year'),
+    command: () => {
+      activeLeaderboardTab.value = 'year';
+      animateLeaderboardCards();
+    },
   },
   {
     label: 'Month',
-    command: () => (activeLeaderboardTab.value = 'month'),
+    command: () => {
+      activeLeaderboardTab.value = 'month';
+      animateLeaderboardCards();
+    },
   },
   {
     label: 'Timer',
-    command: () => (activeLeaderboardTab.value = 'timer'),
+    command: () => {
+      activeLeaderboardTab.value = 'timer';
+      animateLeaderboardCards();
+    },
   },
   {
     label: 'Other',
-    command: () => (activeLeaderboardTab.value = 'other'),
+    command: () => {
+      activeLeaderboardTab.value = 'other';
+      animateLeaderboardCards();
+    },
   },
 ];
 

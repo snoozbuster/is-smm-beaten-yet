@@ -1,6 +1,6 @@
 <template>
   <CourseWorldCard
-    class="relative group flex items-center h-fit py-2 flex-wrap lg:flex-nowrap"
+    class="relative group flex items-center h-fit py-2 flex-wrap lg:flex-nowrap leaderboard-card"
     :grid="false"
   >
     <div class="flex items-center h-fit gap-3 flex-wrap md:flex-nowrap">

@@ -1,5 +1,5 @@
 <template>
-  <CourseWorldCard class="px-6" :grid="false">
+  <CourseWorldCard class="px-6 leaderboard-podium" :grid="false">
     <h3 class="text-xl font-semibold flex justify-center items-center">
       <span class="mx-auto">{{ title }}</span>
       <div
