@@ -11,10 +11,11 @@
     "postinstall": "nuxt prepare && npm run install:lambda",
     "build:level-json": "amplify mock function SyncLevelsGSheets --event local-event.json --timeout 600",
     "dev:error-notifier": "amplify mock function DiscordErrorNotifier --event event.json --timeout 600",
-    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+    "lint:js": "eslint --ext \".ts,.vue,.js\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:js && yarn lint:prettier",
-    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
+    "lintfix": "prettier --write --list-different . && yarn lint:js --fix",
+    "typecheck": "nuxt typecheck"
   },
   "devDependencies": {
     "@aws-amplify/cli": "^12.10.1",
