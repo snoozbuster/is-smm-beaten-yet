@@ -3,7 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - nvm use 24
+        - nvm use
         - corepack enable
         - npx --yes nypm i
     build:
