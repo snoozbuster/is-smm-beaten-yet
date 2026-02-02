@@ -35,7 +35,7 @@
     "eslint-plugin-prettier": "^5.0.1",
     "lodash": "^4.17.21",
     "luxon": "^3.4.4",
-    "nuxt": "^3.8.2",
+    "nuxt": "^3.14.0",
     "nuxt-icon": "^0.6.7",
     "nuxt-lodash": "^2.5.3",
     "nuxt-primevue": "^0.2.2",
