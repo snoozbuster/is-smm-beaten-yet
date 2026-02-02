@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   ],
   nitro: {
     awsAmplify: {
-      // node 22 wasn't added until 3.0 alpha
+      // node 22 wasn't added to types until 3.0 alpha
       runtime: 'nodejs22.x' as any,
     },
   },
