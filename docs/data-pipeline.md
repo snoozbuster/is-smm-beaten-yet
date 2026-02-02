@@ -31,6 +31,8 @@ flowchart LR
   subgraph outputs["Outputs (CDN / app)"]
     cleared["levels/cleared.json"]
     summary["levels/clear_summary.json"]
+    level_groupings["levels/{leaderboard}.json"]
+    players["players/list.json, players/{nnid}.json"]
     level_dirs["course-data/{levelId}/"]
     milestones_out["assets/milestones.json"]
   end
@@ -50,6 +52,8 @@ flowchart LR
 
   build_cleared --> cleared
   build_cleared --> summary
+  build_cleared --> level_groupings
+  build_cleared --> players
   build_milestones --> milestones_out
 ```
 
@@ -124,25 +128,26 @@ The resulting **static level data JSON** is the **second input** to SyncLevelsGS
 
 **SyncLevelsGSheets** ([`amplify/backend/function/SyncLevelsGSheets/src/`](../amplify/backend/function/SyncLevelsGSheets/src/)) is run **locally** (not deployed) to regenerate the final cleared-level dataset. It has three inputs:
 
-| Input                  | Source                                                                                                                 | How it’s used                                                                                                                                                                                                                                                                                                         |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Cleared levels**     | Google Sheet “All Team 0% Clears (by clear date)”                                                                      | [buildClearedLevels.js](../amplify/backend/function/SyncLevelsGSheets/src/buildClearedLevels.js) downloads the sheet as CSV, maps columns (level ID, title, creator, first clearer NNID, date cleared, stars, players, attempts, clears, “True clear?”, etc.), and uses this as the canonical list of cleared levels. |
-| **Static level data**  | `static/static_level_data.json` (from [build-static-data.js](../scripts/build-static-data.js))                         | Joined by `levelId` onto each cleared row to add `autoscroll`, `theme`, `style`, `timer`, `checkpoints`, `worldLength`, and optional `subworld`. Only keys present in the static data are added; missing levels (e.g. deleted, never archived) have no theme/style/etc.                                               |
-| **User country codes** | `static/user_country_codes.json` (from the pipeline that used [pull-country-data.py](../scripts/pull-country-data.py)) | Joined by `creator` and by `firstClearerNnid` to add `countryCode` and `firstClearerCountryCode` to each cleared level. Used for country-based grouping and player/creator stats.                                                                                                                                     |
+| Input                  | Source                                                                                                                 | How it’s used                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Cleared levels**     | Google Sheet “All Team 0% Clears (by clear date)”                                                                      | [buildClearedLevels.js](../amplify/backend/function/SyncLevelsGSheets/src/buildClearedLevels.js) downloads the sheet as CSV (with retries via `async-retry`), maps columns (level ID, title, creator, first clearer NNID, date cleared, stars, players, attempts, clears, “True clear?”, etc.), normalizes `hacked` as boolean, and uses this as the canonical list of cleared levels. If the CSV has fewer than 80,000 rows it throws (sanity check). |
+| **Static level data**  | `static/static_level_data.json` (from [build-static-data.js](../scripts/build-static-data.js))                         | Joined by `levelId` onto each cleared row to add `autoscroll`, `theme`, `style`, `timer`, `checkpoints`, `worldLength`, and optional `subworld`. Only keys present in the static data are added; missing levels (e.g. deleted, never archived) have no theme/style/etc.                                                                                                                                                                                |
+| **User country codes** | `static/user_country_codes.json` (from the pipeline that used [pull-country-data.py](../scripts/pull-country-data.py)) | Joined by `creator` and by `firstClearerNnid` to add `countryCode` and `firstClearerCountryCode` to each cleared level. Used for country-based grouping and player/creator stats.                                                                                                                                                                                                                                                                      |
 
 Flow:
 
-1. **buildClearedLevels()** fetches the sheet CSV and the two JSON inputs (from S3 when not in local/dry-run mode), then left-joins static level data and country codes onto each row and sorts by `dateCleared`.
+1. **buildClearedLevels()** fetches the sheet CSV (with retries) and the two JSON inputs (from S3 when not in local/dry-run mode), then left-joins static level data and country codes onto each row and sorts by `dateCleared`.
 2. The handler builds a **clear summary** (clears by date, totals, legacy vs post-legacy split, daily/weekly “winners”, clears by person).
 3. It uploads `levels/cleared.json` (full cleared list) and `levels/clear_summary.json` (summary).
+4. **buildLeaderboards(clearedLevels)** builds clear-count leaderboards per pivot (year, month, theme, style, country, timer) and for flat sets (total, autoscroll, hacked, legacy), plus winner leaderboards (days won, streak, biggest single day). It uploads `leaderboards/list.json` with `{ clearCounts, winners }`. Leaderboard entries are trimmed to top N places or above a clear-count threshold.
+5. **buildGroupings(clearedLevels, clearCountLeaderboards)** groups cleared levels by year, month, style, theme, country, and timer; uploads list + per-group JSON under `levels/year`, `levels/month`, `levels/style`, `levels/theme`, `levels/country`, `levels/timer`. Each group’s list entry includes `clearedTotal` and `leaderboardPreview` (top places for that group). It also uploads flat lists: `levels/autoscroll.json`, `levels/hacked.json`, `levels/legacy.json`, `levels/botClears.json`.
+6. **uploadPlayerStats(clearedLevels)** uploads `players/list.json` (per-player cleared total, country, legacy count) and `players/{nnid}.json` (levels + stats including `clearsByDate`).
 
-Additional logic is **commented out** because it is very slow and easy to run by mistake; when enabled, it would:
+**Still commented out** (slow / optional):
 
-- **buildGroupings**: Group cleared levels by year, style, theme, and country, then upload list + per-group JSON under `levels/year`, `levels/style`, `levels/theme`, `levels/country`.
-- **uploadPlayerStats**: Per-player cleared levels and summary (including legacy clears), plus country from the NNID→country map; uploads `players/list.json` and `players/{nnid}.json`.
-- **uploadCreatorStats**: Same idea for creators; uploads `creators/list.json` and `creators/{nnid}.json`.
+- **uploadCreatorStats(clearedLevels, playerCountries)** — Same idea for creators; would upload `creators/list.json` and `creators/{nnid}.json`.
 
-So in normal runs, only `levels/cleared.json` and `levels/clear_summary.json` are produced. The app uses these plus the static level data and per-level assets (course-data, thumbnails) from the CDN.
+The app uses the above outputs plus the static level data and per-level assets (course-data, thumbnails) from the CDN.
 
 <a id="onedrive-archive"></a>
 
@@ -159,6 +164,10 @@ The cleared-level **source** for source 1 is the Google Sheet linked above, not 
 
 - **levels/cleared.json** — Full list of cleared levels (from SyncLevelsGSheets).
 - **levels/clear_summary.json** — Summary stats (totals, clears by date, legacy, etc.).
+- **levels/year/**, **levels/month/**, **levels/style/**, **levels/theme/**, **levels/country/**, **levels/timer/** — Grouped cleared levels (list.json + per-group JSON) with leaderboard previews.
+- **levels/autoscroll.json**, **levels/hacked.json**, **levels/legacy.json**, **levels/botClears.json** — Flat lists of cleared levels by category.
+- **leaderboards/list.json** — Clear-count leaderboards (per pivot and flat) and winner leaderboards (times, streak, biggest); see [useLeaderboards.ts](../composables/useLeaderboards.ts).
+- **players/list.json**, **players/{nnid}.json** — Per-player cleared stats and level lists.
 - **course-data/{levelId}/** — Per-level assets: `course_data.cdt`, `course_data_sub.cdt`, thumbnails (and/or extracted JSON/images as used by [LevelPreview.vue](../components/LevelPreview.vue), [levels/[levelId].vue](../pages/levels/[levelId].vue)).
 - **uncleared.json** — List of uncleared levels (derived from cleared + full level set; see [useUnclearedLevels.ts](../composables/useUnclearedLevels.ts)).
 
