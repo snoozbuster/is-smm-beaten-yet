@@ -1,0 +1,19 @@
+---
+description: Caution when editing viewer code or its call sites
+globs: viewer/**/*, **/LevelPreview.vue, **/extract-course-data.js
+alwaysApply: false
+---
+
+# Viewer caution
+
+The `viewer/` directory is a fork of [leomaurodesenv/smm-course-viewer](https://github.com/leomaurodesenv/smm-course-viewer). It contains untyped JavaScript that parses and draws SMM1 level files (`.cdt`). See [viewer/README.md](../../viewer/README.md) for full context.
+
+**Critical**:
+
+1. **Untyped JS**: ESLint runs on `.js` but there is no TypeScript type checking. Changes to viewer code and its call sites (e.g. `LevelPreview.vue`, `scripts/extract-course-data.js`) must be manually checked so APIs and return shapes line up.
+
+2. **Binary parsing**: Parsing in `viewer/SmmCourseViewer.js` is order- and format-sensitive. Do not change the order or semantics of parsing logic; the code must do exactly what it does in the same order every time.
+
+**Do**: Prefer not touching parsing; if you must, make minimal, well-reasoned edits and verify manually.
+
+**Don't**: Reorder parsing steps, change byte/field interpretation, or assume TypeScript/lint will catch viewer ↔ caller mismatches.

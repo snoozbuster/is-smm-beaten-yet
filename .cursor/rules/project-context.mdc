@@ -1,0 +1,21 @@
+---
+description: Core project context for Team 0% SMM1 stats site
+alwaysApply: true
+---
+
+# Project context
+
+This repo is the **Is Super Mario Maker Beaten Yet?** webapp: stats for Team 0%'s goal of clearing every Super Mario Maker 1 level before server shutdown.
+
+**Stack**: Nuxt 3, Vue, TypeScript, PrimeVue, Tailwind CSS. Data is statically generated and served as JSON from a CDN; there is no traditional backend.
+
+**Project structure**:
+- `pages/` — routes
+- `components/` — UI
+- `composables/` — shared logic
+- `constants/`, `types/` — level data and types (see `constants/levelData.ts`, `types/levels.ts`)
+- `scripts/` — data pipeline (Node + Python); see `.cursor/rules/scripts-and-data.mdc`
+- `viewer/` — forked SMM level parser/drawer (JS); see `.cursor/rules/viewer-caution.mdc`
+- `amplify/` — Lambda functions; DiscordErrorNotifier is deployed; SyncLevelsGSheets is local-only and not deployed
+
+**Quality checks**: Run `yarn lint` after editing; run `yarn typecheck` after editing `.ts` or `.vue`. ESLint covers `.ts`, `.vue`, and `.js`; typecheck covers only `.ts`/`.vue` (viewer/scripts `.js` are not type-checked). No unit tests; do not add test frameworks or tests unless specifically requested.
