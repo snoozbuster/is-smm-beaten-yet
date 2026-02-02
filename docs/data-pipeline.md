@@ -10,8 +10,11 @@ Static data is produced by scripts in `scripts/` from the OneDrive dataset and o
 ## Outputs (what the app expects)
 
 - `uncleared.json` — list of uncleared levels (e.g. [useUnclearedLevels.ts](../composables/useUnclearedLevels.ts)).
-- `clear_summary.json` — cleared-level stats summary (e.g. [UnclearedStats.vue](../components/UnclearedStats.vue), [ClearedStats.vue](../components/ClearedStats.vue)).
+- `clear_summary.json` — cleared-level stats summary (e.g. [ClearedStats.vue](../components/ClearedStats.vue)).
 - `course-data/{levelId}/` — per-level assets: `course_data.cdt`, `course_data_sub.cdt`, thumbnail (e.g. [LevelPreview.vue](../components/LevelPreview.vue), [levels/[levelId].vue](../pages/levels/[levelId].vue)).
+- `leaderboards/list.json` — leaderboard data (e.g. [useLeaderboards.ts](../composables/useLeaderboards.ts)); produced by SyncLevelsGSheets.
+- `players/list.json` — player list (e.g. [usePlayer.ts](../composables/usePlayer.ts)); produced by SyncLevelsGSheets.
+- `country/list.json` — country data (e.g. [useCountries.ts](../composables/useCountries.ts)); produced by SyncLevelsGSheets.
 
 ## Scripts (high-level)
 

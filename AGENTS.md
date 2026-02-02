@@ -4,7 +4,7 @@ This repo is the **Is Super Mario Maker Beaten Yet?** webapp: stats for Team 0%'
 
 ## Conventions
 
-- Use existing types in [types/levels.ts](types/levels.ts) and constants in [constants/levelData.ts](constants/levelData.ts); don't introduce new data shapes for app data without updating types.
+- Use existing types in [types/levels.ts](types/levels.ts), [types/leaderboards.ts](types/leaderboards.ts), [types/players.ts](types/players.ts) and constants in [constants/levelData.ts](constants/levelData.ts); don't introduce new data shapes for app data without updating types.
 - Prefer existing composables and components.
 
 ## Quality checks
@@ -21,4 +21,6 @@ When changing code, run `yarn lint` (and `yarn typecheck` for `.ts`/`.vue` chang
 
 - Project structure and data pipeline placeholder: [README.md](README.md)
 - Viewer docs: [viewer/README.md](viewer/README.md)
+- Leaderboards (Hall of Fame): [pages/leaderboards.vue](pages/leaderboards.vue), [composables/useLeaderboards.ts](composables/useLeaderboards.ts)
+- Player profiles: [pages/players/[nnid].vue](pages/players/[nnid].vue), [composables/usePlayer.ts](composables/usePlayer.ts)
 - File-specific rules: `.cursor/rules/`

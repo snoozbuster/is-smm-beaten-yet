@@ -10,7 +10,7 @@ Scripts in `scripts/` are part of the **data pipeline**: they consume the OneDri
 
 **Do not** change script output paths or JSON shapes without checking consumers:
 - [constants/levelData.ts](../../constants/levelData.ts) — `DATA_ROOT_URL`, expected paths
-- Composables and components that fetch `uncleared.json`, `clear_summary.json`, `course-data/{levelId}/`, etc.
+- Composables and components that fetch `uncleared.json`, `clear_summary.json`, `course-data/{levelId}/`, `leaderboards/list.json`, `players/list.json`, `country/list.json`, etc.
 
 **Environment**: Mix of Node (ESM) and Python. Some scripts require Node 21. See script usage (e.g. `-o=`, `-i=`, `-d=`) in each file.
 

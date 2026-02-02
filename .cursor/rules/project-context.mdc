@@ -10,10 +10,10 @@ This repo is the **Is Super Mario Maker Beaten Yet?** webapp: stats for Team 0%'
 **Stack**: Nuxt 3, Vue, TypeScript, PrimeVue, Tailwind CSS. Data is statically generated and served as JSON from a CDN; there is no traditional backend.
 
 **Project structure**:
-- `pages/` — routes
+- `pages/` — routes (incl. leaderboards, players/[nnid])
 - `components/` — UI
 - `composables/` — shared logic
-- `constants/`, `types/` — level data and types (see `constants/levelData.ts`, `types/levels.ts`)
+- `constants/`, `types/` — level data and types (see `constants/levelData.ts`, `constants/leaderboards.ts`, `types/levels.ts`, `types/leaderboards.ts`, `types/players.ts`)
 - `scripts/` — data pipeline (Node + Python); see `.cursor/rules/scripts-and-data.mdc`
 - `viewer/` — forked SMM level parser/drawer (JS); see `.cursor/rules/viewer-caution.mdc`
 - `amplify/` — Lambda functions; DiscordErrorNotifier is deployed; SyncLevelsGSheets is local-only and not deployed
