@@ -75,7 +75,7 @@
         "Role": {
           "Fn::GetAtt": ["LambdaExecutionRole", "Arn"]
         },
-        "Runtime": "nodejs18.x",
+        "Runtime": "nodejs22.x",
         "Layers": [],
         "Timeout": 120,
         "MemorySize": 512

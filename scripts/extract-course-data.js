@@ -1,5 +1,4 @@
-// jank script. run with node 21 and requires minor modifications to level
-// viewer source to work.
+// jank script. requires minor modifications to level viewer source to work.
 import { readdir, readFile, writeFile } from 'fs/promises';
 import path from 'path';
 import _ from 'lodash';
