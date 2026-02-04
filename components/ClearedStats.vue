@@ -71,6 +71,13 @@
               completion for the team!
             </div>
             <TthHistoryModal v-model:visible="modalOpen" />
+            <NuxtLink
+              class="hover:underline block mt-2"
+              to="/levels"
+            >
+              View all cleared levels
+              <Icon name="mdi:chevron-right" />
+            </NuxtLink>
           </div>
           <div class="self-end">
             <h4 class="text-xl font-semibold mb-1">Join us today!</h4>
