@@ -32,8 +32,7 @@
 
 <script setup lang="ts">
 import { COURSE_WORLD_GREEN } from '~/constants/colors';
-import { LEVELS_ROOT_URL } from '~/constants/levelData';
-import type { ClearedLevel } from '~/types/levels';
+import { useClearedLevels } from '~/composables/useClearedLevels';
 
 useSeoMeta({
   title: 'SMM1 Cleared Level Browser',
@@ -41,13 +40,9 @@ useSeoMeta({
   themeColor: COURSE_WORLD_GREEN,
 });
 
-const {
-  data: levels,
-  pending,
-  error,
-} = useAsyncData<ClearedLevel[]>(
-  'levels-cleared',
-  () => $fetch(`${LEVELS_ROOT_URL}/cleared.json`),
-  { deep: false },
-);
+const { levels, pending, error, load } = useClearedLevels();
+
+onMounted(() => {
+  load();
+});
 </script>
