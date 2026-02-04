@@ -2,6 +2,9 @@
   "name": "is-smm-beaten-yet",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --dotenv .env.local",
