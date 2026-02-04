@@ -34,6 +34,7 @@
       </div>
       <ResponsiveLevelList
         :levels="player?.levels"
+        :hide-columns="['firstClearer']"
         class="h-[50dvh] lg:h-full"
       />
     </div>

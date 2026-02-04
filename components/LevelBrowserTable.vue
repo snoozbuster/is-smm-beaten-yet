@@ -19,6 +19,7 @@
       'title',
       'titleTranslation',
       'creator',
+      'firstClearerNnid',
       'country',
       'style',
       'theme',
@@ -171,9 +172,9 @@
       </div>
     </template>
 
-    <template v-for="column in columns">
+    <template v-for="column in effectiveColumnOrder">
       <PrimeColumn
-        v-if="columnVisible(column)"
+        v-if="userColumnVisible(column)"
         :key="column"
         :field="column"
         :header="LEVEL_BROWSER_COLUMNS[column]"
@@ -259,12 +260,17 @@ import {
   PrimeMultiSelect,
   PrimeTriStateCheckbox,
 } from '#components';
+import PlayerNnid from './PlayerNnid.vue';
 import StyleIcon from './StyleIcon.vue';
 import ThemeIcon from './ThemeIcon.vue';
 
 const props = defineProps({
   levels: {
     type: Array as PropType<ClearedLevel[]>,
+    default: () => [],
+  },
+  hideColumns: {
+    type: Array as PropType<(keyof typeof LEVEL_BROWSER_COLUMNS)[]>,
     default: () => [],
   },
 });
@@ -289,8 +295,27 @@ const { formatDate, formatNumber, formatPercent } = useFormatters();
 const { levelBrowserSettings, shouldShowTranslation } =
   useLevelBrowserSettings();
 
-function columnVisible(field: keyof typeof LEVEL_BROWSER_COLUMNS) {
+/** Column order for this view: excludes columns in hideColumns so they are invisible. */
+const effectiveColumnOrder = computed(() =>
+  (
+    unref(levelBrowserSettings).columnOrder ?? DEFAULT_COLUMN_ORDER
+  ).filter(
+    (c): c is keyof typeof LEVEL_BROWSER_COLUMNS =>
+      !props.hideColumns.includes(c),
+  ),
+);
+
+/** User preference only (toggle in menu). hideColumns are excluded via effectiveColumnOrder. */
+function userColumnVisible(field: keyof typeof LEVEL_BROWSER_COLUMNS) {
   return unref(levelBrowserSettings).visibleColumns[field] !== false;
+}
+
+/** Whether this column should be rendered (hidden by prop or by user toggle). */
+function columnVisible(field: keyof typeof LEVEL_BROWSER_COLUMNS) {
+  if (props.hideColumns.includes(field)) {
+    return false;
+  }
+  return userColumnVisible(field);
 }
 
 const columns = ref(
@@ -305,7 +330,7 @@ function handleColumnReorder({
   dropIndex: number;
 }) {
   const columnOrder = levelBrowserSettings.value.columnOrder;
-  const visibleColumns = columnOrder.filter(columnVisible);
+  const visibleColumns = unref(effectiveColumnOrder).filter(userColumnVisible);
   const trueDragIndex = columnOrder.indexOf(visibleColumns[dragIndex]);
   const trueDropIndex = columnOrder.indexOf(visibleColumns[dropIndex]);
   levelBrowserSettings.value.columnOrder.splice(
@@ -334,11 +359,14 @@ const settingsMenuItems = computed(() => [
   },
   {
     label: 'Columns',
-    items: useMap(LEVEL_BROWSER_COLUMNS, (title, field) => ({
-      label: title,
-      field,
-      disabled: field === 'title',
-    })),
+    items: useFilter(
+      useMap(LEVEL_BROWSER_COLUMNS, (title, field) => ({
+        label: title,
+        field,
+        disabled: field === 'title',
+      })),
+      (item) => !props.hideColumns.includes(item.field),
+    ),
   },
 ]);
 
@@ -394,9 +422,8 @@ const numRows = computed(() => unref(currentTableView).length);
 
 const numHiddenColumns = computed(
   () =>
-    useFilter(
-      LEVEL_BROWSER_COLUMNS,
-      (_, field) => !columnVisible(field as keyof typeof LEVEL_BROWSER_COLUMNS),
+    unref(effectiveColumnOrder).filter(
+      (c) => !userColumnVisible(c),
     ).length,
 );
 
@@ -577,6 +604,7 @@ function resetFilters() {
     title: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     uploadDateFilter: { value: null, matchMode: FilterMatchMode.DATE_IS },
     clearDateFilter: { value: null, matchMode: FilterMatchMode.DATE_IS },
+    firstClearerNnid: { value: null, matchMode: FilterMatchMode.CONTAINS },
     stars: { value: null, matchMode: FilterMatchMode.EQUALS },
     players: { value: null, matchMode: FilterMatchMode.EQUALS },
     attempts: { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -970,6 +998,25 @@ const COLUMN_MAP: Record<
         </PrimeCalendar>
       );
     },
+  },
+  firstClearer: {
+    columnProps: {
+      filterField: 'firstClearerNnid',
+      style: 'min-width: 180px',
+    },
+    body: (props: { data: DataTableLevel }) =>
+      props.data.firstClearerNnid ? (
+        <PlayerNnid nnid={props.data.firstClearerNnid} size={16} />
+      ) : null,
+    filter: (props) => (
+      <PrimeInputText
+        v-model={props.filterModel.value}
+        type="text"
+        class="p-column-filter"
+        placeholder="Search by NNID"
+        onInput={props.filterCallback}
+      />
+    ),
   },
   stars: makeNumericCol('stars', () => <span class="pi pi-star mr-1" />),
   players: makeNumericCol('players', () => <span class="pi pi-users mr-1" />),
