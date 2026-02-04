@@ -169,7 +169,7 @@ The cleared-level **source** for source 1 is the Google Sheet linked above, not 
 - **leaderboards/list.json** — Clear-count leaderboards (per pivot and flat) and winner leaderboards (times, streak, biggest); see [useLeaderboards.ts](../composables/useLeaderboards.ts).
 - **players/list.json**, **players/{nnid}.json** — Per-player cleared stats and level lists.
 - **course-data/{levelId}/** — Per-level assets: `course_data.cdt`, `course_data_sub.cdt`, thumbnails (and/or extracted JSON/images as used by [LevelPreview.vue](../components/LevelPreview.vue), [levels/[levelId].vue](../pages/levels/[levelId].vue)).
-- **uncleared.json** — List of uncleared levels (derived from cleared + full level set; see [useUnclearedLevels.ts](../composables/useUnclearedLevels.ts)).
+- **uncleared.json** — List of uncleared levels (derived from cleared + full level set). The app uses the cleared list ([useClearedLevels.ts](../composables/useClearedLevels.ts)) for the level browser.
 
 ## Other scripts
 

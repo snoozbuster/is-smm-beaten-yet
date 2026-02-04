@@ -45,7 +45,7 @@ const levelId = computed(
   () => (route.params.levelId as string)?.trim().toUpperCase(),
 );
 
-const { level } = useUnclearedLevel(levelId);
+const { level } = useClearedLevel(levelId);
 
 const { shouldShowTranslation } = useLevelBrowserSettings();
 const { formatDate } = useFormatters();
@@ -64,24 +64,24 @@ const thumbnailUrl = computed(
 
 useSeoMeta({
   title: () =>
-    `SMM1 Uncleared Level Browser - ${
-      level.value ? levelName.value : 'Not Found (or already cleared)'
+    `SMM1 Cleared Level Browser - ${
+      level.value ? levelName.value : 'Not found'
     }`,
   ogTitle: () =>
-    `SMM1 Uncleared Level Browser - ${
-      level.value ? levelName.value : 'Not Found (or already cleared)'
+    `SMM1 Cleared Level Browser - ${
+      level.value ? levelName.value : 'Not found'
     }`,
   description: () =>
     !level.value
       ? undefined
       : `View course data for this ${
-          level.value.style
+          level.value.style ?? 'SMM1'
         } level uploaded on ${formatDate(level.value.uploadDate)}`,
   ogDescription: () =>
     !level.value
       ? undefined
       : `View course data for this ${
-          level.value.style
+          level.value.style ?? 'SMM1'
         } level uploaded on ${formatDate(level.value.uploadDate)}`,
   ogImage: {
     url: unref(thumbnailUrl),
