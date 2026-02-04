@@ -79,7 +79,7 @@
       <div v-if="showPreview">
         <NuxtLink
           class="text-sm text-gray-400 font-medium text-nowrap"
-          :to="`/levels/${level.levelId}`"
+          :to="levelPreviewTo"
         >
           {{ level.levelId }}
           <Icon
@@ -170,4 +170,8 @@ const { formatDate, formatNumber } = useFormatters();
 const { themeImages, styleImages } = useLevelAssets();
 
 const isClearedLevel = computed(() => 'dateCleared' in (props.level || {}));
+
+const levelPreviewTo = useLevelPreviewTo(
+  computed(() => props.level.levelId),
+);
 </script>

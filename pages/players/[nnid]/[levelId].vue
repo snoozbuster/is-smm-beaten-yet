@@ -1,7 +1,7 @@
 <template>
   <LevelPreviewPage
     :level-id="(route.params.levelId as string) ?? ''"
-    return-path="/levels"
+    :return-path="`/players/${route.params.nnid}`"
   />
 </template>
 

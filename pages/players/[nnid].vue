@@ -37,6 +37,7 @@
         class="h-[50dvh] lg:h-full"
       />
     </div>
+    <NuxtPage />
   </div>
 </template>
 

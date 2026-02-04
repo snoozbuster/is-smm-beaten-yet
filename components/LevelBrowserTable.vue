@@ -738,6 +738,9 @@ const { config } = usePrimeVue();
 const LevelColumn = defineComponent({
   props: ['data'],
   setup(props: { data: DataTableLevel }) {
+    const previewTo = useLevelPreviewTo(
+      computed(() => props.data.levelId),
+    );
     return () => (
       <Fragment>
         {props.data.hacked ? (
@@ -766,7 +769,7 @@ const LevelColumn = defineComponent({
         <span class="text-sm text-gray-400 font-medium text-nowrap">
           {props.data.levelId}
         </span>
-        <NuxtLink to={`/levels/${props.data.levelId}`}>
+        <NuxtLink to={previewTo.value}>
           <PrimeButton class="p-0 align-baseline ml-2" link size="small">
             Preview
           </PrimeButton>
