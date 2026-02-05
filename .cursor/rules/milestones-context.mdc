@@ -1,0 +1,27 @@
+---
+description: What milestones represent and how the data is used
+globs: assets/milestones.json, composables/useMilestones.ts, composables/usePlayer.ts, scripts/build-milestones.cjs
+alwaysApply: false
+---
+
+# Milestones data and consumers
+
+## What milestones represent
+
+- **Major milestones** (`majorMilestones`): The **first clear of the last uncleared level** in a category. The team explicitly tracked each **year × level style** combination (and a special **autoscroll** category) and gave an award/announcement when the final level in that category was cleared. Each entry records who got that first clear (`firstClearerNnid`), when (`dateCleared`), and the level (`levelId`).
+- **`wasRecleared`**: Some categories were initially thought complete; later, additional levels were discovered that had only ever been cleared via hacking. The team re-cleared those; this property marks the milestone for that **re-clear** (the second “first clear” of the category).
+- **Month milestones** (`monthMilestones`): Same idea at **month granularity** (last level cleared in that year–month). These were never officially recognized by the community; they were added for interest. There is overlap with major milestones (the level that completed a year+style often also completed that month).
+
+## Data qualities
+
+- Only a **handful of players** have any milestones; most have none. Do not reserve dedicated UI space for milestones—show them when present, avoid empty reserved blocks.
+- The maximum number of milestones for a single player is on the order of **~25**; lists or modals should handle that scale without assuming “a few.”
+- When surfacing in the UI, treat **major** milestones as the primary “first clearer” story; month milestones are secondary/optional. Use `wasRecleared` where helpful (e.g. tooltip: “Re-clear after additional levels were discovered”).
+
+## Consumers
+
+- **composables/useMilestones.ts**: Exposes `yearMilestones`, `monthMilestones`, `autoscrollMilestone` for the leaderboards page (e.g. “Cleared on … by …”).
+- **composables/usePlayer.ts**: Attaches `player.milestones` by filtering all milestones where `firstClearerNnid === nnid` (used on player profiles).
+- **scripts/build-milestones.cjs**: Produces most of `assets/milestones.json` from sheet + course data; some entries (re-clears, autoscroll) are added or edited by hand. See [docs/data-pipeline.md](../../docs/data-pipeline.md).
+
+Do not change the JSON shape or property semantics without updating types in `types/players.ts` (e.g. `MajorMilestone`, `MinorMilestone`) and all consumers above.
