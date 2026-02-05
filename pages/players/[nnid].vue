@@ -21,7 +21,7 @@
           <StatSection card>
             <ClearedBreakdown :cleared="player.levels" />
           </StatSection>
-          <StatSection card class="max-h-[400px]">
+          <StatSection card class="max-h-[400px] lg:max-h-none min-h-0">
             <h3 class="text-xl mb-3">Leaderboard placements</h3>
             <div class="overflow-auto">
               <PlayerAchievements :nnid="nnid" />
@@ -29,7 +29,9 @@
           </StatSection>
         </template>
         <template v-else>
-          <!-- skeletons-->
+          <PrimeSkeleton class="w-full" height="100%" />
+          <PrimeSkeleton class="w-full" height="100%" />
+          <PrimeSkeleton class="w-full" height="100%" />
         </template>
       </div>
       <ResponsiveLevelList
