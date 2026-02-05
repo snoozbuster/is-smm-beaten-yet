@@ -33,11 +33,6 @@ const links = [
     icon: 'logos:discord-icon',
   },
   {
-    name: 'Watch Team 0% Live',
-    href: 'https://twitch.tv/directory/category/super-mario-maker',
-    icon: 'logos:twitch',
-  },
-  {
     name: 'Team 0% Twitter',
     href: 'https://twitter.com/Team0Percent',
     icon: 'logos:twitter',
