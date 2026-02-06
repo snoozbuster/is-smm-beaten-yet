@@ -135,9 +135,12 @@
           <span class="hidden lg:inline">Cleared on</span>
           {{ formatDate(level.dateCleared, true) }}
         </div>
-        <div class="text-nowrap">
+        <div>
           Achieved by
-          <span class="font-semibold">{{ level.firstClearerNnid }}</span>
+          <br />
+          <span class="text-nowrap">
+            <PlayerNnid :nnid="level.firstClearerNnid" :size="16" />
+          </span>
         </div>
       </template>
     </div>
@@ -171,7 +174,5 @@ const { themeImages, styleImages } = useLevelAssets();
 
 const isClearedLevel = computed(() => 'dateCleared' in (props.level || {}));
 
-const levelPreviewTo = useLevelPreviewTo(
-  computed(() => props.level.levelId),
-);
+const levelPreviewTo = useLevelPreviewTo(computed(() => props.level.levelId));
 </script>
