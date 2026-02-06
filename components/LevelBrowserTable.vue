@@ -297,9 +297,7 @@ const { levelBrowserSettings, shouldShowTranslation } =
 
 /** Column order for this view: excludes columns in hideColumns so they are invisible. */
 const effectiveColumnOrder = computed(() =>
-  (
-    unref(levelBrowserSettings).columnOrder ?? DEFAULT_COLUMN_ORDER
-  ).filter(
+  (unref(levelBrowserSettings).columnOrder ?? DEFAULT_COLUMN_ORDER).filter(
     (c): c is keyof typeof LEVEL_BROWSER_COLUMNS =>
       !props.hideColumns.includes(c),
   ),
@@ -421,10 +419,7 @@ function translateLevels(levels: ClearedLevel[]) {
 const numRows = computed(() => unref(currentTableView).length);
 
 const numHiddenColumns = computed(
-  () =>
-    unref(effectiveColumnOrder).filter(
-      (c) => !userColumnVisible(c),
-    ).length,
+  () => unref(effectiveColumnOrder).filter((c) => !userColumnVisible(c)).length,
 );
 
 const preparedLevels = computed(() => {
@@ -766,9 +761,7 @@ const { config } = usePrimeVue();
 const LevelColumn = defineComponent({
   props: ['data'],
   setup(props: { data: DataTableLevel }) {
-    const previewTo = useLevelPreviewTo(
-      computed(() => props.data.levelId),
-    );
+    const previewTo = useLevelPreviewTo(computed(() => props.data.levelId));
     return () => (
       <Fragment>
         {props.data.hacked ? (
@@ -1006,7 +999,9 @@ const COLUMN_MAP: Record<
     },
     body: (props: { data: DataTableLevel }) =>
       props.data.firstClearerNnid ? (
-        <PlayerNnid nnid={props.data.firstClearerNnid} size={16} />
+        <span class="inline-block whitespace-nowrap">
+          <PlayerNnid nnid={props.data.firstClearerNnid} size={16} />
+        </span>
       ) : null,
     filter: (props) => (
       <PrimeInputText
