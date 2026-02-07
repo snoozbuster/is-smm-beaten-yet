@@ -243,11 +243,16 @@ import { DateTime } from 'luxon';
 import { useToast } from 'primevue/usetoast';
 import { Fragment } from 'vue/jsx-runtime';
 import type { Component } from 'vue';
+import LevelClearMilestone from './LevelClearMilestone.vue';
+import PlayerNnid from './PlayerNnid.vue';
+import StyleIcon from './StyleIcon.vue';
+import ThemeIcon from './ThemeIcon.vue';
 import type { ClearedLevel } from '~/types/levels';
 import useLevelBrowserSettings, {
   DEFAULT_COLUMN_ORDER,
   LEVEL_BROWSER_COLUMNS,
 } from '~/composables/useLevelBrowserSettings';
+import { useMilestones } from '~/composables/useMilestones';
 import {
   PrimeTag,
   NuxtLink,
@@ -260,9 +265,6 @@ import {
   PrimeMultiSelect,
   PrimeTriStateCheckbox,
 } from '#components';
-import PlayerNnid from './PlayerNnid.vue';
-import StyleIcon from './StyleIcon.vue';
-import ThemeIcon from './ThemeIcon.vue';
 
 const props = defineProps({
   levels: {
@@ -762,6 +764,10 @@ const LevelColumn = defineComponent({
   props: ['data'],
   setup(props: { data: DataTableLevel }) {
     const previewTo = useLevelPreviewTo(computed(() => props.data.levelId));
+    const { levelMilestones } = useMilestones();
+    const firstMilestone = computed(
+      () => levelMilestones.value[props.data.levelId]?.[0],
+    );
     return () => (
       <Fragment>
         {props.data.hacked ? (
@@ -774,6 +780,9 @@ const LevelColumn = defineComponent({
             icon="pi pi-danger"
             value="Hacked clear"
           />
+        ) : undefined}
+        {firstMilestone.value ? (
+          <LevelClearMilestone milestone={firstMilestone.value} />
         ) : undefined}
         <div class="mb-1">
           {props.data.translated ? (

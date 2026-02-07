@@ -35,23 +35,31 @@ interface MiscAward extends BasePlayerAward {
   reason: string;
 }
 
-export interface MajorMilestone {
-  year: string;
-  style?: ClearedLevel['style'];
+interface MilestoneBase {
   dateCleared: string;
   levelId: string;
   firstClearerNnid: string;
   wasRecleared?: boolean;
+}
+
+interface MajorMilestoneBase extends MilestoneBase {
   reason?: string;
 }
 
-export interface MinorMilestone {
+export interface MajorMilestoneStyle extends MajorMilestoneBase {
+  year: string;
+  style?: ClearedLevel['style'];
+}
+
+export interface MajorMilestoneAutoscroll extends MajorMilestoneBase {
+  name: 'Autoscroll';
+}
+
+export type MajorMilestone = MajorMilestoneStyle | MajorMilestoneAutoscroll;
+
+export interface MinorMilestone extends MilestoneBase {
   year: string;
   month: string;
-  dateCleared: string;
-  levelId: string;
-  firstClearerNnid: string;
-  wasRecleared?: boolean;
 }
 
 export type Milestone = MajorMilestone | MinorMilestone;

@@ -1,7 +1,10 @@
 <template>
   <div class="hidden lg:block grow" v-bind="$attrs">
     <CourseWorldCard :grid="false" class="h-full">
-      <LevelBrowserTable :levels="levels" :hide-columns="hideColumns" />
+      <LevelBrowserTable
+        :levels="levels"
+        :hide-columns="hideColumns"
+      />
     </CourseWorldCard>
   </div>
   <div class="lg:hidden grow" v-bind="$attrs">

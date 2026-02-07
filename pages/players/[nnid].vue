@@ -22,8 +22,14 @@
             <ClearedBreakdown :cleared="player.levels" />
           </StatSection>
           <StatSection card class="max-h-[400px] lg:max-h-none min-h-0">
-            <h3 class="text-xl mb-3">Leaderboard placements</h3>
-            <PlayerAchievements :nnid="nnid" />
+            <h3 v-if="!player?.milestones?.length" class="text-xl mb-3">
+              Leaderboard placements
+            </h3>
+            <PlayerAchievements
+              :nnid="nnid"
+              :milestones="player?.milestones ?? []"
+              :cleared-levels="player?.levels ?? []"
+            />
           </StatSection>
         </template>
         <template v-else>

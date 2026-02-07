@@ -19,6 +19,10 @@
     value="True clear"
     tabindex="1"
   />
+  <LevelClearMilestone
+    v-if="levelMilestone"
+    :milestone="levelMilestone"
+  />
   <div class="flex">
     <div
       class="w-8/12 mr-2 flex flex-col justify-between"
@@ -38,6 +42,7 @@
             />
           </button>
           <button
+            v-if="level.theme"
             v-tooltip.focus.right="
               `This level uses the ${level.theme.toLowerCase()} theme`
             "
@@ -170,6 +175,13 @@ const props = defineProps({
 });
 
 const { formatDate, formatNumber } = useFormatters();
+const { levelMilestones } = useMilestones();
+
+const levelMilestone = computed(() => {
+  const milestones = levelMilestones.value[props.level?.levelId];
+  return milestones?.[0];
+});
+
 const { themeImages, styleImages } = useLevelAssets();
 
 const isClearedLevel = computed(() => 'dateCleared' in (props.level || {}));

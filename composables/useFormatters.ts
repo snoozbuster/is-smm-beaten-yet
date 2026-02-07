@@ -49,5 +49,11 @@ export default function useFormatters() {
       DateTime.fromISO(d).toLocaleString(
         short ? DateTime.DATE_MED : DateTime.DATE_FULL,
       ),
+    /** Format year + month as "January 2023". Pass year and month (e.g. "2023", "01"). */
+    formatMonthYear: (year: string, month: string) =>
+      DateTime.fromISO(`${year}-${month}`).toLocaleString({
+        month: 'long',
+        year: 'numeric',
+      }),
   };
 }
