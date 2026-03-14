@@ -97,24 +97,15 @@
           aria-hidden="true"
         />
       </div>
-      <NuxtLink
-        to="/leaderboards"
-        class="course-world-btn flex items-center justify-center bg-100-mario-red py-3 text-center text-lg font-bold uppercase text-white shadow-lg transition hover:opacity-95"
-      >
+      <CourseWorldMenuButton to="/leaderboards" color="red">
         Hall of Fame
-      </NuxtLink>
-      <NuxtLink
-        to="/levels"
-        class="course-world-btn flex items-center justify-center bg-course-world py-3 text-center text-lg font-bold uppercase text-white shadow-lg transition hover:opacity-95"
-      >
+      </CourseWorldMenuButton>
+      <CourseWorldMenuButton to="/levels" color="teal">
         Courses
-      </NuxtLink>
-      <NuxtLink
-        to="/leaderboards"
-        class="course-world-btn flex items-center justify-center bg-makers-purple py-3 text-center text-lg font-bold uppercase text-white shadow-lg transition hover:opacity-95"
-      >
+      </CourseWorldMenuButton>
+      <CourseWorldMenuButton to="/leaderboards" color="purple">
         Players
-      </NuxtLink>
+      </CourseWorldMenuButton>
     </nav>
   </div>
 </template>
@@ -179,10 +170,6 @@
   }
 }
 
-.course-world-btn {
-  border: 3px solid #fbcd0e;
-  border-radius: 12px;
-}
 </style>
 
 <script setup lang="ts">
