@@ -7,11 +7,11 @@
       :aria-hidden="!drawerOpen"
     >
       <div
-        class="flex shrink-0 items-center gap-2 border-b border-black/10 px-3 py-3"
+        class="flex shrink-0 items-center gap-2 border-b border-black/10 px-4 py-3"
       >
         <NuxtLink
           to="/#menu"
-          class="flex h-9 w-9 shadow shrink-0 items-center justify-center rounded-md bg-smm-menu-button text-black transition hover:brightness-95"
+          class="flex h-9 w-9 shadow-lg shrink-0 items-center justify-center rounded-md bg-smm-menu-button text-black transition hover:brightness-95"
           aria-label="Go to home"
           @click="drawerOpen = false"
         >
@@ -31,12 +31,12 @@
           <Icon name="mdi:close" class="text-xl" />
         </button>
       </div>
-      <nav class="flex flex-1 flex-col gap-1 p-3" aria-label="Main menu">
+      <nav class="flex flex-1 flex-col gap-3 p-4" aria-label="Main menu">
         <NuxtLink
           v-for="item in navLinks"
           :key="item.path"
           :to="item.path"
-          class="drawer-link rounded-md shadow px-4 py-3 text-left text-sm font-medium no-underline transition"
+          class="drawer-link rounded-md shadow-lg px-4 py-3 text-left text-sm font-medium no-underline transition"
           active-class="drawer-link--active"
           @click="drawerOpen = false"
         >
