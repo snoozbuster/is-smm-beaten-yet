@@ -1,13 +1,24 @@
 <template>
-  <PrimeInputGroup>
-    <PrimeInputGroupAddon class="p-2">
-      <i class="pi pi-search" />
-    </PrimeInputGroupAddon>
+  <PrimeInputGroup
+    :pt="{
+      root: {
+        class:
+          'rounded-md bg-course-world-button-active focus-within:ring-1 focus-within:ring-inset focus-within:ring-course-world-button',
+      },
+    }"
+  >
     <PrimeAutoComplete
       v-model="currentQuery"
       placeholder="Find a player by NNID"
       :min-length="2"
       :suggestions="suggestions"
+      :pt="{
+        root: { class: 'border-none' },
+        input: {
+          class:
+            'bg-transparent border-none shadow-none text-white placeholder:text-white placeholder:opacity-80',
+        },
+      }"
       @complete="(event) => search(event.query)"
       @item-select="(event) => navigateToPlayer(event.value)"
     >
@@ -17,11 +28,20 @@
         </div>
       </template>
     </PrimeAutoComplete>
+    <PrimeInputGroupAddon
+      :pt="{
+        root: {
+          class:
+            'border-none px-3 bg-course-world-button text-course-world-button-text hover:brightness-105',
+        },
+      }"
+    >
+      <i class="pi pi-search" />
+    </PrimeInputGroupAddon>
   </PrimeInputGroup>
 </template>
 
 <script lang="ts" setup>
-const selectedItem = ref();
 const currentQuery = ref('');
 const { players } = usePlayerList();
 

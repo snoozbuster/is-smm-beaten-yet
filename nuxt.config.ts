@@ -127,10 +127,32 @@ export default defineNuxtConfig({
           'course-world-contrast': '#91f2e1',
           'course-world-card': '#fdffbe',
           'course-world-card-contrast': '#7f8143',
+          'course-world-button': '#7ef4d2',
+          'course-world-button-text': '#39b591',
+          'course-world-button-hover': '#6ae8c4',
+          'course-world-button-active': '#139e7f',
           'makers-purple': 'rgb(108, 67, 161)',
           '100-mario-red': 'rgb(145, 39, 53)',
         },
       },
+      plugins: [
+        function ({ addBase, theme }: any) {
+          addBase({
+            ':root': {
+              '--course-world-button': theme('colors.course-world-button'),
+              '--course-world-button-text': theme(
+                'colors.course-world-button-text',
+              ),
+              '--course-world-button-hover': theme(
+                'colors.course-world-button-hover',
+              ),
+              '--course-world-button-active': theme(
+                'colors.course-world-button-active',
+              ),
+            },
+          });
+        },
+      ],
     },
   },
 
