@@ -3,7 +3,7 @@
     class="h-dvh"
     :class="[
       'position-relative',
-      dataReady || forceStatsScroll ? 'scroll-snap' : 'overflow-hidden',
+      dataReady || forceMenuScroll ? 'scroll-snap' : 'overflow-hidden',
     ]"
   >
     <PrimeToast position="bottom-center" />
@@ -15,7 +15,7 @@
         :inert="!dataReady"
       >
         <a
-          href="#stats"
+          href="#menu"
           class="-translate-x-2/4 mb-5 text-xl grid place-content-center relative text-center"
           @click.prevent="smoothScroll"
         >
@@ -24,11 +24,9 @@
         </a>
       </div>
     </div>
-    <ClearedStats
-      id="stats"
-      class="pane pb-10 md:pb-0 min-h-dvh md:h-dvh"
-      :visible="scrolled"
-      @ready="promptScroll"
+    <CourseWorldMenu
+      id="menu"
+      class="pane pb-10 md:pb-0 min-h-dvh md:min-h-svh"
     />
   </main>
 </template>
@@ -105,43 +103,35 @@ const promptText = computed(() => 'Check out the journey');
 
 const route = useRoute();
 const dataReady = ref(false);
-const scrolled = ref(false);
-const forceStatsScroll = ref(false);
-
-let observer: IntersectionObserver;
-
-function promptScroll() {
-  dataReady.value = true;
-}
+const forceMenuScroll = ref(false);
 
 function smoothScroll() {
   document
-    .getElementById('stats')
+    .getElementById('menu')
     ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  scrolled.value = true;
 }
 
 onMounted(() => {
-  forceStatsScroll.value = route.hash === '#stats';
+  dataReady.value = true;
+  forceMenuScroll.value = route.hash === '#menu';
   nextTick(() => {
-    observer = new IntersectionObserver(
+    const menu = document.getElementById('menu');
+    if (!menu) return;
+    const observer = new IntersectionObserver(
       (entries) => {
-        scrolled.value = entries.some((entry) => entry.isIntersecting);
-        window.location.hash = scrolled.value ? 'stats' : '';
+        const visible = entries.some((entry) => entry.isIntersecting);
+        window.location.hash = visible ? 'menu' : '';
       },
       {
         root: document.getElementsByTagName('main')[0],
         threshold: 0.3,
       },
     );
-
-    const stats = document.getElementById('stats')!;
-    if (forceStatsScroll.value) {
-      stats.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      scrolled.value = true;
-      setTimeout(() => observer.observe(stats), 500);
+    if (forceMenuScroll.value) {
+      menu.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => observer.observe(menu), 500);
     } else {
-      observer.observe(stats);
+      observer.observe(menu);
     }
   });
 });
