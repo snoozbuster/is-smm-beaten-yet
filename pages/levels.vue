@@ -6,14 +6,6 @@
           Cleared Super Mario Maker 1 Levels
         </span>
         <span class="lg:hidden"> Cleared levels </span>
-        <button
-          v-tooltip.focus="
-            'Level list is synced with the game every ~2 minutes.'
-          "
-          class="ml-2 opacity-50 hover:opacity-100 transition-opacity"
-        >
-          <span class="text-2xl pi pi-question-circle" />
-        </button>
       </h1>
       <p v-if="pending" class="text-course-world-contrast">
         Loading cleared levels…
