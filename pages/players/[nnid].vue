@@ -6,8 +6,6 @@
         <h1 class="text-4xl text-course-world-contrast flex items-center">
           <PlayerNnid :nnid="nnid" :player="player" :size="24" />
         </h1>
-
-        <PlayerSearch class="ml-auto w-fit" />
       </div>
 
       <div class="grid lg:grid-cols-3 lg:h-[400px] gap-5 mb-5">
