@@ -88,6 +88,19 @@ useSeoMeta({
   themeColor: SMM_YELLOW,
 });
 
+definePageMeta({
+  layout: 'main-menu',
+  // I'm not sure if this is needed but it's here for now
+  layoutTransition: { name: 'slide-up', mode: 'default' },
+  middleware: (to, from) => {
+    // I think this only runs when navigating to the home page
+    if (to.path === '/') {
+      to.meta.layoutTransition = { name: 'slide-down', mode: 'default' };
+      from.meta.layoutTransition = { name: 'slide-down', mode: 'default' };
+    }
+  },
+});
+
 const promptText = computed(() => 'Check out the journey');
 
 const route = useRoute();

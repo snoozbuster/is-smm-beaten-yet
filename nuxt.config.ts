@@ -10,6 +10,7 @@ export default defineNuxtConfig({
 
   app: {
     cdnURL: 'https://static.issmmbeatenyet.com/',
+    layoutTransition: { name: 'slide-up', mode: 'default' },
   },
 
   hooks: {
