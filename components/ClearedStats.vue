@@ -71,10 +71,7 @@
               completion for the team!
             </div>
             <TthHistoryModal v-model:visible="modalOpen" />
-            <NuxtLink
-              class="hover:underline block mt-2"
-              to="/levels"
-            >
+            <NuxtLink class="hover:underline block mt-2" to="/levels">
               View all cleared levels
               <Icon name="mdi:chevron-right" />
             </NuxtLink>
@@ -139,8 +136,7 @@
 <script setup lang="ts">
 import gsap from 'gsap';
 import { DateTime } from 'luxon';
-import type { ClearedLevelStatSummary } from '~/types/levels';
-import { LEVELS_ROOT_URL, SHUTDOWN_DATE } from '~/constants/levelData';
+import { SHUTDOWN_DATE } from '~/constants/levelData';
 import { PrimeSkeleton } from '#components';
 
 const emit = defineEmits({
@@ -158,14 +154,14 @@ const animationStarted = ref(false);
 
 const ready = ref(false);
 
-const clearSummary = shallowRef<Partial<ClearedLevelStatSummary>>({});
+const { summary: clearSummary, load } = useClearSummary();
 
 const modalOpen = ref(false);
 
 const timeToShutdown = computed(() =>
   DateTime.fromISO(SHUTDOWN_DATE)
     .toRelative({
-      base: DateTime.fromISO(clearSummary.value.mostRecentClear?.dateCleared!),
+      base: DateTime.fromISO(clearSummary.value?.mostRecentClear?.dateCleared!),
       unit: ['days', 'hours', 'minutes'],
     })
     ?.replace(/^in /, ''),
@@ -187,11 +183,7 @@ function startAnimation() {
 }
 
 onMounted(async () => {
-  [clearSummary.value] = await Promise.all([
-    // this seems wrong but it works? what is the nuxt-y way to do this?
-    (async () =>
-      (await fetch(`${LEVELS_ROOT_URL}/clear_summary.json`)).json())(),
-  ]);
+  await load();
 
   ready.value = true;
   emit('ready');
