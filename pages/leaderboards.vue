@@ -1,16 +1,9 @@
 <template>
   <div class="bg-black min-h-dvh text-smm-yellow pt-5 pb-10">
     <div class="mx-auto max-w-screen-lg relative px-5">
-      <NuxtLink class="text-sm absolute mt-2 text-smm" to="/">
-        <Icon name="mdi:chevron-left" class="align-middle" /> Home
-      </NuxtLink>
       <h1 class="text-4xl text-center mb-5 font-medium uppercase text-smm">
         Hall of Fame
       </h1>
-
-      <PlayerSearch
-        class="md:w-fit md:absolute md:mr-3 right-0 top-0 mb-3 mx-auto"
-      />
 
       <LeaderboardPodium
         class="mx-auto w-fit mb-5"
@@ -175,8 +168,8 @@
 </style>
 
 <script lang="ts" setup>
-import type { ValidLeaderboardGroups } from '~/types/leaderboards';
 import gsap from 'gsap';
+import type { ValidLeaderboardGroups } from '~/types/leaderboards';
 
 const { leaderboards } = useAllLeaderboards();
 

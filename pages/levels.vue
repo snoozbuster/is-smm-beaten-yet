@@ -1,9 +1,6 @@
 <template>
   <div class="h-dvh overflow-hidden bg-course-world">
     <div class="h-full max-w-[1800px] mt-auto mx-auto flex flex-col p-5">
-      <NuxtLink to="/#stats" class="w-fit text-course-world-contrast text-lg">
-        <span class="pi pi-angle-left"></span> Back to stats
-      </NuxtLink>
       <h1 class="text-course-world-contrast text-4xl lg:mb-5">
         <span class="hidden lg:inline">
           Cleared Super Mario Maker 1 Levels
