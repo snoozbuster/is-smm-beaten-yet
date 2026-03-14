@@ -120,6 +120,11 @@ export default defineNuxtConfig({
     editorSupport: true,
     config: {
       theme: {
+        extend: {
+          boxShadow: {
+            drawer: 'inset 4px 0 8px rgba(0,0,0,0.12)',
+          },
+        },
         colors: {
           ...colors,
           'smm-yellow': '#fbcd0e',
@@ -131,6 +136,10 @@ export default defineNuxtConfig({
           'course-world-button-text': '#39b591',
           'course-world-button-hover': '#6ae8c4',
           'course-world-button-active': '#139e7f',
+          'smm-menu-hamburger': '#FDDB0A',
+          'smm-menu-drawer': '#F9D80B',
+          'smm-menu-button': '#FCE40B',
+          'smm-menu-button-active': '#313243',
           'makers-purple': 'rgb(108, 67, 161)',
           '100-mario-red': 'rgb(145, 39, 53)',
         },
@@ -148,6 +157,10 @@ export default defineNuxtConfig({
               ),
               '--course-world-button-active': theme(
                 'colors.course-world-button-active',
+              ),
+              '--smm-menu-button': theme('colors.smm-menu-button'),
+              '--smm-menu-button-active': theme(
+                'colors.smm-menu-button-active',
               ),
             },
           });
